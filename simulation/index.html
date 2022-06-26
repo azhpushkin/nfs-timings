@@ -1,0 +1,555 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Onboard</title>
+	<script src="./jquery.js"></script>
+	<link rel="stylesheet" type="text/css" href="./style.css">
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+			/* ================== init vars  ==================*/
+			const UPDATE_INTERVAL = 1000; //update data interval msek
+			const UPDATE_INTERVAL_AFTER_FAIL = 5000; //again try interval if error
+			const parsedURL = new URL(window.location);
+			const compTeamNameFirst = parsedURL.searchParams.get('compTeamNameFirst');
+			const compTeamNameSecond = parsedURL.searchParams.get('compTeamNameSecond');
+			const debug = !!parsedURL.searchParams.get('debug');
+			const theme = parsedURL.searchParams.get('theme');
+			const hide = parsedURL.searchParams.get('hide');
+			const EMPTY_TIME = '<span class="empty">--.---</span>'
+			// const endPoint = new URL(parsedURL.protocol === 'file:' ? 'http://nfs.playwar.com' : parsedURL.origin);
+			const endPoint = new URL('http://localhost:7000');
+			endPoint.pathname = '/getmaininfo.json';
+			if ( compTeamNameFirst ) endPoint.searchParams.append('compTeamNameFirst', compTeamNameFirst);
+			if ( compTeamNameSecond ) endPoint.searchParams.append('compTeamNameSecond', compTeamNameSecond);
+
+			const tts_pitTime = 15;
+
+			/* ================== log record  ==================*/
+			const log = (text, type, show_mode) => {
+				if ( !debug && show_mode === 'debug' ) return;
+
+				switch ( type ) {
+					case 'good':
+						return console.info('%c' + text, 'background: #57b567; color: #fff');
+					case 'bad':
+						return console.error('%c' + text, 'background: #b55757; color: #fff');
+					default:
+						return console.log(text);
+				}
+			}
+
+			/* ================== theme  ==================*/
+			if ( theme === 'light' ) {
+				document.body.setAttribute('id', 'light');
+			}
+
+			/* ================== menu  ==================*/
+			const menu = document.getElementById('menu_icon');
+			const mainMenu = document.querySelector('.main_menu_layer');
+			menu.addEventListener('click', () => {
+				menu.classList.toggle('open');
+				mainMenu.classList.toggle('opened');
+			});
+
+			/* ================== hide if on tv  ==================*/
+			const bh_comparison = document.querySelector('.main_menu_layer');
+			if ( hide === 'all' ) {
+				menu.style.display = 'none';
+				bh_comparison.style.display = 'none';
+			}
+
+			/* ================== init and update ==================*/
+			const error_div = document.getElementById('err');
+			const show_err_window = (status) => {
+				error_div.style.display = status ? 'block' : 'none';
+			}
+
+			const getData = async() => {
+				return fetch(endPoint, {
+					method: 'GET',
+
+				});
+			}
+
+			const coronaRegex = /(Резанко|Карлюк|Фортуна|Медведева|Сириченко|Сериченко)/i
+			const beerRegex = /(Ткаченко|Закалюк)/i
+			const snailRegex = /(Петушков|Тищенко|Тыщенко)/i
+			const rainRegex = /(Хавило)/i
+			const getPilotName = (name, kart) => {
+				if (!name)
+					return `Карт ${kart}`;
+				if (coronaRegex.test(name))
+					return `${name} 👑`;
+				if (beerRegex.test(name))
+					return `${name} 🍺`;
+				if (snailRegex.test(name))
+					return `${name} 🐌`;
+				if (rainRegex.test(name))
+					return `${name} 🌧`;
+				return name;
+			}
+
+			const table = {
+				header:  document.querySelector('.board_table_head'),
+				body: document.getElementById('results'),
+				rows: {},
+			}
+			const header = {
+				raceTime: document.querySelector('.totalRaceTime'),
+				bestLapRaceNameTeam: document.querySelector('.bestLapRaceNameTeam'),
+				bestLapRaceNumberTeam: document.querySelector('.bestLapRaceNumberTeam'),
+				bestS1Race: document.querySelector('.bestS1Race'),
+				bestS2Race: document.querySelector('.bestS2Race'),
+				bestLapRace: document.querySelector('.bestLapRace'),
+
+			}
+			const updateState = (data) => {
+				const { onTablo } = data;
+				const { isRace } = onTablo;
+
+				//race time
+				header.raceTime.innerHTML = onTablo.totalRaceTime;
+				// $('.totalRaceTime').html(json.onTablo.totalRaceTime);
+
+				//best lap
+				header.bestLapRaceNameTeam.innerHTML = onTablo.bestLapRaceNameTeam;
+				header.bestLapRaceNumberTeam.innerHTML = onTablo.bestLapRaceNumberTeam;
+				header.bestS1Race.innerHTML = onTablo.bestS1Race === '8:20:00.000' ? EMPTY_TIME : onTablo.bestS1Race || EMPTY_TIME;
+				header.bestS2Race.innerHTML = onTablo.bestS2Race === '8:20:00.000' ? EMPTY_TIME : onTablo.bestS2Race || EMPTY_TIME;
+				header.bestLapRace.innerHTML = onTablo.bestLapRace === '0' ? EMPTY_TIME : onTablo.bestLapRace || EMPTY_TIME;
+
+				// updateComparison(onTablo);
+			}
+
+			const updated = {}
+			const prev = {
+				isRace: undefined,
+				teams: {},
+				laps: {},
+				transponders: [],
+			};
+			const convertToSeconds = (timeStr) => timeStr.split(/:/g).reduce((acc, value, i, {length}) => acc + value * Math.pow(60, length - i - 1), 0);
+			const updateTableHeader = (isRace) => {
+				let headerTtHtml = `
+							<td class="pit_td center pos_td">Pos</td>
+							<td class="race_tr team_pilot_td">${ isRace ? 'Team/Pilot' : 'Pilot' }</td>
+							<td class="center hide_tr kart_td">Kart</td>
+							<td class="center lastlap_td">LastLap</td>
+							<td class="center s1_td">S1</td>
+							<td class="center s2_td">S2</td>`
+
+				headerTtHtml += isRace ? `
+							<td class="center best_lap_seg_td">BLSeg</td>
+							<td class="center gap_td">Gap</td>` : '';
+
+				headerTtHtml += `
+							<td class="center bestlap_race_td">BLRace</td>`;
+
+				headerTtHtml += isRace ? `
+							<td class="center mid_td">Midl</td>
+							<td class="center pits_td">Pits</td>
+							<td class="center ontrack_td">OnTrack</td>` : '';
+
+				headerTtHtml += `
+							<td class="center laps_td lapCount_td">Laps</td>`;
+
+				table.header.innerHTML = headerTtHtml;
+			}
+			const lapThreshold = 0.1;
+			const getLapClass = (team, onTablo) => {
+				if (!team.lastLap) return '';
+
+				const lastLap = convertToSeconds(team.lastLap);
+				const bestLap = convertToSeconds(onTablo.bestLapRace);
+				if (lastLap <= bestLap) return 'pink'
+
+				const bestLapOnSegment = convertToSeconds(onTablo.isRace ? team.bestLapOnSegment : team.bestLap);
+				if (lastLap <= bestLapOnSegment + lapThreshold) return 'green'
+
+				const midLap = convertToSeconds(team.midLap);
+				if (lastLap > midLap) return 'warning';
+
+				return '';
+			}
+			const updateRow = (team, id, onTablo) => {
+				log(`updateRow ${id}`, 'good', 'debug');
+				const {
+					isOnPit,
+					position,
+					number,
+					kart,
+					teamName,
+					pilotName,
+					lastLap,
+					lastLapS1,
+					lastLapS2,
+					midLap,
+					bestLapOnSegment,
+					bestLap,
+					isRaketa,
+					lag,
+					lastPitMainTime,
+					lapCount,
+					totalOnTrack,
+					secondsFromPit,
+					pitstops,
+					timeFromLassPassing,
+				} = team;
+				const { isRace, finish: started } = onTablo
+				const [tr, progress] = table.rows[id];
+				let rowHtml = '';
+
+				tr.classList[isOnPit ? 'add' : 'remove']('pit');
+
+				// new passing
+				if ( prev.laps[id] !== (started ? lapCount : null)) {
+					log(`POS ${position}`, 'good', 'debug');
+					const laps = lapCount * 1;
+					const lap = laps ? convertToSeconds(lastLap) : 60;
+					const percentLap = Math.min(Math.max(timeFromLassPassing / 1000 / lap , 0), 1);
+					const div = document.createElement('div');
+
+					if (started && timeFromLassPassing < 3000) {
+						tr.classList.add('updated');
+						setTimeout(() => {
+							tr.classList.remove('updated');
+						}, 3000);
+					}
+
+					div.classList.add('progress-line');
+					if (started) {
+						const duration = (lap * (1 - percentLap + 0.1)).toFixed(1);
+						const span = div.appendChild(document.createElement('span'))
+						span.style.transition = `transform ${duration}s linear`;
+						span.style.transform = `translateX(${(percentLap * 100 * 20).toFixed(1)}%)`;
+						setTimeout(() => {
+							span.style.transform = `translateX(${110 * 20}%)`;
+						}, 20);
+					}
+
+					progress.firstChild.innerHTML = '';
+					progress.firstChild.appendChild(div);
+				}
+
+				rowHtml += `<td class="center pit_td">${isOnPit ? '<div class="in_pit"><span>PIT</span></div>' : ''}<span class="position">${position}</div></td>`;
+
+				rowHtml += `<td class="team_td">
+						<div class="team_td_box">
+							${isRace ? `<div class="number">${number}</div>` : ''}
+							<div class="show_team_pilot_name_box">
+								${isRace ? `<span class="teamName_box"><span class="teamName">${teamName}</span></span>` : ''}
+								<span class="pilotName">${getPilotName(pilotName, number)}</span>
+							</div>
+						</div>
+					</td>`;
+
+				rowHtml += isRace ? `<td class="black center kart">${kart}</td>` : `<td class="black center number">${number}</td>`;
+
+				rowHtml += `<td class="black center lastLap ${getLapClass(team, onTablo)}">${lastLap || EMPTY_TIME}${lastLap && isRaketa ? '🚀' : ''}</td>`;
+
+				rowHtml += `<td class="center lastLapS1">${lastLapS1 || EMPTY_TIME}</td>`;
+
+				rowHtml += `<td class="center lastLapS2">${lastLapS2 || EMPTY_TIME}</td>`;
+
+				if (isRace) {
+					rowHtml += `<td class="black center green hide_tr">${bestLapOnSegment || EMPTY_TIME}</td>`;
+					rowHtml += `<td class="center lag">${lag || EMPTY_TIME}</td>`;
+				}
+
+				rowHtml += `<td class="center black pink">${bestLap || EMPTY_TIME}</td>`;
+
+				if (isRace) {
+					rowHtml += `<td class="center midLap">${midLap || EMPTY_TIME}</td>`;
+					rowHtml += `<td class="center pitstops">${pitstops}</td>`;
+					rowHtml += `${getPitTime(secondsFromPit, lastPitMainTime, totalOnTrack, pitstops)}`;
+				}
+
+				rowHtml += `<td class="lapCount lapCount_td center">${lapCount || EMPTY_TIME}</td>`;
+
+				tr.innerHTML = rowHtml;
+			}
+			const getPitTime = (secondsFromPit, lastPitMainTime, totalOnTrack, pitstops) => {
+				// if (secondsFromPit <= tts_pitTime) {
+				// 	return `<td class="center hide_tr black pit">${lastPitMainTime}</td>`;
+				// }
+
+				const windowStart = 900;
+				const windowEnd = pitstops > 0 ? 2700 : 1800;
+				const warning = windowEnd - 300;
+				const onTrack = convertToSeconds(totalOnTrack);
+				const tdClass =
+					onTrack < windowStart
+						? ''
+						: (onTrack < warning
+						? 'green'
+						: (onTrack < windowEnd
+						? 'warning'
+						: 'red'));
+				return `<td class="center hide_tr black timeOnTrack ${tdClass}"><span class="totalOnTrack">${totalOnTrack}</span></td>`;
+			}
+			const updateTable = (data) => {
+				const { onTablo } = data;
+				const { isRace, teams, finish: started } = onTablo;
+
+				if (prev.isRace !== isRace) {
+					updateTableHeader(isRace);
+					prev.isRace = isRace;
+				}
+
+				const transponders = teams.map(({ transponderId }) => transponderId);
+				const addTransponders = transponders.filter(t => !prev.transponders.includes(t));
+				const removeTransponders = prev.transponders.filter(t => !transponders.includes(t));
+
+				// adding new transponders
+				if (addTransponders.length) {
+					log(`+trans: [${addTransponders.join(', ')}]`, '', 'debug');
+
+					for (let id of addTransponders) {
+						const 
+							team = document.createElement('tr'),
+							progress = document.createElement('tr');
+						team.classList.add('team_tr_box');
+						team.setAttribute('data-id', id);
+						progress.classList.add('progress');
+						progress.setAttribute('data-id', id);
+						progress.innerHTML = `<td colspan="14" class="cols_13"></td>`;
+						table.rows[id] = [team, progress];
+						table.body.append(...table.rows[id]);
+					}
+				}
+
+				// removing unused transponders
+				if (removeTransponders.length) {
+					log(`-trans: [${removeTransponders.join(', ')}]`, '', 'debug');
+					for (let id of removeTransponders) {
+						for (let row of table.rows[id]) {
+							row.remove();
+						}
+						delete updated[id];
+						delete table.rows[id];
+					}
+				}
+
+				// sort transponders correctly
+				for ( let i = 0; i < transponders.length - 1; i++ ) {
+					const id = transponders[i];
+					const rows = table.rows[id];
+					const nextRow = table.body.children[i * 2];
+
+					// skip position update if it's already in position
+					if (nextRow === rows[0]) continue;
+
+					nextRow.before(rows[1]);
+					rows[1].before(rows[0]);
+				}
+
+				// update row when data changes
+				const updatedHashes = {};
+				teams.forEach(team => {
+					const { transponderId: id } = team;
+					const newJson = JSON.stringify(getUpdateValues(team, isRace, started));
+					updatedHashes[id] = newJson;
+					if (prev.teams[id] === newJson) return;
+
+					log(`COMPARING ROWS ${id}`, '', 'debug');
+					log(prev.teams[id], '', 'debug');
+					log(newJson, '', 'debug');
+
+					updateRow(team, id, onTablo);
+				});
+
+				prev.teams = updatedHashes;
+				prev.laps = teams.reduce((acc, team) => {
+					const { transponderId, lapCount } = team;
+					acc[transponderId] = started ? lapCount : null;
+					return acc;
+				}, {});
+				prev.transponders = transponders;
+			}
+
+			const getUpdateValues = ({ isOnPit, position, number, kart, teamName, pilotName, lastLap, lastLapS1, lastLapS2, bestLapOnSegment, bestLap, isRaketa, lag, lastPitMainTime, lapCount, totalOnTrack, secondsFromPit }, isRace, started) => (
+				isRace
+					? { started, isOnPit, position, number, kart, teamName, pilotName, lastLap, lastLapS1, lastLapS2, bestLapOnSegment, bestLap, isRaketa, lag, lastPitMainTime, lapCount, totalOnTrack, secondsFromPit }
+					: { started, isOnPit, position, number, pilotName, lastLap, lastLapS1, lastLapS2, bestLap, isRaketa, lapCount }
+			);
+
+			// main update function
+			const updateData = async () => {
+				try {
+					const data = await(await getData()).json();
+
+					// test race mode
+					// data.onTablo.isRace = true;
+
+					updateState(data);
+					updateTable(data);
+					show_err_window(false);
+					setTimeout(updateData, UPDATE_INTERVAL);
+					log('UPDATED', 'good', 'debug');
+				} catch ( e ) {
+					show_err_window(true);
+					setTimeout(updateData, UPDATE_INTERVAL_AFTER_FAIL);
+					log(`UPDATE FAILED: ${e}`, 'bad', 'debug');
+				}
+
+			}
+
+			updateData();
+
+			//select kart
+			// $('.team_list_now').change(function () {
+			// 	selected_team_list_now = $(this).children('option:selected').val();
+			//
+			// 	if ( typeof compTeamNameSecond !== 'undefined' ) {
+			// 		window.location.replace('./board.html?compTeamNameSecond=' + compTeamNameSecond + '&compTeamNameFirst=' + selected_team_list_now);
+			//
+			// 	} else {
+			// 		window.location.replace('./board.html?compTeamNameFirst=' + selected_team_list_now);
+			// 	}
+			//
+			// });
+			// $('.team_list_to_com').change(function () {
+			// 	selected_team_list_to_com = $(this).children('option:selected').val();
+			//
+			// 	if ( typeof compTeamNameFirst !== 'undefined' ) {
+			// 		window.location.replace('./board.html?compTeamNameFirst=' + compTeamNameFirst + '&compTeamNameSecond=' + selected_team_list_to_com);
+			// 	} else {
+			// 		window.location.replace('./board.html?compTeamNameSecond=' + selected_team_list_to_com);
+			//
+			// 	}
+			// });
+		});
+	</script>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="err">
+	Offline
+</div>
+<div id="menu_icon">
+	<span></span>
+	<span></span>
+	<span></span>
+</div>
+<div class="main_menu_layer">
+	<div class="mml_col_title">
+	</div>
+	<div class="main_menu_layer_in">
+		<div class="mml_col">
+			<a href="./board.html?theme=light" class="dark">табло светлое</a>
+			<a href="./board.html" class="dark">табло темное</a>
+			<a href="./team.html" class="dark">команда</a>
+			<a href="./onboard.html?kart=1&screen=default" class="dark">на руле (простой)</a>
+
+		</div>
+	</div>
+</div>
+
+<div class="conatiner" id="board">
+	<div class="board_head">
+		<div class="bh_race_time_box">
+			<div class="bh_race_time bhb_time_in totalRaceTime">--:--:--</div>
+		</div>
+		<div class="bh_comparison" style="display: none;">
+			<div class="bh_c_top">
+				<div class="bh_c_team">
+					<select name="" class="team_list team_list_now"></select>
+				</div>
+				<div class="bh_c_team bh_c_team_right">
+					<select name="" class="team_list team_list_to_com"></select>
+				</div>
+			</div>
+			<div class="bh_c_teams_box">
+				<div class="bh_lang compLag">-.---</div>
+				<div class="bh_c_team_item">
+					<div class="bh_c_ti_time_box">
+						<span class="bh_c_ti_time_lastlap firstLastLap compTeamFirstLastLap">-.---</span>
+					</div>
+					<div class="bh_c_ti_sector_box left">
+						<div class="bh_c_ti_sb_item">
+							<div class="bh_c_ti_sbi_last_time">
+								S1 <span class="compTeamFirstS1">-.---</span>
+							</div>
+						</div>
+						<div class="bh_c_ti_sb_item">
+							<div class="bh_c_ti_sbi_last_time">
+								S2 <span class="compTeamFirstS2">-.---</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="bh_c_team_item bh_c_ti_sb_left">
+					<div class="bh_c_ti_time_box">
+						<span class="bh_c_ti_time_lastlap compTeamSecondLastLap">-.---</span>
+						<span class="bh_c_ti_time_lang compDiff">-.---</span>
+					</div>
+					<div class="bh_c_ti_sector_box">
+						<div class="bh_c_ti_sb_item">
+							<div class="bh_c_ti_sbi_lang compDiffS1">
+								-.---
+							</div>
+							<div class="bh_c_ti_sbi_last_time">
+								S1 <span class="compTeamSecondS1">-.---</span>
+							</div>
+						</div>
+						<div class="bh_c_ti_sb_item">
+							<div class="bh_c_ti_sbi_lang compDiffS2">
+								-.---
+							</div>
+							<div class="bh_c_ti_sbi_last_time">
+								S2 <span class="compTeamSecondS2">-.---</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="bh_best_lap_box">
+			<div class="bh_best_lb_box">
+				<div class="bh_best_lb_sectors">
+					<div class="bh_best_lb_pilot empty">
+						<span class="bbl_info_team bestLapRaceNumberTeam"></span>
+						<span class="bbl_info_team bestLapRaceNameTeam"></span>
+						-
+						<span class="bbl_info_pilot bestLapRaceNamePilot"></span>
+						-
+						<span class="bbl_info_kart "></span>
+					</div>
+					<div class="bh_best_lb_sectors_timing">
+						<div class="bh_best_lb_sector">
+							S1 <span class="bestS1Race">--.---</span>
+						</div>
+						<div class="bh_best_lb_sector">
+							S2 <span class="bestS2Race">--.---</span>
+						</div>
+					</div>
+				</div>
+				<div class="bh_best_lb_bestlap bbl_time bestLapRace">--.---</div>
+			</div>
+		</div>
+	</div>
+	<div id="board_table_box">
+		<table class="board_table">
+			<tr class="board_table_head">
+				<td class="pit_td center pos_td">Pos</td>
+				<td class="race_tr team_pilot_td">Pilot</td>
+				<td class="center hide_tr kart_td">Kart</td>
+				<td class="center lastlap_td">LastLap</td>
+				<td class="center s1_td">S1</td>
+				<td class="center s2_td">S2</td>
+				<td class="center best_lap_seg_td show_if_race">BLSeg</td>
+				<td class="center gap_td show_if_race">Gap</td>
+				<td class="center bestlap_race_td">BLRace</td>
+				<td class="center mid_td show_if_race">Midl</td>
+				<td class="center pits_td show_if_race">Pits</td>
+				<td class="center ontrack_td show_if_race">OnTrack</td>
+				<td class="center laps_td lapCount_td">Laps</td>
+			</tr>
+			<tbody id="results"></tbody>
+		</table>
+	</div>
+</div>
+
+</body>
+</html>

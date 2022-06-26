@@ -1,0 +1,1906 @@
+@charset "UTF-8";
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+  font-family: 'Arial';
+}
+
+html {
+  line-height: 1;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+caption, th, td {
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+q, blockquote {
+  quotes: none;
+}
+
+q:before, q:after, blockquote:before, blockquote:after {
+  content: "";
+  content: none;
+}
+
+a img {
+  border: none;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, main, menu, nav, section, summary {
+  display: block;
+}
+
+*, *:before, *:after {
+  padding: 0;
+  margin: 0;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  color: #B6B6B6;
+  font-size: 18px;
+  position: relative;
+  line-height: 1.42857143;
+  background: #252442;
+}
+
+img {
+  display: inline-block;
+  max-width: 100%;
+}
+
+a, button {
+  cursor: pointer;
+}
+
+
+.clr {
+  clear: both;
+  display: block;
+}
+.black {
+  font-weight: 900;
+}
+#err {
+  background: #17172d;
+  border-top-right-radius: 10px;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  display: none;
+   color: #9291A0;
+  font-size: 12px;
+}
+#err span {
+
+  font-weight: 900;
+}
+/*=================== main_menu ===================*/
+.main_menu_layer {
+  position: fixed;
+  z-index: 99;
+  background: #252442;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  padding: 30px;
+  opacity: 0;
+  transition: opacity 0.5s, visibility 0s linear 0.5s;
+}
+.main_menu_layer.opened {
+  visibility: visible;
+  opacity: 1;
+  transition-duration: 0.5s;
+  transition-delay: 0s;
+}
+.main_menu_layer_in {
+  display: flex;
+  height: 100%;
+  padding-right: 30px;
+  justify-content: center;
+}
+#onboard_page .main_menu_layer_in {
+  justify-content: space-between;
+}
+.mml_col {
+  height: 100%;
+  width: 48%;
+}
+
+.mml_col a {
+  display: block;
+  height: 20%;
+  background: #6562AA;
+  border-radius: 10px;
+  text-align: center;
+  color: #B6B6B6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-transform: uppercase;
+  margin: 0 0 6%;
+  font-size: 1.8rem;
+  text-decoration: none;
+  font-weight: 900;
+}
+.mml_col_title {
+  /*padding-top: 50px;
+  padding-bottom: 2%;*/
+  font-size: 14px;
+  color: #B6B6B6;
+}
+.mml_col a.dark {
+  background: #000000;
+}
+.mml_col a span {
+  display: block;
+}
+.main_menu {
+  position: fixed;
+  right: 10px;
+  top: 10px;
+  background: #6562AA;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  line-height: 40px;
+  text-align: center;
+}
+
+#menu_icon{
+  width: 60px;
+  height: 60px;
+  position: fixed;
+  bottom:10px;
+  z-index: 999;
+  right:10px;
+  -webkit-transform: rotate(0deg);
+  -moz-transform: rotate(0deg);
+  -o-transform: rotate(0deg);
+  transform: rotate(0deg);
+  -webkit-transition: .5s ease-in-out;
+  -moz-transition: .5s ease-in-out;
+  -o-transition: .5s ease-in-out;
+  transition: .5s ease-in-out;
+  cursor: pointer;
+}
+#menu_icon.menu_onboard {
+  bottom:auto;
+  top: 10px;
+  right:10px;
+}
+#menu_icon span {
+  display: block;
+  position: absolute;
+  height: 9px;
+  width: 100%;
+  background: #474747;
+  border-radius: 9px;
+  opacity: 1;
+  left: 0;
+  transform: rotate(0deg);
+  transition: .25s ease-in-out;
+}
+
+#menu_icon span:nth-child(1) {
+  bottom: 0px;
+}
+
+#menu_icon span:nth-child(2) {
+  bottom: 18px;
+}
+
+#menu_icon span:nth-child(3) {
+  bottom: 36px;
+}
+
+#menu_icon.open span:nth-child(1) {
+  transform: translateY(-18px) rotate(-45deg) ;
+}
+
+#menu_icon.open span:nth-child(2) {
+  opacity: 0;
+  width: 0;
+  left: -30px;
+}
+
+#menu_icon.open span:nth-child(3) {
+  transform: translateY(18px) rotate(45deg);
+}
+.mml_kart_list {
+  width: 60px;
+  height: 60px;
+  position: fixed;
+  right: 10px;
+  top: 70px;
+  font-size: 20px;
+  text-align: center;
+  font-weight: 900;
+  background: #474747;
+}
+.mml_kart_list.mml_kart_list_inteam {
+  top: 10px;
+}
+.mml_kart_list a {
+ width: 15%;
+    height: 22%;
+    float: left;
+    margin: 0 2% 4% 3%;
+  background: #E1E4F1;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-weight: 900;
+  text-decoration: none;
+  color: #000000;
+  font-size: 2.5em;
+}
+.mml_kart_list a span {
+  display: block;
+}
+/*=================== onboard ===================*/
+.onboard {
+  color: #B6B6B6;
+  background: #000000;
+}
+.onboard.rocket {
+  color: #ffc800;
+}
+.onboard_box {
+  min-height: 100vh;
+  text-align: center;
+  width: 100%;
+}
+.onboard_display {
+  display: none;
+  width: 100%;
+  min-height: 100vh;
+}
+.onboard_display.active {
+  display: flex;
+}
+.onbord_lang_time {
+  font-size: 5rem;
+  font-weight: 900;
+  line-height: 100%;
+}
+.onbord_lang_time.good {
+  color: #00E55C;
+}
+.onbord_lang_time.bad {
+  color: #E50000;
+}
+.onbord_last_time {
+  font-size: 12rem;
+  font-weight: 900;
+  text-align: center;
+  line-height: 80%;
+}
+.onboard_time {
+  height: 60%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.onboard_stats {
+  height: 40%;
+  display: flex;
+  justify-content: center;
+}
+.onboard_stats_item {
+  width: 40%;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.oci_lang {
+  font-weight: 900;
+ font-size: 3rem;
+ line-height: 1.2rem;
+}
+
+.oci_lang.good {
+  color: #01D310;
+}
+.oci_lang.bad {
+  color: #01D310;
+}
+.oci_time {
+  font-weight: 900;
+  font-size: 4rem;
+}
+.onboard_position {
+  width: 20%;
+  text-align: center;
+  font-weight: 900;
+  color: #B6B6B6;
+  font-size: 7rem;
+  background: #333333;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.onboard_position.first {
+  background: #00bf2f;
+  color:#fff;
+}
+.onboard_position.second {
+  background: #c1f41f;
+  color:#fff;
+}
+.onboard_position.third {
+  background: #cc00a6;
+  color:#fff;
+
+}
+
+
+.onboard_positive .onbord_lang_time,
+.onboard_positive .oci_lang {
+  color: #00E55C;
+}
+.onboard_negative .onbord_lang_time,
+.onboard_negative .oci_lang {
+  color: #E50000;
+}
+.onboard_stats_item.onboard_positive::after,
+.onboard_stats_item.onboard_negative::after {
+  content: '';
+  display: block;
+  background: #00E55C;
+  height: 20px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+.onboard_stats_item.onboard_negative::after {
+  background: #E50000;
+}
+.onboard_info_box {
+  width: 20%;
+  background: #383B45;
+  position: relative;
+}
+
+/**/
+#onboard_race .onboard_stats_item {
+  width: 50%;
+}
+
+/*kvala*/
+#onboard_kvala .onboard_box {
+  display:flex;
+  justify-content: center;
+}
+
+#onboard_kvala .oib_race_info {
+  height: 50vh;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+.onboard_time_box {
+  width: 80%;
+}
+.oib_times {
+  padding: 20px;
+  text-align: left;
+  height:60%;
+  padding-bottom: 0;
+}
+.oib_pilot_item {
+  padding: 10px;
+}
+.oib_item_title {
+  color: #b6b6b6;
+  font-size: 1rem;
+ 
+}
+.oib_item_time {
+  color: #A2A9BD;
+   font-weight: 900;
+  font-size: 2.4rem;
+}
+.oib_race_info {
+  background: #1C1F27;
+  padding: 20px;
+  height:40%;
+}
+.oib_ri_item_title {
+  color: #626262;
+      font-size: 0.7rem;
+}
+.oib_ri_item {
+  margin-bottom: 1.5rem;
+}
+.oib_ri_item.oib_2_colum {
+  display: flex;
+  justify-content: space-between;
+}
+
+.oib_ri_time {
+  color: #A2A8BD;
+  font-size: 2.5rem;
+  font-weight: 900;
+      line-height: 2.5rem;
+}
+.oib_ri_time.oib_ri_laps {
+  font-size: 3rem;
+      line-height: 3rem;
+}
+
+/*sprint*/
+#onboard_sprint .onboard_box {
+  display:flex;
+  justify-content: center;
+}
+#onboard_sprint .oib_times {
+  height: 50vh;
+}
+#onboard_sprint .oib_race_info {
+  height: 50vh;
+  padding: 0;
+}
+.oib_ri_item_col {
+  width: 50%;
+}
+.oib_ri_position {
+  padding: 20px 10px;
+  background: #21242E;
+}
+.oib_ri_bytime {
+  padding: 20px 10px;
+  background: #2A2D37;
+}
+
+/*marafon*/
+#onboard_marafon .onboard_stats_item {
+  width: 50%;
+}
+#onboard_marafon .onboard_info_timing {
+  display:flex;
+  justify-content: center;
+}
+#onboard_marafon .oib_ri_position  {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  margin-bottom: 0;
+}
+#onboard_marafon .oib_ri_position .oib_ri_item_title {
+  padding-right: 20px;
+   font-size:1rem;
+}
+#onboard_marafon .oib_ri_position .oib_ri_time {
+ font-size:2rem;
+}
+#onboard_marafon .oib_ri_part {
+ padding: 1em 1rem;
+  margin-bottom: 0;
+}
+#onboard_marafon .oib_race_info {
+  padding: 0;
+  position: relative;
+}
+.onboard_info_timing {
+  height: 85vh;
+}
+.onboard_info_pits {
+  height: 15vh;
+  position: relative;
+  overflow: hidden;
+  background: #1C1F27;
+  display: flex;
+  align-items: flex-end;
+}
+#team .onboard_info_pits {
+  height: 75px;
+}
+.oip_karts {
+  position: relative;
+  height: 80%;
+}
+.oip_name {
+  position: absolute;
+  left: -20px;
+  opacity: 0.5;
+  bottom: 20px;
+  transform: rotate(-90deg); 
+}
+.oip_karts_in_race {
+  width: 70%;
+}
+.oip_karts_in_pit {
+  width: 30%;
+}
+.oip_karts ul,
+.th_laps_ap_oi_left ul {
+  width: 100%;
+  height: 100%;
+   padding-left: 20px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.oip_karts ul li,
+.th_laps_ap_oi_left ul li {
+  height: 100%;
+  line-height: 100%;
+  font-size: 1.5rem;
+  flex: 1;
+  color: #000000;
+  border-right: 1px black solid;
+  background: #4E5260;
+  text-align: center;
+  line-height: 100%;
+  display: flex;
+  align-items: center;
+  font-weight: 900;
+}
+.oip_karts ul li.type_bad {
+  background: #D73333;
+}
+.oip_karts ul li.type_soso {
+  background: #4E5260;
+}
+.oip_karts ul li.type_good {
+  background: #4ADF50;
+}
+.oip_karts ul li span {
+  display: block;
+  width: 100%;
+}
+.oip_karts ul,
+.oip_karts ul li {
+  list-style: none;
+}
+.time_good {
+  color:#00E55C;
+}
+.time_bad {
+  color:#E11E1E;
+}
+/*=================== board ===================*/
+#board {
+  
+}
+.board_head {
+  display: flex;
+  color: #B6B6B6;
+  width: 100%;
+  background: #252442;
+  justify-content: space-between;
+}
+.bh_race_time_box {
+  padding: 15px 20px;
+   font-size: 0.8em;
+  width: 30%;
+}
+.bh_race_time {
+ font-size: 3.5em;
+ line-height: 1em;
+  font-weight: 900;
+}
+
+.bh_comparison {
+  width: 40%;
+  padding-bottom: 30px;
+  position: relative;
+}
+.bh_comparison::before {
+  height: 100%;
+  background: #444368;
+  width: 3px;
+  content: '';
+  display: block;
+  position: absolute;
+  left: 50%;
+  margin-left: -1px;
+  top: 0;
+}
+.bh_c_top {
+  background: #444368;
+  color: #8E8DAE;
+  height: 40px;
+  line-height: 40px;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+.bh_c_team {
+  width: 47%;
+}
+.bh_c_team select {
+  width: 100%;
+  height: 30px;
+  background: #444368;
+  color: #8E8DAE;
+  border:1px #444368 solid;
+}
+.bh_c_team.bh_c_team_right {
+  text-align: right;
+} 
+.bh_c_teams_box {
+  display: flex;
+  width: 100%;
+  justify-content: flex-end;
+  position: relative;
+}
+.bh_lang {
+  position: absolute;
+  left: 50%;
+  width: 110px;
+  margin-left: -55px;
+  top: 10px;
+  padding: 7px 10px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 900;
+  background: #444368;
+}
+.bh_c_team_item {
+  width: 48%;
+  color: #B6B6B6;
+  text-align: right;
+}
+.bh_c_team_item.bh_c_ti_sb_left {
+  text-align: left;
+  margin-left: auto;
+}
+.bh_c_ti_time_box {
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 60px;
+}
+.bh_c_team_item.bh_c_ti_sb_left .bh_c_ti_time_box {
+ justify-content: flex-start;
+ padding-right: 0px;
+ padding-left: 60px;
+}
+.bh_c_ti_time_lang {
+  font-size: 20px;
+  padding:0 10px;
+}
+.bh_c_ti_time_lastlap {
+  font-size: 48px;
+}
+.bh_c_ti_sector_box {
+  display: flex;
+  justify-content: flex-end;
+}
+.bh_c_ti_sector_box.left {
+  padding-top: 20px;
+}
+.bh_c_ti_sb_item {
+  width: 35%;
+}
+.bh_c_ti_sbi_lang {
+  font-size: 14px;
+  font-weight: 900;
+}
+.bh_c_ti_sbi_last_time {
+  font-size: 14px;
+  color: #6C6A9A;
+}
+.bh_c_ti_sbi_last_time span {
+  font-size: 20px;
+  font-weight: 900;
+  display: block;
+  color: #B6B6B6;
+}
+.bh_c_team_item.bh_c_ti_sb_left .bh_c_ti_sb_left {
+  text-align: left;
+}
+.bh_c_team_item.bh_c_ti_sb_left .bh_c_ti_sector_box {
+  justify-content: flex-start;
+}
+.bh_best_lap_box {
+  width: 40%;
+  font-size: 0.8em;
+  text-align: right;
+  padding: 15px 20px;
+}
+.bh_best_lb_box {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.bh_best_lb_bestlap {
+  font-weight: 900;
+  font-size: 3.5em;
+  padding-left: 10px;
+  line-height: 3rem;
+}
+.bh_best_lb_sectors {
+  width: 60%;
+}
+.bh_best_lb_sector span {
+  font-size: 20px;
+  font-weight: 900;
+}
+.bh_best_lb_pilot {
+  font-weight: 900;
+  font-size: 14px;
+  color: #9291A0;
+}
+.bh_best_lb_sectors_timing {
+  display: flex;
+  justify-content: flex-end;
+}
+.bh_best_lb_sector {
+  width: 40%;
+}
+
+tr.progress  {
+  overflow: hidden;
+}
+tr.progress td {
+  position: relative;
+  padding: 0;
+}
+
+
+.progress .progress-line {
+  user-select: none;
+  pointer-events: none;
+  width: 100%;
+  overflow-x: hidden;
+  position: absolute;
+  z-index: 1;
+  top: -8px;
+  height: 8px;
+}
+
+.progress .progress-line * {
+  box-sizing: border-box;
+}
+
+.progress .progress-line span {
+  position: absolute;
+  left: 0;
+  width: 5%;
+  margin-left: -5%;
+  border-radius: 1px;
+  overflow-x: hidden;
+  padding: 4px 4px;
+}
+
+.progress .progress-line span:before {
+  content: "";
+  display: block;
+  left: 2px;
+  right: 4px;
+  height: 2px;
+  position: absolute;
+  background: linear-gradient(to right, rgba(255, 200, 0, 0), 66%, #ffc800);
+  border-radius: 1px;
+  transform: translateY(-50%);
+}
+.progress .progress-line span:after {
+  position: absolute;
+  content: "";
+  display: block;
+  width: 2px;
+  height: 2px;
+  right: 2px;
+  background: #fff;
+  box-shadow: 0 0 2px 2px #ffc800;
+  border-radius: 1px;
+  transform: translateY(-50%);
+}
+
+.board_table{
+width: 100%;
+max-width: 100%;
+color:#B6B6B6;
+}
+.board_table_head {
+  background: #17172d;
+      font-size: 16px;
+  color: #B6B6B6;
+  text-transform: uppercase;
+}
+
+#results .team_tr_box:nth-child(4n+3) {
+   background: #17172d;
+  position: relative;
+}
+.board_table tr.selected {
+  background: #fff0cc !important;
+}
+.board_table tr td.track_line {
+  position: relative;
+}
+.board_table tr td.track_line:after {
+  position: absolute;
+  content: '';
+  width: 20%;
+  background: #444368;
+  height: 1px;
+  bottom: 0;
+  left: 0;
+}
+.track_line {
+  position: absolute;
+  content: '';
+  width: 0%;
+  background: #444368;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+}
+.track_line:after {
+  content: '';
+  position: absolute;
+  right: 0px;
+  top: -3px;
+  display: block;
+  width: 8px;
+  height: 8px;
+  background: #17172d;
+  border-radius: 100%;
+  border:2px #444368 solid;
+}
+.center {
+  text-align: center;
+}
+.board_table tr.board_table_head td {
+  padding: 10px;
+}
+.more_team {
+  display: block;
+  border-radius: 4px;
+  background: #d2d2d2;
+  color: #000;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+}
+.board_table td {
+  padding: 15px 10px;  
+}
+.board_table td .number {
+  width: 8%;
+  height: 15px;
+  line-height: 15px;
+}
+/*
+.board_table td .pilotName {
+  display: none;
+}*/
+.show_team_pilot_name_box {
+  position: relative;
+  width: 92%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  height: 15px;
+  line-height: 15px;
+}
+.board_table td .teamName,
+.board_table td .pilotName {
+   font-size: 0.8em;
+}
+
+.empty {
+  opacity: 0.3;
+}
+
+.teamName_box {
+  padding-right: 10px;
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  max-width: 47%;
+  height: 25px;
+  line-height: 25px;
+}
+.pilotName {
+  display: inline-block;
+  position: relative;
+  overflow: hidden;
+  max-width: 47%;
+  height: 30px;
+  line-height: 30px;
+}
+/*
+.board_table td .teamName_box {
+   position: absolute;
+   top: 0;
+   height: 100%;
+   display: flex;
+   align-items: center;
+}
+*/
+/*
+.teamName {
+  display: none;
+}
+*/
+.team_td_box {
+  display:flex; 
+  align-items: center;
+}
+.pos_td {
+  width: 4%;
+}
+.team_pilot_td {
+  width: 26%;
+}
+.kart_td {
+  width: 6%;
+}
+.lastlap_td {
+  width: 11%;
+}
+.s1_td {
+  width: 6%;
+}
+.s2_td {
+  width: 6%;
+}
+.best_lap_seg_td {
+  width: 6%;
+}
+.gap_td {
+  width: 5%;
+}
+.bestlap_race_td {
+  width: 6%;
+}
+.mid_td {
+  width: 6%;
+}
+.pits_td {
+  width: 3%;
+}
+.ontrack_td {
+  width: 7%;
+}
+.laps_td {
+  width: 6%;
+}
+
+.board_table td.team_td {
+  position: relative;
+  overflow:hidden; 
+}
+.board_table tr.pit td,
+.pits_table tr.pit td  {
+  background:#48391b;
+  color: #A57E1C;
+} 
+.pits_table .number {
+  background: #bbbbbb;
+  padding: 3px 5px;
+  margin-right: 5px;
+  border-radius: 4px;
+}
+#light .board_table tr.pit td,
+#light .pits_table tr.pit td  {
+  background:#ffeac0;
+  color: #A57E1C;
+} 
+
+.totalOnTrack.pit {
+color: #A57E1C;
+}
+.bt_part_time {
+  font-size: 24px;
+   font-family: ProximaRegular;
+}
+.bt_part_time.good{
+  color: green
+}
+.bt_part_time.bad {
+  color: red;
+}
+.pit_td {
+  position: relative;
+}
+.in_pit {
+  text-transform: uppercase;
+  color: #B6B6B6;
+  position: absolute;
+  background:#B08D34;
+  font-weight: 900;
+  left: 0px;
+  top: 0;
+  width: 20px;
+  height: 100%;
+}
+.in_pit span {
+  display: block;
+  position: absolute;
+  width: 100%;
+  bottom: 50%;
+  color: #B6B6B6;
+  font-weight: 900;
+  line-height: 20px;
+  font-size: 12px;
+  transform: rotate(-90deg) translateX(-50%);
+}
+.team_in_pit .in_pit {
+  display: block;
+}
+.board_table tr.team_in_pit {
+  background: #FFF5E1;
+  color:#A57E1C;
+}
+/*=================== pitstops ===================*/
+#pits .teamName {
+  display: block;
+}
+.pits_del_window {
+  background: #252442;
+  position: fixed;
+  top: 0;
+  display: none;
+  z-index: 90;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.pits_del_window_in {
+  padding-top: 30px;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.pdw_title {
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #B6B6B6;
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+.pdw_list {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+.pdw_list_item {
+cursor: pointer;
+  display: block;
+  flex:1 1 20%;
+  height: 60px;
+  margin: 10px;
+  background: #E1E4F1;
+  line-height: 90px;
+  text-align: center;
+  border-radius: 6px;
+  line-height: 60px;
+  text-decoration: none;
+  color: #000;
+  font-size: 24px;
+  font-weight: 900;
+}
+.pdw_list_item.active {
+  background: #930909;
+  color:#B6B6B6;
+}
+.pits_head {
+  background: #252442;
+  padding: 20px;
+  color: #B6B6B6;
+display: flex;
+  justify-content: space-between;
+}
+.pits_head_top {
+  position: relative;
+  width: 50%;
+}
+.pits_head_top span {
+font-size: 2em;
+}
+.pht_time_title {
+  color: #B6B6B6;
+  line-height: 20px;
+  font-size: 14px;
+}
+
+.show_delate_pits_window {
+  display: block;
+  height: 40px;
+  margin-left: auto;
+  line-height: 40px;
+  border-radius: 4px;
+  text-decoration: none;
+  color: #B6B6B6;
+  background: #504F7B;
+  padding: 0 15px;
+}
+
+.delate_pits_bt,
+.undo_delate_pits_bt {
+  display: block;
+  text-decoration: none;
+  color: #B6B6B6;
+  height: 83px;
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  width: 500px;
+  margin-left: -250px;
+text-transform: uppercase;
+line-height: 83px;
+font-weight: 900;
+text-align: center;
+background: #930909;
+box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.25);
+border-radius: 5px;
+  padding: 0 15px;
+}
+.delate_pits_bt.disbl {
+  background: grey;
+}
+.undo_delate_pits_bt {
+  height: 63px;
+  line-height: 63px;
+  position: relative;
+  color: #6F6F6F;
+  left: auto;
+  margin:30px auto;
+  background: #E1E4F1;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  font-size: 18px;
+}
+.pht_time_in {
+  font-weight: 900;
+}
+.pht_time_out {
+  color: #5c796e;
+}
+.pits_table {
+  width: 100%;
+}
+.pits_table tr:nth-child(2n+2) {
+  background: #17172d;
+  position: relative;
+}
+.pits_table_head {
+  background: #17172d;
+  text-transform: uppercase;
+}
+.pits_table tr.pits_table_head td {
+  padding: 15px 20px;
+  font-size: 14px;
+}
+.pits_table td {
+  padding: 13px 20px;
+}
+
+.pt_links {
+  display: flex;
+  justify-content: space-between;
+}
+.pt_links a,
+.pit_bt {
+  display: block;
+   border-radius: 4px;
+   margin-left: 10px;
+  background: #504f7b;
+  color: #B6B6B6;
+  min-width: 100px;
+  padding: 10px 15px;
+  text-transform: uppercase;
+  text-decoration: none;font-size: 19px;
+  text-align: center;
+}
+.pt_links a.pt_winow_link {
+  margin-left: auto;
+}
+.pt_links .pit_bt {
+ background: #074633;
+ color: #B6B6B6;
+ padding: 10px 10px;
+ border: 0;
+}
+.pt_winow_link.push_me {
+ background: #ab3f3f;
+ color: #B6B6B6;
+}
+.start_pit_form {
+  display: inline-block;
+}
+.pt_kart {
+  width: 80px;
+}
+.pits_form select {
+  width: 100%;
+  height: 40px;
+  margin-bottom: 10px;
+}
+.pits_form label {
+
+}
+.pits_form_bt {
+   border-radius: 4px;
+  background: #17172d;
+  color: #B6B6B6;
+  font-size: 20px;
+  width: 100%;
+  border:0;
+  padding: 20px 0;
+  font-weight: 900;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+}
+.pt_select_pilot_name {
+  background: #E1E4F1;
+border-radius: 4px;
+height: 45px;
+}
+.pt_select_pilot_name option {
+  font-size: 20px;
+}
+/*=================== team ===================*/
+.team_head {
+  display: flex;
+  background: #252442;
+  color: #B6B6B6;
+  justify-content: space-between;
+}
+.th_info {
+  width: 30%;
+  background: #393855;
+  padding: 1.5em;
+}
+.th_info_pits {
+  width: 30%;
+}
+.th_name {
+  margin-bottom: 10px;
+  font-size: 18px;
+  height: 25px;
+  position: relative;
+  overflow: hidden;
+  font-weight: 900;
+}
+.th_now_on_kart {
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+.th_now_on_kart strong {
+  font-size: 15px;
+}
+.th_race_info {
+  display: flex;
+}
+.th_race_time {
+  font-size: 14px;
+  padding-right: 20px;
+}
+.th_race_time div {
+  font-size: 36px;
+  font-weight: 900;
+}
+.th_race_pos {
+  font-size: 14px;
+  font-weight: 900;
+}
+.th_race_pos span {
+  font-size: 36px;
+}
+.th_race_pos span.all_teams {
+  font-size: 20px;
+}
+.th_info_pits {
+  background: #393855;
+  padding: 30px;
+  text-align: center;
+}
+.th_ip_time {
+  font-size: 14px;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+.th_ip_time.pit,
+.totalOnTrack.pit {
+  color: #FF0000;
+}
+
+.th_ip_time div {
+  font-size: 58px;
+  font-weight: 900;
+}
+.th_ip_pits_num {
+  font-size: 14px;
+}
+.th_ip_pits_num div {
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.th_laps_and_pits {
+  background: #1B1A36;
+  
+  padding-bottom: 0;
+  color: #B6B6B6;
+  display: flex;
+  justify-content: space-between;
+}
+.th_laps_ap_time_item {
+  font-size: 14px;
+  padding: 1em;
+}
+.th_laps_ap_time_item div {
+  font-size: 30px;
+  font-weight: 900;
+}
+.th_laps_ap_onpits_item {
+  margin-left: auto;
+  width: 50%;
+      background: #393855;
+}
+.th_laps_and_pits .onboard_info_pits {
+  background: transparent;
+}
+
+.team_table {
+  width: 100%;
+}
+.strategy_info {
+  display: flex;
+  justify-content: space-between;
+}
+.segments_table {
+    width: 69%;
+}
+.pilots_table {
+    width: 30%;
+    margin-left: auto;
+}
+.team_table tr:nth-child(2n+2) {
+  background: #17172d;
+  position: relative;
+}
+.team_table_head {
+  background: #17172d;
+  text-transform: uppercase;
+}
+.team_table td {
+  padding: 6px 20px;
+}
+.team_table tr.team_table_head td {
+  padding: 15px 20px;
+}
+
+
+/**/
+.pt_kart {
+  width: 80px;
+}
+#results {
+  width: 100%;
+}
+#success_window {
+  background:#1d963c;
+  color: #B6B6B6;
+  padding: 20px 30px;
+  font-size: 18px;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  box-shadow: 1px 1px 15px #000;
+  display: none;
+  left: 0;
+}
+
+.wow_class {
+  animation-name: color_change;
+  animation-duration: 1s;
+}
+.bad {
+  animation-name: color_change_bad;
+  animation-duration: 1s;
+}
+.good {
+  animation-name: color_change_good;
+  animation-duration: 1s;
+}
+@keyframes color_change {
+  to { color: #aeb12d; }
+}
+
+@keyframes color_change_good {
+from { color: #009600; }
+ to { color: #fff; }
+}
+
+@keyframes color_change_bad {
+from { color: #b70000; }
+ to { color: #fff; }
+}
+
+
+/*color themes*/
+body#light {
+  background: #F2F3F7;
+  color: #282727;
+}
+#light .board_table_head,
+#light .pits_table_head {
+  background: #F2F3F7;
+  color: #282727;
+}
+#light .board_table,
+#light .pits_table {
+ color: #282727;
+}
+#light #results .team_tr_box:nth-child(4n+3),
+#light .pits_table tr:nth-child(2n+2) {
+  background: #F2F3F7;
+}
+#light #board_table_box,
+#light .pits_table {
+  background: #fff;
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+}
+#light .board_head {
+  color: #fff;
+}
+#light .pt_links a,
+#light .pit_bt {
+  color: #282727;
+      background: #c7c7c7;
+}
+/* ================================== mobile ===========================*/
+@media only screen and (max-width: 1100px) {
+#board_table_box {
+    max-width: 100%;
+    position: relative;
+    overflow: scroll;
+    padding-bottom: 10px;
+  }
+  .board_table td {
+    padding: 10px 5px;
+    font-size:0.8em;
+  }
+  .board_table tr.board_table_head td,
+  .pits_table tr.pits_table_head td {
+    padding: 10px 0;
+    font-size:0.8em;
+  }
+  .pits_table td {
+     padding: 10px 5px;
+  }
+    .pt_links a, .pit_bt {
+    font-size: 14px;
+  }
+  .in_pit span {
+    font-size: 8px;
+    bottom: 4px;
+  }
+  .in_pit {
+    width: 12px;
+  }
+
+  #onboard_marafon .oib_ri_part {
+    padding: 10px;
+  }
+  .bh_best_lb_bestlap {
+    font-size: 1.5rem;
+    line-height: 1.2rem;
+  }
+  .bh_best_lap_box {
+    width: 40%;
+  }
+
+  .bh_best_lb_sector span {
+    font-size: 0.8rem;
+  }
+  .onbord_lang_time {
+    font-size: 3rem;
+  }
+  .oip_name {
+    left: -14px;
+  }
+  .onbord_last_time {
+    font-size: 7rem;
+  }
+  .oci_lang {
+    font-size: 2rem;
+  }
+  .oci_time {
+    font-size: 3rem;
+  }
+  .mml_col a {
+    font-size: 1rem;
+  }
+
+  #onboard_marafon .oib_ri_position .oib_ri_item_title {
+    padding-right: 5px;
+  }
+
+  .bh_best_lap_box,
+  .bh_race_time_box {
+    font-size: 0.4em;
+    display: block;
+  }
+  .bh_best_lb_pilot {
+    font-size: 12px;
+  }
+  .bh_race_time_box,
+  .bh_best_lap_box {
+    padding: 5px;
+  }
+
+ 
+
+  .oib_item_title,
+  #onboard_marafon .oib_ri_position .oib_ri_item_title {
+    font-size: 0.8rem;
+  }
+  .oib_ri_time,
+  .oib_item_time {
+    font-size: 1rem;
+        line-height: 31px;
+  }
+  .oib_item_time {
+    font-size: 135%;
+  }
+  .oib_ri_position,
+  .oib_ri_bytime {
+    padding: 10px;
+  }
+
+  .oib_ri_time {
+        line-height: 2rem;
+       font-size: 115%;
+  }
+  .onboard_position {
+    font-size: 5rem;
+  }
+  .oip_name {
+    font-size: 13px;
+  }
+    .oib_times {
+    padding: 10px;
+    padding-bottom: 0;
+  }
+  .oib_pilot_item {
+    padding-bottom: 0;
+  }
+}
+
+
+@media only screen and (max-width: 800px) {
+  .progress .progress-line span {
+    position: absolute;
+    user-select: none;
+    pointer-events: none;
+    left: 0;
+    width: 5%;
+    border-radius: 1px;
+    overflow-x: hidden;
+    padding: 3px 3px;
+  }
+
+  .progress .progress-line {
+    top: -6px;
+    height: 6px;
+  }
+
+  .progress .progress-line span:before {
+    right: 3px;
+    height: 1px;
+    transform: translateY(-2px);
+  }
+  .progress .progress-line span:after {
+    width: 1px;
+    height: 1px;
+    background: #fff;
+    box-shadow: 0 0 1px 1px #ffc800;
+    transform: translateY(-2px);
+  }
+
+  .pits_table td {
+    font-size: 12px;
+  }
+  .show_delate_pits_window {
+    display: none;
+  }
+  .pits_head_top span {
+    font-size: 1rem;
+  }
+  .pits_head {
+    padding: 5px;
+  }
+  .pt_links {
+    display: block;
+  }
+  .pt_kart {
+    width: auto;
+  }
+  .pt_links a, .pit_bt,
+  .show_delate_pits_window {
+    font-size: 9px;
+    padding: 5px;
+  }
+  .pt_links a, .pit_bt {
+    margin-left: 0;
+    margin-bottom: 3px;
+  }
+  .pt_links a {
+    display: none;
+  }
+  .pt_links a.pt_winow_link {
+    display: block;
+  }
+  .show_delate_pits_window {
+    line-height: 36px;
+    height: 45px;
+  }
+  .in_pit span {
+
+    bottom: 0px;
+  }
+  .bh_race_time {
+        font-size: 2em;
+  }
+  .bh_best_lb_pilot {
+    font-size: 8px;
+  }
+  .bh_race_time_box {
+    display: flex;
+    align-items: center;
+  }
+  .bh_best_lb_bestlap {
+    font-size: 1rem;
+  }
+  .bh_best_lb_sector span {
+    font-size: 0.6rem;
+  }
+  .onbord_lang_time {
+    font-size: 3rem;
+  }
+  .board_head_title {
+    display: none;
+  }
+  .board_table td {
+    padding: 5px;
+    font-size:0.6em;
+  }
+  .board_table tr.board_table_head td,
+  .pits_table tr.pits_table_head td {
+    padding: 2px 0;
+    font-size:0.5em;
+  }
+  .pits_table tr.pits_table_head td {
+    padding: 8px 0;
+  }
+   /**/
+   .bh_best_lap_box {
+    width: 50%;
+   }
+  #menu_icon {
+    width: 40px;
+    height: 40px;
+  }
+  #menu_icon span {
+    height: 6px;
+  }
+  #menu_icon span:nth-child(3) {
+    transform: translateY(8px);
+  }
+  #menu_icon span:nth-child(1) {
+    transform: translateY(-8px);
+  }
+
+  .mml_kart_list {
+    width: 40px;
+    height: 40px;
+    top: 43px;
+    border:0;
+  }
+  .oib_times {
+    padding: 0px;
+  }
+  .oib_pilot_item {
+   padding: 10px 10px 0 10px;
+  }
+.oib_ri_time,
+#onboard_marafon .oib_ri_position .oib_ri_time {
+       line-height: 2.2rem;
+    font-size: 150%;
+  }
+  .oib_item_time {
+        line-height: 35px;
+        font-size: 160%;
+  }
+.oib_race_info {
+  padding: 20px 0;
+}
+  /**/
+  #team {
+    padding-bottom: 150px;
+  }
+
+  .th_laps_ap_onpits_item {
+    position: fixed;
+    width: 100%;
+    left: 0;
+    bottom: 0;
+  }
+  .team_head {
+    display: block;
+  }
+  .th_info {
+    width: 100%;
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .bh_comparison,
+  .pilots_table,
+  .segments_table {
+    width: 100%;
+  }
+  #team .onboard_info_pits {
+    height: 60px;
+    padding-right: 55px;
+  }
+  .th_info_pits {
+    width: 100%;
+    position: fixed;
+    bottom: 60px;
+    left: 0;
+    text-align: left;
+    padding: 10px 10px 0px 10px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .th_ip_time div {
+    font-size: 2rem;
+  }
+  .th_name {
+    display: none;
+  }
+  .strategy_info {
+    display: block;
+  }
+  .team_table {
+    font-size: 14px;
+  }
+  .team_table tr.team_table_head td {
+    padding: 5px;
+  }
+  .th_laps_ap_time_item {
+    padding-right: 0;
+  }
+  .th_laps_and_pits {
+        flex-wrap: wrap;
+        padding: 5px;
+        border-bottom: 10px #b6b6b6 solid;
+  }
+  .th_race_time div,
+  .th_race_pos span {
+    font-size: 25px;
+  }
+  .segments_table {
+    border-bottom: 10px #b6b6b6 solid;
+  }
+  .th_ip_time {
+    margin-bottom: 0;
+  }
+  .oib_ri_time.lapCount {
+    line-height: 2.6rem;
+    font-size: 300%;
+
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .bh_race_time {
+        font-size: 2em;
+  }
+  .bh_best_lb_pilot {
+    font-size: 8px;
+  }
+  .bh_race_time_box {
+    display: flex;
+    align-items: center;
+  }
+  .bh_best_lb_bestlap {
+    font-size: 1rem;
+  }
+  .bh_best_lb_sector span {
+    font-size: 0.6rem;
+  }
+  .onbord_lang_time {
+    font-size: 3rem;
+  }
+  .board_head_title {
+    display: none;
+  }
+  .board_table td {
+    padding: 5px;
+    font-size:0.6em;
+  }
+  .th_ip_time div {
+    font-size: 2rem;
+  }
+  .team_table {
+    font-size: 14px;
+  }
+  .board_table tr.board_table_head td,
+  .pits_table tr.pits_table_head td {
+    padding: 5px;
+    font-size:0.5em;
+  }
+  .th_race_time div,
+  .th_race_pos span {
+    font-size: 25px;
+  }
+
+   .oib_item_time {
+        line-height: 23px;
+        font-size: 115%;
+  }
+  
+  .oib_times {
+    padding: 0px;
+  }
+  .oib_pilot_item {
+   padding: 10px 10px 0 10px;
+  }
+
+
+}
+
+#results tr.team_tr_box td {
+  transition: color 0.5s, background-color 0.5s;
+}
+
+#results tr.team_tr_box.updated td {
+  background: rgba(0, 255, 0, 0.5);
+  color: #000;
+}
+
+td.green {
+  color: #0B0;
+}
+td.warning {
+  color: #B70;
+}
+td.red {
+  color: #B00;
+}
+td.pink {
+  color: #B0B;
+}
