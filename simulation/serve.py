@@ -17,7 +17,7 @@ for s in SAMPLES_PATH.iterdir():
 
 def get_sample():
     if len(sys.argv) > 1 and sys.argv[1] == 'single':
-        return json.load(open('sample.json'))
+        return json.load(open('sample2.json'))
     else:
         return random.choice(SAMPLES)[1]
 

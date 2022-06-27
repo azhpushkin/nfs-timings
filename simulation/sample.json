@@ -65,7 +65,7 @@
         "compLag": "0.0",
         "teams": [
             {
-                "pilotName": "\u0414\u0430\u043d\u0438\u043b\u043e",
+                "pilotName": "SomePilto",
                 "lag": "0",
                 "timeFromLassPassing": "6733",
                 "endLap": false,
@@ -93,7 +93,7 @@
                 "secondsFromPit": "616",
                 "isOnPit": false,
                 "isRaketa": true,
-                "number": "6",
+                "number": "123",
                 "pitstops": "0",
                 "kart": "0",
                 "lastPitMainTime": "0",

@@ -203,6 +203,7 @@
 				tr.classList[isOnPit ? 'add' : 'remove']('pit');
 
 				// new passing
+				
 				if ( prev.laps[id] !== (started ? lapCount : null)) {
 					log(`POS ${position}`, 'good', 'debug');
 					const laps = lapCount * 1;
@@ -210,6 +211,7 @@
 					const percentLap = Math.min(Math.max(timeFromLassPassing / 1000 / lap , 0), 1);
 					const div = document.createElement('div');
 
+					log('##########', 'good', 'debug');
 					if (started && timeFromLassPassing < 3000) {
 						tr.classList.add('updated');
 						setTimeout(() => {
