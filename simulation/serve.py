@@ -2,6 +2,8 @@ from http import server
 import json
 import pathlib
 import random
+import sys
+
 
 SAMPLES_PATH = pathlib.Path(__file__).parent.resolve().parent / 'samples'
 print('Loading samples from ', SAMPLES_PATH)
@@ -13,12 +15,19 @@ for s in SAMPLES_PATH.iterdir():
     SAMPLES.append((s.name, contents))
 
 
+def get_sample():
+    if len(sys.argv) > 1 and sys.argv[1] == 'single':
+        return json.load(open('sample.json'))
+    else:
+        return random.choice(SAMPLES)[1]
+
 
 class CustomHTTPHandler(server.SimpleHTTPRequestHandler):
     def do_GET(self) -> None:
         print(self.path, self.path == '/getmaininfo.json')
         if self.path == '/getmaininfo.json':
-            data = json.dumps(random.choice(SAMPLES)[1])
+
+            data = json.dumps(get_sample())
             self.send_response(code=200)
             self.send_header(keyword='Content-type', value='application/json')
             self.end_headers()
