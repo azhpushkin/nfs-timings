@@ -1,18 +1,15 @@
-import select
-import json
+import requests
+import traceback
+import time
 
-from database.tables import engine
-
-sa_connection = engine.connect().execution_options(isolation_level="AUTOCOMMIT")
-sa_connection.execute("LISTEN job_updates")
-
-
-raw_connection = sa_connection.connection
 while True:
-    if select.select([raw_connection], [], [], 5) == ([], [], []):
-        print("Timeout")
+    try:
+        response = requests.get('https://nfs-stats.herokuapp2.com/getmaininfo.json')
+    except Exception as e:
+        print(e)
     else:
-        raw_connection.poll()
-        while raw_connection.notifies:
-            notify = raw_connection.notifies.pop(0)
-            print("Got NOTIFY:", notify.channel, json.loads(notify.payload))
+        print(response)
+
+    time.sleep(1)
+
+

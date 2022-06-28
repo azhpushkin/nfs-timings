@@ -12,3 +12,6 @@ simone:
 
 black:
 	python -m black .
+
+i:
+	python -m IPython  # easier to deal with venv
