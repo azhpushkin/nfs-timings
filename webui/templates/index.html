@@ -1,10 +1,5 @@
-<html>
-<head>
-    <title>Kart stats</title>
-    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
-</head>
-<body>
-    Index page!
+{% extends "base.html" %}
+{% block body %}
+    Index page!<br>
     Go to jobs: <a href="/jobs">click here</a>
-</body>
-</html>
+{% endblock %}

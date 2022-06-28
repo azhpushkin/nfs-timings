@@ -1,9 +1,7 @@
-<html>
-<head>
-    <title>Item Details</title>
-    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
-</head>
-<body>
+
+
+{% extends "base.html" %}
+{% block body %}
     Jobs launched:<br>
     {% for job in jobs %}
         <div class="job">
@@ -12,5 +10,4 @@
             Queries {{job.url}}<br>
         </div>
     {% endfor %}
-</body>
-</html>
+{% endblock %}
