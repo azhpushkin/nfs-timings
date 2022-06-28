@@ -4,3 +4,5 @@ SQLAlchemy==1.4.39
 pydantic==1.9.1
 python-dotenv==0.20.0
 uvicorn==0.18.2
+black==22.6.0
+ipython==8.4.0
