@@ -1,3 +1,10 @@
-body {
-    color: red;
+.job {
+    border: 1px solid gray;
+    border-radius: 3px;
+    padding: 5px;
+    display: inline-block;
+}
+
+.job:hover {
+    background-color: #cccccc;
 }

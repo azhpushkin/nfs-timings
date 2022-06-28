@@ -4,6 +4,13 @@
     <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
 </head>
 <body>
-    <h1>Jobs here!</h1>
+    Jobs launched:<br>
+    {% for job in jobs %}
+        <div class="job">
+            Job # {{job.id}}<br>
+            Created at {{job.created_at}}<br>
+            Queries {{job.url}}<br>
+        </div>
+    {% endfor %}
 </body>
 </html>
