@@ -6,7 +6,7 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-import tables
+from database.tables import Job as JobTable
 
 
 class CreateJob(BaseModel):
@@ -23,14 +23,11 @@ class Job(BaseModel):
 
 
 def get_jobs(db: Session) -> List[Job]:
-    return db.query(tables.Job).order_by(tables.Job.created_at.desc())
+    return db.query(JobTable).order_by(JobTable.created_at.desc())
 
 
 def create_new_job(db: Session, job: CreateJob) -> Job:
-    new_job = tables.Job(
-        created_at=datetime.now(),
-        url=job.url
-    )
+    new_job = JobTable(created_at=datetime.now(), url=job.url)
     db.add(new_job)
     db.commit()
     db.refresh(new_job)

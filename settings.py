@@ -1,4 +1,8 @@
 from pydantic import BaseSettings
+import pathlib
+
+ROOT = pathlib.Path(__file__).parent.resolve()
+WEBUI_ROOT = ROOT / "webui"
 
 
 class Settings(BaseSettings):

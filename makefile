@@ -1,5 +1,5 @@
 run:
-	cd app && python -m uvicorn main:app --reload
+	python -m uvicorn webui.main:app --reload
 
 sim:
 	cd simulation && python serve.py
@@ -7,7 +7,5 @@ sim:
 simone:
 	cd simulation && python serve.py single
 
-
-
 black:
-	python -m black app
+	python -m black .

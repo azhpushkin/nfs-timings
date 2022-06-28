@@ -3,7 +3,7 @@ import requests
 import json
 
 
-URL = 'https://nfs-stats.herokuapp.com/getmaininfo.json'
+URL = "https://nfs-stats.herokuapp.com/getmaininfo.json"
 
 
 while True:
@@ -11,8 +11,7 @@ while True:
     t = round(time.time())
     r = requests.get(URL)
     data = r.json()
-    f = open(f'new-samples/{t}.json', 'w')
+    f = open(f"new-samples/{t}.json", "w")
     json.dump(data, f)
     f.close()
-    print(f'Wrote new-samples/{t}.json')
-    
+    print(f"Wrote new-samples/{t}.json")

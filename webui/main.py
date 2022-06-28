@@ -4,8 +4,9 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
-import jobs
-from tables import SessionLocal
+from webui import jobs
+from database.tables import SessionLocal
+from settings import WEBUI_ROOT
 
 app = FastAPI()
 
@@ -18,10 +19,11 @@ def get_db():
     finally:
         db.close()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+
+app.mount("/static", StaticFiles(directory=WEBUI_ROOT / "static"), name="static")
 
 
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory=WEBUI_ROOT / "templates")
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -32,4 +34,6 @@ async def index(request: Request):
 @app.get("/jobs", response_class=HTMLResponse)
 async def get_jobs(request: Request, db: Session = Depends(get_db)):
     all_jobs = jobs.get_jobs(db)
-    return templates.TemplateResponse("jobs.html", {"request": request, 'jobs': all_jobs})
+    return templates.TemplateResponse(
+        "jobs.html", {"request": request, "jobs": all_jobs}
+    )
