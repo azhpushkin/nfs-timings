@@ -1,4 +1,7 @@
+from typing import List
+
 import sqlalchemy as sa
+from sqlalchemy.orm import Session
 
 from database.base import Base
 
@@ -13,3 +16,7 @@ class NFSRequest(Base):
 
     response = sa.Column(sa.Text)
     response_json = sa.Column(sa.JSON)
+
+
+def get_requests_for_job(db: Session, job_id: int) -> List[NFSRequest]:
+    return db.query(NFSRequest).where(NFSRequest.job_id == job_id).order_by(NFSRequest.created_at.desc()).limit(20)

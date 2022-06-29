@@ -27,11 +27,12 @@ def get_jobs(request: Request, db: Session = Depends(get_db)):
 @jobs_router.get("/jobs/{job_id}", response_class=HTMLResponse)
 def get_single_job(request: Request, job_id: int, db: Session = Depends(get_db)):
     job = database.jobs.get_single_job(db, job_id)
+    job_requests = database.nfs_requests.get_requests_for_job(db, job_id)
     if not job:
         raise HTTPException(status_code=404, detail="Job not found")
 
     return templates.TemplateResponse(
-        "jobs_detail.html", {"request": request, "job": job}
+        "jobs_detail.html", {"request": request, "job": job, 'requests': job_requests}
     )
 
 
