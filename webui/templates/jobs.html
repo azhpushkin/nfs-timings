@@ -1,13 +1,28 @@
 
 
+
 {% extends "base.html" %}
 {% block body %}
-    Jobs launched:<br>
+    <h4>List of jobs:</h4>
+    <div class="row">
+    <div class="list-group">
     {% for job in jobs %}
-        <div class="job">
-            Job # {{job.id}}<br>
-            Created at {{job.created_at}}<br>
-            Queries {{job.url}}<br>
-        </div>
+<a href="#" class="list-group-item d-flex list-group-item-action align-items-center">
+<div class="ms-2 me-auto">
+      <div class="fw-bold">Job # {{job.id}}</div>
+{{job.url}}<br>
+Created at {{job.created_at.strftime('%H:%M, %d %b %Y')}}
+    </div>
+    {% if job.is_running %}
+        <span class="badge bg-success rounded-pill">RUNNING</span>
+    {% else %}
+<span class="badge bg-danger rounded-pill">STOPPED</span>
+    {% endif %}
+</a>
+
+
     {% endfor %}
+    </div>
+    </div>
 {% endblock %}
+
