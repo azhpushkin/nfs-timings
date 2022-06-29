@@ -6,8 +6,8 @@ from sqlalchemy.orm import Session
 from fastapi import FastAPI, Form
 
 
-from webui import jobs
-from database.tables import SessionLocal
+from database.base import SessionLocal
+import database
 from settings import WEBUI_ROOT
 
 app = FastAPI()
@@ -35,7 +35,7 @@ def index(request: Request):
 
 @app.get("/jobs", response_class=HTMLResponse)
 def get_jobs(request: Request, db: Session = Depends(get_db)):
-    all_jobs = jobs.get_jobs(db)
+    all_jobs = database.jobs.get_jobs(db)
     return templates.TemplateResponse(
         "jobs_list.html", {"request": request, "jobs": all_jobs}
     )
@@ -43,7 +43,7 @@ def get_jobs(request: Request, db: Session = Depends(get_db)):
 
 @app.get("/jobs/{job_id}", response_class=HTMLResponse)
 def get_single_job(request: Request, job_id: int, db: Session = Depends(get_db)):
-    job = jobs.get_single_job(db, job_id)
+    job = database.jobs.get_single_job(db, job_id)
     return templates.TemplateResponse(
         "jobs_detail.html", {"request": request, "job": job}
     )
@@ -51,7 +51,7 @@ def get_single_job(request: Request, job_id: int, db: Session = Depends(get_db))
 
 @app.post("/jobs")
 def add_new_job(request: Request, job_url: str = Form(), db: Session = Depends(get_db)):
-    job = jobs.create_new_job(db, job_url)
+    job = database.jobs.create_new_job(db, job_url)
     return templates.TemplateResponse(
         "jobs_detail.html", {"request": request, "job": job}
     )
