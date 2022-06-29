@@ -4,11 +4,11 @@
 {% extends "base.html" %}
 {% block body %}
     <h4>List of jobs:</h4>
-    <div class="row">
+
     <div class="list-group">
     {% for job in jobs %}
-<a href="#" class="list-group-item d-flex list-group-item-action align-items-center">
-<div class="ms-2 me-auto">
+<a href="/jobs/{{ job.id }}" class="list-group-item d-flex list-group-item-action align-items-center">
+<div class="me-auto">
       <div class="fw-bold">Job # {{job.id}}</div>
 {{job.url}}<br>
 Created at {{job.created_at.strftime('%H:%M, %d %b %Y')}}
@@ -23,6 +23,6 @@ Created at {{job.created_at.strftime('%H:%M, %d %b %Y')}}
 
     {% endfor %}
     </div>
-    </div>
+
 {% endblock %}
 

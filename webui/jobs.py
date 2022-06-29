@@ -26,6 +26,10 @@ def get_jobs(db: Session) -> List[Job]:
     return db.query(JobTable).order_by(JobTable.created_at.desc())
 
 
+def get_single_job(db: Session, job_id: int) -> List[Job]:
+    return db.query(JobTable).where(JobTable.id == job_id).first()
+
+
 def create_new_job(db: Session, job: CreateJob) -> Job:
     new_job = JobTable(created_at=datetime.now(), url=job.url)
     db.add(new_job)

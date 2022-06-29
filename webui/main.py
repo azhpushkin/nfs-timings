@@ -27,13 +27,21 @@ templates = Jinja2Templates(directory=WEBUI_ROOT / "templates")
 
 
 @app.get("/", response_class=HTMLResponse)
-async def index(request: Request):
+def index(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.get("/jobs", response_class=HTMLResponse)
-async def get_jobs(request: Request, db: Session = Depends(get_db)):
+def get_jobs(request: Request, db: Session = Depends(get_db)):
     all_jobs = jobs.get_jobs(db)
     return templates.TemplateResponse(
-        "jobs.html", {"request": request, "jobs": all_jobs}
+        "jobs_list.html", {"request": request, "jobs": all_jobs}
+    )
+
+
+@app.get("/jobs/{job_id}", response_class=HTMLResponse)
+def get_jobs(request: Request, job_id: int, db: Session = Depends(get_db)):
+    job = jobs.get_single_job(db, job_id)
+    return templates.TemplateResponse(
+        "jobs_detail.html", {"request": request, "job": job}
     )

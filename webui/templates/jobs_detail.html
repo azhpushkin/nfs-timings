@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block body %}
+    <h3>Job # {{ job.id }}</h3>
+    <a href="http://{{job.url}}">{{job.url}}</a><br>
+    Created at {{job.created_at.strftime('%H:%M, %d %b %Y')}}<br>
+    <hr class="my-2">
+    <h6>Requests of the job:</h6>
+
+    <ul class="list-group">
+      <li class="list-group-item list-group-item-success">{{job.created_at.strftime('%H:%M, %d %b %Y')}}</li>
+      <li class="list-group-item list-group-item-success">{{job.created_at.strftime('%H:%M, %d %b %Y')}}</li>
+      <li class="list-group-item list-group-item-danger">{{job.created_at.strftime('%H:%M, %d %b %Y')}}</li>
+      <li class="list-group-item list-group-item-success">{{job.created_at.strftime('%H:%M, %d %b %Y')}}</li>
+      <li class="list-group-item list-group-item-success">{{job.created_at.strftime('%H:%M, %d %b %Y')}}</li>
+    </ul>
+
+{% endblock %}
+
