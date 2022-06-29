@@ -9,10 +9,6 @@ from pydantic import BaseModel
 from database.tables import Job as JobTable
 
 
-class CreateJob(BaseModel):
-    url: str
-
-
 class Job(BaseModel):
     id: int
     url: str
@@ -30,8 +26,8 @@ def get_single_job(db: Session, job_id: int) -> List[Job]:
     return db.query(JobTable).where(JobTable.id == job_id).first()
 
 
-def create_new_job(db: Session, job: CreateJob) -> Job:
-    new_job = JobTable(created_at=datetime.now(), url=job.url)
+def create_new_job(db: Session, job_url: str) -> Job:
+    new_job = JobTable(created_at=datetime.now(), url=job_url)
     db.add(new_job)
     db.commit()
     db.refresh(new_job)

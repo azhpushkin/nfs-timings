@@ -1,9 +1,20 @@
 {% extends "base.html" %}
 {% block body %}
     <h3>Job # {{ job.id }}</h3>
-    <a href="http://{{job.url}}">{{job.url}}</a><br>
+    <a href="{{job.url}}">{{job.url}}</a><br>
     Created at {{job.created_at.strftime('%H:%M, %d %b %Y')}}<br>
-    <hr class="my-2">
+    {% if not job.is_running %}
+    <hr class="">
+        <form class="" method="post">
+        <input type="url" class="form-control" id="job_url"
+               value="https://nfs-stats.herokuapp.com/getmaininfo.json"
+               name="job_url"
+                hidden>
+            <button type="submit" class="btn btn-warning mb-3">Start this job again</button>
+        </form>
+    {% endif %}
+
+    <hr class="mt-0 mb-2">
     <h6>Requests of the job:</h6>
 
     <ul class="list-group">

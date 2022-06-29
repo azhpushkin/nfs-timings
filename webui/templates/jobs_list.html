@@ -3,25 +3,40 @@
 
 {% extends "base.html" %}
 {% block body %}
-    <h4>List of jobs:</h4>
+    <form class="mb-3" method="post">
+        <h5>Add new job for url:</h5>
+
+        <div class="mb-2">
+        <input type="url" class="form-control" id="job_url"
+               value="https://nfs-stats.herokuapp.com/getmaininfo.json"
+               name="job_url">
+            </div>
+        <div class="mb-3">
+           <button type="submit" class="btn btn-primary mb-3">Schedule job</button>
+        </div>
+
+    </form>
+    <hr>
+
+    <h5>List of jobs:</h5>
 
     <div class="list-group">
-    {% for job in jobs %}
-<a href="/jobs/{{ job.id }}" class="list-group-item d-flex list-group-item-action align-items-center">
-<div class="me-auto">
-      <div class="fw-bold">Job # {{job.id}}</div>
-{{job.url}}<br>
-Created at {{job.created_at.strftime('%H:%M, %d %b %Y')}}
-    </div>
-    {% if job.is_running %}
-        <span class="badge bg-success rounded-pill">RUNNING</span>
-    {% else %}
-<span class="badge bg-danger rounded-pill">STOPPED</span>
-    {% endif %}
-</a>
+        {% for job in jobs %}
+            <a href="/jobs/{{ job.id }}" class="list-group-item d-flex list-group-item-action align-items-center">
+                <div class="me-auto">
+                    <div class="fw-bold">Job # {{ job.id }}</div>
+                    {{ job.url }}<br>
+                    Created at {{ job.created_at.strftime('%H:%M, %d %b %Y') }}
+                </div>
+                {% if job.is_running %}
+                    <span class="badge bg-success rounded-pill">RUNNING</span>
+                {% else %}
+                    <span class="badge bg-danger rounded-pill">STOPPED</span>
+                {% endif %}
+            </a>
 
 
-    {% endfor %}
+        {% endfor %}
     </div>
 
 {% endblock %}
