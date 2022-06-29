@@ -7,11 +7,15 @@ from fastapi import FastAPI, Form
 from starlette.responses import RedirectResponse
 
 from database.base import SessionLocal
+from rq import Queue
 import database
 from settings import WEBUI_ROOT
 
+from worker.worker import  start_job_worker
+
 app = FastAPI()
 default_job_url = "https://nfs-stats.herokuapp.com/getmaininfo.json"
+queue = Queue(connection=database.redis_conn)
 
 
 # Dependency
@@ -65,6 +69,7 @@ def add_new_job(request: Request, job_url: str = Form(), db: Session = Depends(g
             "jobs": database.jobs.get_jobs(db),
         }
     else:
+        queue.enqueue(start_job_worker, job.id)
         template = "jobs_detail.html"
         context = {"job": job}
     return templates.TemplateResponse(template, {"request": request, **context})
