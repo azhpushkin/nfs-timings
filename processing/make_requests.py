@@ -11,10 +11,10 @@ session = SessionLocal()
 
 
 def start_job_worker(job_id: int):
-    print(f'Starting worker for job {job_id}')
+    print(f"Starting worker for job {job_id}")
     job = jobs.get_single_job(session, job_id)
     while True:
-        print(f'[{job_id}] Requesting {job.url}')
+        print(f"[{job_id}] Requesting {job.url}")
         try:
             response = requests.get(job.url)
         except Exception as e:
