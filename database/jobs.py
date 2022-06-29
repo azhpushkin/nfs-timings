@@ -32,7 +32,7 @@ def create_new_job(db: Session, job_url: str) -> Optional[Job]:
         # Only one currently running might be present
         return None
 
-    new_job = Job(created_at=datetime.now(), url=job_url)
+    new_job = Job(created_at=datetime.now(), url=job_url, is_running=True)
     db.add(new_job)
     db.commit()
     db.refresh(new_job)

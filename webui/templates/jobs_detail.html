@@ -1,20 +1,24 @@
 {% extends "base.html" %}
 {% block body %}
     <h3>Job # {{ job.id }}</h3>
+    {% if job.is_running %}
+    <span class="badge bg-success">Running</span>
+    {% else %}
+    <span class="badge bg-danger">Stopped</span>
+    {% endif %}
+    <br>
     <a href="{{job.url}}">{{job.url}}</a><br>
     Created at {{job.created_at.strftime('%H:%M, %d %b %Y')}}<br>
-    {% if not job.is_running %}
-    <hr class="">
-        <form class="" method="post">
-        <input type="url" class="form-control" id="job_url"
-               value="https://nfs-stats.herokuapp.com/getmaininfo.json"
-               name="job_url"
-                hidden>
-            <button type="submit" class="btn btn-warning mb-3">Start this job again</button>
+
+    {% if job.is_running %}
+    <hr>
+        <form method="post" action="/jobs/{{ job.id }}/delete">
+            <button type="submit" class="btn btn-danger">Stop this job</button>
         </form>
+
     {% endif %}
 
-    <hr class="mt-0 mb-2">
+    <hr>
     <h6>Requests of the job:</h6>
 
     <ul class="list-group">

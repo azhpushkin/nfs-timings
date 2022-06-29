@@ -7,7 +7,7 @@ WEBUI_ROOT = ROOT / "webui"
 
 class Settings(BaseSettings):
     database_url: str = "postgresql://localhost:5432/nfs"
-    redis_url: str = 'redis://localhost:6379/0'
+    redis_url: str = "redis://localhost:6379/0"
 
     class Config:
         env_file = ".env"

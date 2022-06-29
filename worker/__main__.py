@@ -21,7 +21,7 @@ def start_job_worker(job_id: int):
                 status=0,
                 job_id=job.id,
                 response=traceback.format_exc(),
-                response_json={}
+                response_json={},
             )
         else:
             nfs_request = nfs_requests.NFSRequest(
@@ -29,7 +29,7 @@ def start_job_worker(job_id: int):
                 status=response.status_code,
                 job_id=job.id,
                 response=traceback.format_exc(),
-                response_json=response.json()
+                response_json=response.json(),
             )
 
         session.add(nfs_request)
