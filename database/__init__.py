@@ -1,3 +1,4 @@
 from . import jobs
-from . import requests
+from . import nfs_requests
 from . import base
+from .redis import redis_conn

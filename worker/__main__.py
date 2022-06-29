@@ -1,26 +1,38 @@
-import requests
-import traceback
 import time
+import traceback
+from datetime import datetime
 
+import requests
 
-from redis import Redis
-from rq import Queue
-
-import database
+from database import jobs, nfs_requests
 from database.base import SessionLocal
 
-queue = Queue(connection=Redis())
 session = SessionLocal()
 
 
 def start_job_worker(job_id: int):
-    job = database.jobs.get_single_job(session, job_id)
+    job = jobs.get_single_job(session, job_id)
     while True:
         try:
-            response = requests.get("https://nfs-stats.herokuapp.com/getmaininfo.json")
+            response = requests.get(job.url)
         except Exception as e:
-            print(e)
+            nfs_request = nfs_requests.NFSRequest(
+                created_at=datetime.now(),
+                status=0,
+                job_id=job.id,
+                response=traceback.format_exc(),
+                response_json={}
+            )
         else:
-            print(response)
+            nfs_request = nfs_requests.NFSRequest(
+                created_at=datetime.now(),
+                status=response.status_code,
+                job_id=job.id,
+                response=traceback.format_exc(),
+                response_json=response.json()
+            )
 
-        time.sleep(1)
+        session.add(nfs_request)
+        session.commit()
+        session.refresh(nfs_request)
+        time.sleep(4)

@@ -3,7 +3,7 @@ import sqlalchemy as sa
 from database.base import Base
 
 
-class Request(Base):
+class NFSRequest(Base):
     __tablename__ = "requests"
 
     id = sa.Column(sa.Integer, primary_key=True)
