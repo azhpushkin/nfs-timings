@@ -19,7 +19,7 @@ class Job(BaseModel):
 
 
 def get_jobs(db: Session) -> List[Job]:
-    return db.query(JobTable).order_by(JobTable.created_at.desc())
+    return db.query(JobTable).order_by(JobTable.created_at.desc()).limit(10)
 
 
 def get_single_job(db: Session, job_id: int) -> List[Job]:
