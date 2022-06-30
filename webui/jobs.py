@@ -1,3 +1,5 @@
+import json
+
 from fastapi import Form
 from fastapi import Request, Depends, HTTPException, APIRouter
 from fastapi.responses import HTMLResponse
@@ -63,3 +65,23 @@ def delete_job(request: Request, job_id: int, db: Session = Depends(get_db)):
     db.commit()
 
     return RedirectResponse(f"/jobs/{job.id}", status_code=302)
+
+
+@jobs_router.get("/requests/{request_id}", response_class=HTMLResponse)
+def get_request_details(request: Request, request_id: int, db: Session = Depends(get_db)):
+    nfs_request = database.nfs_requests.get_single_request(db, request_id)
+    if not nfs_request:
+        raise HTTPException(status_code=404, detail="Request not found")
+
+    if nfs_request.response_json:
+        nfs_request.response_json['onTablo'].pop('teams2', None)
+        nfs_request.response_json.pop('onBoard', None)
+        nfs_request.pretty_json = json.dumps(nfs_request.response_json, indent=4)
+    else:
+        nfs_request.pretty_json = 'NO JSON RETRIEVED'
+
+    print(nfs_request.pretty_json)
+
+    return templates.TemplateResponse(
+        "request_detail.html", {"request": request, "nfs_request": nfs_request}
+    )

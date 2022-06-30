@@ -20,3 +20,7 @@ class NFSRequest(Base):
 
 def get_requests_for_job(db: Session, job_id: int) -> List[NFSRequest]:
     return db.query(NFSRequest).where(NFSRequest.job_id == job_id).order_by(NFSRequest.created_at.desc()).limit(20)
+
+
+def get_single_request(db: Session, request_id: int) -> NFSRequest:
+    return db.query(NFSRequest).where(NFSRequest.id == request_id).first()

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block body %}
+    <h6>Request #{{ nfs_request.id }}</h6>
+    Created at {{nfs_request.created_at.strftime('%H:%M, %d %b %Y')}}<br>
+    Status: {{ nfs_request.status }}<br>
+    Performed in scope of: <a href="/jobs/{{ nfs_request.job_id }}">Job #{{ nfs_request.job_id }}</a><br>
+    <hr>
+    Retrieved json:
+    <pre>
+    {{ nfs_request.pretty_json }}
+    </pre>
+
+{% endblock %}
+
