@@ -7,7 +7,7 @@ URL = "https://nfs-stats.herokuapp.com/getmaininfo.json"
 
 
 while True:
-    # time.sleep(1.5)
+    time.sleep(1)
     t = round(time.time())
     r = requests.get(URL)
     data = r.json()
