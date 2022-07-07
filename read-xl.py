@@ -1,30 +1,40 @@
-import json
+from datetime import timedelta
+
+import os
+import django
 from openpyxl import load_workbook
 
-wb = load_workbook(filename='race.xlsx')
+# Setup django to use models
+os.environ['DJANGO_SETTINGS_MODULE'] = 'timings.settings'
+django.setup()
+
+from django.utils import timezone
+
+from stats.models import BoardRequest
+from stats.processing import time_to_int, process_lap_lime
+
+
+
+wb = load_workbook(filename='simulation/race.xlsx')
 print('loaded!')
-
-
-def time_to_int(t):
-    h, m, s = t.split(':')
-    return int(h) * 3600 + int(m) * 60 + int(s)
-
-
-def int_to_time(t):
-    t = int(t)
-    h = t // 3600
-    m = (t - 3600 * h) // 60
-    s = t - (h*3600) - (m * 60)
-    return f'{h}:{m}:{s}'
-
 
 data = []
 q = 0
 
+teamnumber = 0
+
 for sheet in wb.worksheets[2:]:
+    # iterate over teams
     cur_col = 3
     cur_time = 0
+    teamnumber += 1
+
     while sheet.cell(row=20, column=cur_col).value:
+        # iterate over stints
+        ontrack = 0
+
+        teamname = sheet['A4'].value
+        print(teamname)
 
         name_link = sheet.cell(row=20, column=cur_col).value[1:]
         name_cell = sheet[name_link]
@@ -43,11 +53,31 @@ for sheet in wb.worksheets[2:]:
 
         cur_row = 21
         while sheet.cell(row=cur_row, column=cur_col).value:
+            # iterate over laps
             time = float(sheet.cell(row=cur_row, column=cur_col).value)
-            # print(f'{name} on kart {kart} (at {int_to_time(cur_time)}), {time}')
-            # input()
+
+            dummy_board_request = BoardRequest.objects.create(
+                created_at=timezone.now() + timedelta(seconds=int(cur_time)),
+                url='http://example.com',
+                status=200,
+                response='lala',
+                response_json={},
+                is_processed=True
+            )
+
+            process_lap_lime(
+                dummy_board_request,
+                race_time=cur_time,
+                team_number=teamnumber,
+                team_name=teamname,
+                pilot_name=name,
+                kart=kart,
+                ontrack=ontrack,
+                lap_time=time
+            )
             cur_row += 1
             cur_time = round(cur_time + time, 3)
+            ontrack = round(ontrack + time, 3)
             q += 1
         cur_col+=1
 

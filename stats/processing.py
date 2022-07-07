@@ -1,15 +1,55 @@
 from stats.models import Lap, BoardRequest, Team
 
 
+def time_to_int(t: str) -> int:
+    h, m, s = t.split(':')
+    return int(h) * 3600 + int(m) * 60 + int(s)
+
+
+def int_to_time(t: int) -> str:
+    t = int(t)
+    h = t // 3600
+    m = (t - 3600 * h) // 60
+    s = t - (h * 3600) - (m * 60)
+    return f'{h}:{m}:{s}'
+
+
+def process_json(board_request: BoardRequest):
+    data = board_request.response_json['onTablo']
+    if not data['isRace']:
+        return
+
+    total_race_time = time_to_int(data['totalRaceTime'])
+
+    for team in data['teams']:
+        pilot_name = team['pilotName']
+        last_lap = team['lastLap']
+        kart = team['kart']
+        team_number = team['number']
+        team_name = team['teamName']
+        ontrack_time = time_to_int(team['totalOnTrack'])
+
+        process_lap_lime(
+            board_request,
+            race_time=total_race_time,
+            team_number=team_number,
+            team_name=team_name,
+            pilot_name=pilot_name,
+            kart=kart,
+            ontrack=ontrack_time,
+            lap_time=last_lap
+        )
+
+
 def process_lap_lime(
-    board_request: BoardRequest,
-    race_time: int,
-    team_number: int,
-    team_name: str,
-    pilot_name: str,
-    kart: int,
-    ontrack: int,
-    lap_time: float
+        board_request: BoardRequest,
+        race_time: int,
+        team_number: int,
+        team_name: str,
+        pilot_name: str,
+        kart: int,
+        ontrack: int,
+        lap_time: float
 ):
     if ontrack < 120:
         return
@@ -47,4 +87,3 @@ def process_lap_lime(
         stint=stint,
         lap_time=lap_time,
     )
-
