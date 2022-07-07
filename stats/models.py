@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 
@@ -26,7 +27,7 @@ class Lap(models.Model):
 
     team_number = models.IntegerField(db_index=True)
     pilot_name = models.TextField()
-    kart = models.TextField(db_index=True)
+    kart = models.IntegerField(db_index=True)
 
     race_time = models.IntegerField()
     stint = models.IntegerField()
@@ -44,3 +45,17 @@ class Team(models.Model):
     class Meta:
         db_table = 'teams'
 
+
+class StintInfo(models.Model):
+    pilot = models.TextField()
+    team_number = models.IntegerField()
+    stint = models.IntegerField()
+    kart = models.IntegerField()
+    laps_amount = models.IntegerField()
+    lap_times = ArrayField(models.FloatField())
+    avg_80 = models.FloatField()
+    avg_40 = models.FloatField()
+
+    class Meta:
+        db_table = 'stints_info'
+        managed = False
