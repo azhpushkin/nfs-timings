@@ -12,7 +12,7 @@ class BoardRequest(models.Model):
     response = models.TextField()
     response_json = models.JSONField()
 
-    is_processed = models.BooleanField(default=False)
+    is_processed = models.BooleanField(default=False, db_index=True)
 
     class Meta:
         db_table = 'requests'
