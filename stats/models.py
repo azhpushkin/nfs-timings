@@ -7,6 +7,8 @@ class Config(models.Model):
 
 class BoardRequest(models.Model):
     created_at = models.DateTimeField()
+    url = models.TextField()
+
     status = models.IntegerField()
 
     response = models.TextField()
