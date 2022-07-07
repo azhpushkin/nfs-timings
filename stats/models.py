@@ -21,11 +21,19 @@ class BoardRequest(models.Model):
         db_table = 'requests'
 
 
+class Team(models.Model):
+    number = models.IntegerField(primary_key=True)
+    name = models.TextField()
+
+    class Meta:
+        db_table = 'teams'
+
+
 class Lap(models.Model):
     board_request = models.ForeignKey(BoardRequest, on_delete=models.PROTECT, related_name='laps')
     created_at = models.DateTimeField()  # copied from board_request
 
-    team_number = models.IntegerField(db_index=True)
+    team = models.ForeignKey(Team, on_delete=models.PROTECT, related_name='laps')
     pilot_name = models.TextField()
     kart = models.IntegerField(db_index=True)
 
@@ -38,17 +46,10 @@ class Lap(models.Model):
         db_table = 'laps'
 
 
-class Team(models.Model):
-    number = models.IntegerField()
-    name = models.TextField()
-
-    class Meta:
-        db_table = 'teams'
-
-
 class StintInfo(models.Model):
+    stint_id = models.TextField(primary_key=True)
     pilot = models.TextField()
-    team_number = models.IntegerField()
+    team = models.ForeignKey(Team, on_delete=models.DO_NOTHING)
     stint = models.IntegerField()
     kart = models.IntegerField()
     laps_amount = models.IntegerField()

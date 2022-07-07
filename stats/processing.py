@@ -61,14 +61,15 @@ def process_lap_lime(
         # First 5 minutes might be full of fights, ignore them
         return
 
-    last_lap_of_team = Lap.objects.filter(team_number=team_number).order_by('-created_at').first()
+    last_lap_of_team = Lap.objects.filter(team_id=team_number).order_by('-created_at').first()
 
     if last_lap_of_team and last_lap_of_team.kart == kart and last_lap_of_team.lap_time == lap_time:
         # Same lap probably, skip it
         return
 
-    if not Team.objects.filter(number=team_number):
-        Team.objects.create(number=team_number, name=team_name)
+    team, _ = Team.objects.get_or_create(number=team_number, defaults={
+        'name': team_name,
+    })
 
     if not last_lap_of_team:
         stint = 1
@@ -77,10 +78,10 @@ def process_lap_lime(
     else:
         stint = last_lap_of_team.stint + 1
 
-    new_lap = Lap.objects.create(
+    Lap.objects.create(
         board_request=board_request,
         created_at=board_request.created_at,
-        team_number=team_number,
+        team=team,
         pilot_name=pilot_name,
         kart=kart,
         race_time=race_time,

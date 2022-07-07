@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
 
-from stats.models import Lap
+from stats.models import Lap, Team
 
 
 class IndexView(TemplateView):
@@ -8,3 +8,14 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         return {}
+
+
+
+class TeamsView(TemplateView):
+    template_name = "teams.html"
+
+    def get_context_data(self, **kwargs):
+        return {
+            'teams': Team.objects.all(),
+
+        }
