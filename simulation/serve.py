@@ -4,15 +4,15 @@ import pathlib
 import random
 import sys
 
-
-SAMPLES_PATH = pathlib.Path(__file__).parent.resolve().parent / "samples"
-print("Loading samples from ", SAMPLES_PATH)
-
-SAMPLES = []
-for s in SAMPLES_PATH.iterdir():
-    contents = json.load(open(s))
-
-    SAMPLES.append((s.name, contents))
+#
+# SAMPLES_PATH = pathlib.Path(__file__).parent.resolve().parent / "samples"
+# print("Loading samples from ", SAMPLES_PATH)
+#
+# SAMPLES = []
+# for s in SAMPLES_PATH.iterdir():
+#     contents = json.load(open(s))
+#
+#     SAMPLES.append((s.name, contents))
 
 
 def get_sample():
