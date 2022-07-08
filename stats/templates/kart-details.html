@@ -27,7 +27,7 @@
                 <td>{{ stint.best_lap|floatformat:3 }}</td>
                 <td>{{ stint.avg_40|floatformat:3 }}</td>
                 <td>{{ stint.avg_80|floatformat:3 }}</td>
-                <td><a>Show</a></td>
+                <td><a href="{% url 'stint-detail' stint.stint_id %}">Show</a></td>
             </tr>
         {% endfor %}
 

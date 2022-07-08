@@ -5,6 +5,7 @@ from django.db.models.expressions import RawSQL
 from django.views.generic import TemplateView
 
 from stats.models import Lap, Team, StintInfo
+from stats.processing import int_to_time
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -39,4 +40,18 @@ class KartDetailsView(LoginRequiredMixin, TemplateView):
         return {
             'kart': kwargs['kart'],
             'stints': stints
+        }
+
+
+class StintDetailsView(LoginRequiredMixin, TemplateView):
+    template_name = "stint-details.html"
+
+    def get_context_data(self, **kwargs):
+        stint = StintInfo.objects.get(stint_id=kwargs['stint'])
+        laps = Lap.objects.filter(team_id=stint.team_id, stint=stint.stint).order_by('race_time')
+
+        return {
+            'stint': stint,
+            'laps': laps,
+            'race_time': int_to_time(laps.first().race_time)
         }
