@@ -11,12 +11,15 @@ class IndexView(LoginRequiredMixin, TemplateView):
     template_name = "karts.html"
 
     def get_context_data(self, **kwargs):
-        return {}
+        best_stints = StintInfo.objects.annotate(best_stint=RawSQL('ROW_NUMBER() OVER(partition by kart ORDER BY best_lap)', ())).order_by('best_lap')
+        best_stints = [s for s in best_stints if s.best_stint == 1]
+        return {
+            'stints': best_stints
+        }
 
 
 class TeamsView(LoginRequiredMixin, TemplateView):
     template_name = "teams.html"
-
 
     def get_context_data(self, **kwargs):
         stints_by_teams = StintInfo.objects.select_related('team').values('team', 'team__name').annotate(
