@@ -5,7 +5,10 @@ from stats.models import BoardRequest, Config, Team, Lap
 
 @admin.register(BoardRequest)
 class BoardRequestAdmin(admin.ModelAdmin):
-    list_display = ('id', 'url', 'created_at', 'status', 'is_processed')
+    list_display = ('id', 'url', 'created_at', 'status', 'is_processed', 'race_time')
+
+    def race_time(self, obj):
+        return obj.response_json.get('onTablo', {}).get('totalRaceTime', 'NO_TIME')
 
 
 @admin.register(Team)

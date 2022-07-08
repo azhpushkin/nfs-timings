@@ -16,18 +16,21 @@ def int_to_time(t: int) -> str:
 
 def process_json(board_request: BoardRequest):
     data = board_request.response_json['onTablo']
-    if not data['isRace']:
-        return
+    # if not data['isRace']:
+    #     return
 
     total_race_time = time_to_int(data['totalRaceTime'])
 
     for team in data['teams']:
-        pilot_name = team['pilotName']
-        last_lap = team['lastLap']
-        kart = team['kart']
-        team_number = team['number']
-        team_name = team['teamName']
-        ontrack_time = time_to_int(team['totalOnTrack'])
+        try:
+            pilot_name = team['pilotName']
+            last_lap = float(team['lastLap'])
+            kart = int(team['kart'])
+            team_number = int(team['number'])
+            team_name = team['teamName']
+            ontrack_time = time_to_int(team['totalOnTrack'])
+        except:
+            continue
 
         process_lap_lime(
             board_request,
@@ -51,14 +54,11 @@ def process_lap_lime(
         ontrack: int,
         lap_time: float
 ):
+    print('Processing: ', locals())
     if ontrack < 120:
         return
 
     if lap_time > 50:
-        return
-
-    if race_time < 300:
-        # First 5 minutes might be full of fights, ignore them
         return
 
     last_lap_of_team = Lap.objects.filter(team_id=team_number).order_by('-created_at').first()
