@@ -16,12 +16,16 @@ def int_to_time(t: int) -> str:
 
 def process_json(board_request: BoardRequest):
     data = board_request.response_json['onTablo']
-    # if not data['isRace']:
-    #     return
+    if not data['isRace']:
+        return
 
     total_race_time = time_to_int(data['totalRaceTime'])
 
     for team in data['teams']:
+        if not (team.get('pilotName') or team.get('teamName')):
+            # Probably this is Vovan
+            continue
+
         try:
             pilot_name = team['pilotName']
             last_lap = float(team['lastLap'])
