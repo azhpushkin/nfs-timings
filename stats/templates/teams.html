@@ -11,7 +11,7 @@ TEAMS
     Stints:
     <ul>
         {% for stint in team.stints %}
-            <li><span style="display: inline-block; width: 100px">Kart {{ stint.kart }}</span> - {{ stint.best_lap }}</li>
+            <li><span style="display: inline-block; width: 100px">Kart {{ stint.kart }}</span> - {{ stint.best_lap|floatformat:3 }}</li>
             {% endfor %}
     </ul>
 </div>
