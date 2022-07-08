@@ -5,5 +5,16 @@ INDEX
 {% endblock %}
 
 {% block body %}
+    {% for team in teams %}
+
+    <div><b>{{ team.team }} - {{ team.team__name }}</b>
+    Stints:
+    <ul>
+        {% for stint in team.stints %}
+            <li><span style="display: inline-block; width: 100px">Kart {{ stint.kart }}</span> - {{ stint.best_lap }}</li>
+            {% endfor %}
+    </ul>
+</div>
+    {% endfor %}
 
 {% endblock %}

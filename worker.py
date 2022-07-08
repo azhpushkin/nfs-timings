@@ -64,6 +64,12 @@ def request_api():
     print(f'OK: {response.status_code} request saved')
 
 
+@app.task("after task 'request_api'")
+def refresh_materialized():
+    from django.db import connection
+    with connection.cursor() as cursor:
+        cursor.execute('refresh materialized view stints_info')
+
 
 
 if __name__ == "__main__":
