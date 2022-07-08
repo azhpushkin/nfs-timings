@@ -1,5 +1,6 @@
 import traceback
 from datetime import datetime
+import logging
 
 from redengine import RedEngine
 import requests
@@ -17,13 +18,20 @@ from stats.processing import process_json
 
 app = RedEngine()
 
+handler = logging.StreamHandler()
+handler.setLevel(logging.DEBUG)
+
+task_logger = logging.getLogger('redengine.task')
+task_logger.addHandler(handler)
+
+
+
 kiev_timezone = pytz.timezone('Europe/Kiev')
 
 
 @app.task('every 5 seconds')
 def request_api():
     config = Config.objects.first()
-    print(config)
     if config and config.api_url:
         api_url = config.api_url
     else:
@@ -40,11 +48,25 @@ def request_api():
             response_json={},
             is_processed=True  # nothing to do here
         )
-        print('Failed request saved')
+        print(f'FAIL: request to {api_url} failed')
         return
 
-    if response.status_code != 200:
-        BoardRequest.objects.create(
+    try:
+        if response.status_code != 200:
+            raise ValueError('Not 200 status')
+        board_request = BoardRequest.objects.create(
+            url=api_url,
+            created_at=datetime.now(tz=kiev_timezone),
+            status=response.status_code,
+            response=response.content,
+            response_json=response.json(),
+            is_processed=False
+        )
+        print(f'OK: {board_request} saved fine')
+        process_json(board_request)
+    except:
+        print(f'FAIL: Detected issue, status {response.status_code}')
+        b = BoardRequest.objects.create(
             url=api_url,
             created_at=datetime.now(tz=kiev_timezone),
             status=response.status_code,
@@ -52,19 +74,13 @@ def request_api():
             response_json={},
             is_processed=True  # nothing to do here as well
         )
-        print(f'FAIL: {response.status_code} status saved')
-        return
+        print(f'FAIL: {b} written for debugging purposes')
+    else:
+        board_request.is_processed = True
+        board_request.save(update_fields=['is_processed'])
+        print(f'OK: {board_request} processed correctly, {board_request.laps.count()} written')
 
-    board_request = BoardRequest.objects.create(
-        url=api_url,
-        created_at=datetime.now(tz=kiev_timezone),
-        status=response.status_code,
-        response=response.content,
-        response_json=response.json(),
-        is_processed=False
-    )
-    process_json(board_request)
-    print(f'OK: {response.status_code} request saved')
+
 
 
 @app.task("after task 'request_api'")
