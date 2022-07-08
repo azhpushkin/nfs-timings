@@ -28,3 +28,15 @@ class TeamsView(LoginRequiredMixin, TemplateView):
         return {
             'teams': stints_by_teams
         }
+
+
+class KartDetailsView(LoginRequiredMixin, TemplateView):
+    template_name = "kart-details.html"
+
+    def get_context_data(self, **kwargs):
+        stints = StintInfo.objects.filter(kart=int(kwargs['kart'])).order_by('best_lap')
+
+        return {
+            'kart': kwargs['kart'],
+            'stints': stints
+        }

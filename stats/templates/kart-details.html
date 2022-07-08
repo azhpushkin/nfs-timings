@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}
+    KARTS
+{% endblock %}
+
+
+{% block body %}
+    <h3>
+    Stints on kart {{ kart }}
+    </h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Pilot</th>
+            <th>Best</th>
+            <th>40%</th>
+            <th>80%</th>
+            <th>Full log</th>
+        </tr>
+
+        </thead>
+        {% for stint in stints %}
+
+            <tr>
+                <td>{{ stint.pilot }}</td>
+                <td>{{ stint.best_lap|floatformat:3 }}</td>
+                <td>{{ stint.avg_40|floatformat:3 }}</td>
+                <td>{{ stint.avg_80|floatformat:3 }}</td>
+                <td><a>Show</a></td>
+            </tr>
+        {% endfor %}
+
+    </table>
+
+{% endblock %}
