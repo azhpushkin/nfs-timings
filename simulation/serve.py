@@ -1,33 +1,32 @@
-from http import server
 import json
-import pathlib
-import random
 import sys
+from http import server
 
-#
-# SAMPLES_PATH = pathlib.Path(__file__).parent.resolve().parent / "samples"
-# print("Loading samples from ", SAMPLES_PATH)
-#
-# SAMPLES = []
-# for s in SAMPLES_PATH.iterdir():
-#     contents = json.load(open(s))
-#
-#     SAMPLES.append((s.name, contents))
+import psycopg2
 
+request_id = sys.argv[1]
+print("Serving request", request_id)
 
-def get_sample():
-    if len(sys.argv) > 1 and sys.argv[1] == "single":
-        return json.load(open("sample2.json"))
-    else:
-        return random.choice(SAMPLES)[1]
+conn = psycopg2.connect(dbname='nfs')
 
+with conn:
+    with conn.cursor() as cursor:
+        cursor.execute(
+            'select status, response_json from requests where id = %s',
+            [request_id, ]
+        )
+        status, response = cursor.fetchone()
+
+if status != 200:
+    raise RuntimeError(f'Status is {status}')
 
 class CustomHTTPHandler(server.SimpleHTTPRequestHandler):
     def do_GET(self) -> None:
         print(self.path, self.path == "/getmaininfo.json")
+        print(response)
         if self.path == "/getmaininfo.json":
 
-            data = json.dumps(get_sample())
+            data = json.dumps(response)
             self.send_response(code=200)
             self.send_header(keyword="Content-type", value="application/json")
             self.end_headers()
