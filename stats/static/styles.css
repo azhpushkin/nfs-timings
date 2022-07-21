@@ -1,3 +1,21 @@
+
+
 header ul li {
     margin-top: 5px;
 }
+
+.kart-number {
+    font-family: 'Racing Sans One', cursive;
+    border: 3px solid black;
+    border-radius: 5px;
+    text-decoration: none;
+    color: black;
+    font-size: 1.3em;
+    width: 1.5em;
+    text-align: center;
+    display: inline-block;
+}
+
+/*.pilot-name {*/
+/*    white-space: nowrap;*/
+/*}*/

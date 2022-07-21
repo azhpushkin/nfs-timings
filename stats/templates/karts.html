@@ -21,11 +21,11 @@
 
             <tr>
                 <td style="vertical-align: middle">
-                    <a href="{% url 'kart-detail' stint.kart %}" style="color: black; text-decoration: underline; font-size: 1.3em">
-                        <b>{{ stint.kart }}</b>
+                    <a class="kart-number" href="{% url 'kart-detail' stint.kart %}">
+                        {{ stint.kart }}
                     </a>
                 </td>
-                <td>{{ stint.pilot }}</td>
+                <td class="pilot-name">{{ stint.pilot }}</td>
                 <td>{{ stint.best_lap|floatformat:3 }}</td>
                 <td>{{ stint.avg_40|floatformat:3 }}</td>
                 <td>{{ stint.avg_80|floatformat:3 }}</td>
