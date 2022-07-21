@@ -2,31 +2,27 @@
 
 <!doctype html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {#   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">#}
-    {#  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />#}
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picnic">
-
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+   <link rel="stylesheet" href="{% static 'styles.css' %}">
 
     <title>{% block title %}{% endblock %}</title>
-</head>
-<body>
+  </head>
+  <body>
+  <header>
+        <ul>
+      <li><a href="{% url 'karts' %}"><i class="fa-solid fa-car-side"></i> Karts overview</a></li>
+      <li><a href="{% url 'teams' %}"><i class="fa-solid fa-people-group"></i> Teams overview</a></li>
+    </ul>
 
-<header>
-    <div class="container">
-            <a href="{% url 'karts' %}"><i class="fa-solid fa-car-side"></i> Karts overview</a>
-            <a href="{% url 'teams' %}"><i class="fa-solid fa-people-group"></i> Teams overview</a>
-    </div>
-</header>
-<div class="container">
+  </header>
+  <hr>
     {% block body %}{% endblock %}
 
-</div>
 
-</body>
+  </body>
 </html>
