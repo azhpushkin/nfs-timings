@@ -18,13 +18,10 @@
   </head>
   <body>
   <header>
-        <ul>
-      <li><a href="{% url 'karts' %}"><i class="fa-solid fa-car-side"></i> Karts overview</a></li>
-      <li><a href="{% url 'teams' %}"><i class="fa-solid fa-people-group"></i> Teams overview</a></li>
-    </ul>
+      <a href="{% url 'karts' %}"><i class="fa-solid fa-car-side"></i> Karts overview</a>
+      <a href="{% url 'teams' %}"><i class="fa-solid fa-people-group"></i> Teams overview</a>
 
   </header>
-  <hr>
     {% block body %}{% endblock %}
 
 

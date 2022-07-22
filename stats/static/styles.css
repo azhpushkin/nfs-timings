@@ -1,7 +1,8 @@
-
-
-header ul li {
-    margin-top: 5px;
+header {
+    display: flex;
+    justify-content: space-around;
+    border-bottom: 1px solid black;
+    padding-bottom: 20px;
 }
 
 .kart-number {
@@ -10,12 +11,17 @@ header ul li {
     border-radius: 5px;
     text-decoration: none;
     color: black;
-    font-size: 1.3em;
+    font-size: 1.5em;
     width: 1.5em;
     text-align: center;
     display: inline-block;
 }
 
-/*.pilot-name {*/
-/*    white-space: nowrap;*/
-/*}*/
+table {
+    table-layout: fixed;
+}
+
+.pilot-name {
+
+    width: 8em;
+}
