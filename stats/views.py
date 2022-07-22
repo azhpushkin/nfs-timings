@@ -13,11 +13,16 @@ class IndexView(LoginRequiredMixin, TemplateView):
     template_name = "karts.html"
 
     def get_context_data(self, **kwargs):
+        sorting = self.request.GET.get('sort', 'best_lap')
+        if sorting not in ('best_lap', 'avg_80', 'best_sector_1', 'best_sector_2'):
+            raise Exception('Bad sorting!')
+
         best_stints = StintInfo.objects.annotate(
-            best_stint=RawSQL('ROW_NUMBER() OVER(partition by kart ORDER BY best_lap)', ())).order_by('best_lap')
+            best_stint=RawSQL(f'ROW_NUMBER() OVER(partition by kart ORDER BY {sorting})', ())).order_by(sorting)
         best_stints = [s for s in best_stints if s.best_stint == 1]
 
         return {
+            'sorting': sorting,
             'stints': best_stints
         }
 

@@ -8,7 +8,7 @@
 
 {% block body %}
     <h3>
-    Stints on <span class="kart-number">{{ kart }}</span>
+    Stints on <a class="kart-number"  href="{% url 'kart-detail' kart %}">{{ kart }}</a>
     </h3>
     <table>
         <thead>
