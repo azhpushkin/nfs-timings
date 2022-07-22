@@ -12,19 +12,7 @@ header {
     border-radius: 5px;
     text-decoration: none;
     color: black;
-    font-size: 1.5em;
-    width: 1.5em;
-    text-align: center;
-    display: inline-block;
-}
-
-.kart-number-smaller {
-    font-family: 'Racing Sans One', cursive;
-    border: 3px solid black;
-    border-radius: 5px;
-    text-decoration: none;
-    color: black;
-    font-size: 1em;
+    font-size: 1.1em;
     width: 1.5em;
     text-align: center;
     display: inline-block;
@@ -38,10 +26,10 @@ table {
     table-layout: fixed;
 }
 
-.pilot-name {
+/*.pilot-name {*/
 
-    width: 8em;
-}
+/*    width: 8em;*/
+/*}*/
 
 .sorting-options {
     display: flex;

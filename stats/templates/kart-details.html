@@ -36,9 +36,9 @@
                 <td class="pilot-name">{{ stint.pilot|split_pilot }}</td>
                 <td {% if sorting == 'best_lap' %}style="font-weight: bold;"{% endif %}>{{ stint.best_lap|floatformat:3 }}</td>
                 <td>
-                    <span {% if sorting == 'best_sector_1' %}style="font-weight: bold;"{% endif %}>s1 - {{ stint.best_sector_1|floatformat:2 }}</span>
+                    <span {% if sorting == 'best_sector_1' %}style="font-weight: bold;"{% endif %}>{{ stint.best_sector_1|floatformat:2 }}</span>
                     <br>
-                    <span {% if sorting == 'best_sector_2' %}style="font-weight: bold;"{% endif %}>s2 - {{ stint.best_sector_2|floatformat:2 }}</span>
+                    <span {% if sorting == 'best_sector_2' %}style="font-weight: bold;"{% endif %}>{{ stint.best_sector_2|floatformat:2 }}</span>
                 </td>
                 <td {% if sorting == 'avg_80' %}style="font-weight: bold;"{% endif %}>{{ stint.avg_80|floatformat:3 }}</td>
                 <td><a href="{% url 'stint-detail' stint.stint_id %}">Show</a></td>

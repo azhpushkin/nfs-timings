@@ -11,18 +11,18 @@
     <table>
         <thead>
         <tr>
-            <th style="width: 3em; ">Kart</th>
+            <th style="width: 2em; "><i class="fa-solid fa-car-side"></i></th>
             <th class="pilot-name">Pilot</th>
             <th>Laps<br>Start at</th>
             <th>Best</th>
-            <th>80%</th>
+            <th>Avg</th>
         </tr>
 
         </thead>
         {% for stint in stints %}
 
             <tr>
-                <td style="width: 3em; vertical-align: middle">
+                <td style="width: 2em; vertical-align: middle">
                     <a class="kart-number" href="{% url 'kart-detail' stint.kart %}">
                         {{ stint.kart }}
                     </a>

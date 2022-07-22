@@ -19,7 +19,7 @@
     <table>
         <thead>
         <tr>
-            <th style="width: 3em; ">Kart</th>
+            <th style="width: 2em; "><i class="fa-solid fa-car-side"></i></th>
             <th class="pilot-name">Pilot</th>
             <th>Best</th>
             <th>Sectors</th>
@@ -30,7 +30,7 @@
         {% for stint in stints %}
 
             <tr>
-                <td style="width: 3em; vertical-align: middle">
+                <td style="width: 2em; vertical-align: middle">
                     <a class="kart-number" href="{% url 'kart-detail' stint.kart %}">
                         {{ stint.kart }}
                     </a>
@@ -38,9 +38,9 @@
                 <td class="pilot-name">{{ stint.pilot|split_pilot }}</td>
                 <td {% if sorting == 'best_lap' %}style="font-weight: bold;"{% endif %}>{{ stint.best_lap|floatformat:3 }}</td>
                 <td>
-                    <span {% if sorting == 'best_sector_1' %}style="font-weight: bold;"{% endif %}>s1 - {{ stint.best_sector_1|floatformat:2 }}</span>
+                    <span {% if sorting == 'best_sector_1' %}style="font-weight: bold;"{% endif %}>{{ stint.best_sector_1|floatformat:2 }}</span>
                     <br>
-                    <span {% if sorting == 'best_sector_2' %}style="font-weight: bold;"{% endif %}>s2 - {{ stint.best_sector_2|floatformat:2 }}</span>
+                    <span {% if sorting == 'best_sector_2' %}style="font-weight: bold;"{% endif %}>{{ stint.best_sector_2|floatformat:2 }}</span>
                 </td>
                 <td {% if sorting == 'avg_80' %}style="font-weight: bold;"{% endif %}>{{ stint.avg_80|floatformat:3 }}</td>
             </tr>

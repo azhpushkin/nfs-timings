@@ -27,8 +27,8 @@ TEAMS
 
         {% for stint in team.stints %}
             <tr>
-            <td style="width: 3em; vertical-align: middle">
-                <a href="{% url 'kart-detail' stint.kart %}" class="kart-number-smaller" style="margin-left: 10px">{{ stint.kart }}</a>
+            <td style="width: 2em; vertical-align: middle">
+                <a href="{% url 'kart-detail' stint.kart %}" class="kart-number" style="margin-left: 10px">{{ stint.kart }}</a>
             </td>
 
                 <td>{{ stint.pilot|split_pilot }}</td>
