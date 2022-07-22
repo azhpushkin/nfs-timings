@@ -6,12 +6,21 @@ TEAMS
 {% endblock %}
 
 {% block body %}
-    <h4>! Teams are sorted by best lap</h4>
+    Jump to:
+    <ul>
+    {% for team in teams %}
+    <li>
+        <a style="color: inherit; text-decoration: underline" href="#team-{{ team.team }}">#{{ team.team }} - {{ team.team__name }}</a>
+    </li>
+    {% endfor %}
+    </ul>
 
+    <hr>
+    <h4>! Teams are sorted by best lap</h4>
     {% for team in teams %}
 
     <div class="team-card">
-        <div class="title">#{{ team.team }} - {{ team.team__name }}</div>
+        <div class="title" id="team-{{ team.team }}">#{{ team.team }} - {{ team.team__name }}</div>
 
         <table>
 
