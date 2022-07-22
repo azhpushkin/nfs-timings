@@ -14,11 +14,14 @@ class IndexView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         sorting = self.request.GET.get('sort', 'best_lap')
-        if sorting not in ('best_lap', 'avg_80', 'best_sector_1', 'best_sector_2'):
+        if sorting not in ('best_lap', 'avg_80', 'optimal', 'best_sector_1', 'best_sector_2'):
             raise Exception('Bad sorting!')
 
+        field = sorting
+        if sorting == 'optimal':
+            field = 'best_theoretical'
         best_stints = StintInfo.objects.annotate(
-            best_stint=RawSQL(f'ROW_NUMBER() OVER(partition by kart ORDER BY {sorting})', ())).order_by(sorting)
+            best_stint=RawSQL(f'ROW_NUMBER() OVER(partition by kart ORDER BY {field})', ())).order_by(field)
         best_stints = [s for s in best_stints if s.best_stint == 1]
 
         return {
@@ -65,9 +68,13 @@ class KartDetailsView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         sorting = self.request.GET.get('sort', 'best_lap')
-        if sorting not in ('best_lap', 'avg_80', 'best_sector_1', 'best_sector_2'):
+        if sorting not in ('best_lap', 'avg_80', 'optimal', 'best_sector_1', 'best_sector_2'):
             raise Exception('Bad sorting!')
-        stints = StintInfo.objects.filter(kart=int(kwargs['kart'])).order_by(sorting)
+
+        field = sorting
+        if sorting == 'optimal':
+            field = 'best_theoretical'
+        stints = StintInfo.objects.filter(kart=int(kwargs['kart'])).order_by(field)
 
         return {
             'kart': kwargs['kart'],

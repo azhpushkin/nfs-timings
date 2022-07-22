@@ -9,19 +9,25 @@
 {% block body %}
     <div>
     Order by:
-        <div class="sorting-options">
-            {% if sorting != 'best_lap' %}<a href="{% url 'karts' %}">* Best</a>{% else %}<b>* Best</b>{% endif %}
-            {% if sorting != 'avg_80' %}<a href="{% url 'karts' %}?sort=avg_80">* Avg</a>{% else %}<b>* Avg</b>{% endif %}
-            {% if sorting != 'best_sector_1' %}<a href="{% url 'karts' %}?sort=best_sector_1">* S1</a>{% else %}<b>* S1</b>{% endif %}
-            {% if sorting != 'best_sector_2' %}<a href="{% url 'karts' %}?sort=best_sector_2">* S2</a>{% else %}<b>* S2</b>{% endif %}
-        </div>
+        <ul class="sorting-options">
+            <li>{% if sorting != 'best_lap' %}<a href="{% url 'karts' %}">Best</a>{% else %}<b>Best</b>{% endif %}</li>
+            <li>{% if sorting != 'avg_80' %}<a href="{% url 'karts' %}?sort=avg_80">Avg</a>{% else %}<b>Avg</b>{% endif %}</li>
+            <li>{% if sorting != 'optimal' %}<a href="{% url 'karts' %}?sort=optimal">Optimal</a>{% else %}<b>Optimal</b>{% endif %}</li>
+            <li>{% if sorting != 'best_sector_1' %}<a href="{% url 'karts' %}?sort=best_sector_1">S1</a>{% else %}<b>S1</b>{% endif %}</li>
+            <li>{% if sorting != 'best_sector_2' %}<a href="{% url 'karts' %}?sort=best_sector_2">S2</a>{% else %}<b>S2</b>{% endif %}</li>
+
+        </ul>
     </div>
     <table>
         <thead>
         <tr>
             <th style="width: 2em; "><i class="fa-solid fa-car-side"></i></th>
             <th class="pilot-name">Pilot</th>
+            {% if sorting == 'optimal' %}
+            <th>Optimal</th>
+            {% else %}
             <th>Best</th>
+            {% endif %}
             <th>Sectors</th>
             <th>Avg</th>
         </tr>
@@ -36,7 +42,14 @@
                     </a>
                 </td>
                 <td class="pilot-name">{{ stint.pilot|split_pilot }}</td>
-                <td {% if sorting == 'best_lap' %}style="font-weight: bold;"{% endif %}>{{ stint.best_lap|floatformat:3 }}</td>
+                 {% if sorting == 'optimal' %}
+            <td style="font-weight: bold">
+            {{ stint.best_theoretical|floatformat:3 }}
+            </td>
+
+            {% else %}
+            <td {% if sorting == 'best_lap' %}style="font-weight: bold;"{% endif %}>{{ stint.best_lap|floatformat:3 }}</td>
+            {% endif %}
                 <td>
                     <span {% if sorting == 'best_sector_1' %}style="font-weight: bold;"{% endif %}>{{ stint.best_sector_1|floatformat:2 }}</span>
                     <br>
