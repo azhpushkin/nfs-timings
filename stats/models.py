@@ -41,6 +41,8 @@ class Lap(models.Model):
     stint = models.IntegerField()
 
     lap_time = models.FloatField()
+    sector_1 = models.FloatField()
+    sector_2 = models.FloatField()
 
     class Meta:
         db_table = 'laps'

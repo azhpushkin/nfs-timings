@@ -2,6 +2,8 @@ from stats.models import Lap, BoardRequest, Team
 
 
 def time_to_int(t: str) -> int:
+    # This could sometimes fail, cause right after the pit it might
+    # show pit time, but Except will catch it
     h, m, s = t.split(':')
     return int(h) * 3600 + int(m) * 60 + int(s)
 
@@ -14,9 +16,17 @@ def int_to_time(t: int) -> str:
     return f'{h}:{m}:{s}'
 
 
+def get_last_lap(s):
+    if ':' in s:
+        minutes, seconds = s.split(':')
+        return float(seconds) + int(minutes)*60
+    else:
+        return float(s)
+
+
 def process_json(board_request: BoardRequest):
-    data = board_request.response_json['onTablo']
-    if not data['isRace']:
+    data = board_request.response_json.get('onTablo', {})
+    if not data.get('isRace'):
         return
 
     total_race_time = time_to_int(data['totalRaceTime'])
@@ -28,12 +38,16 @@ def process_json(board_request: BoardRequest):
 
         try:
             pilot_name = team['pilotName']
-            last_lap = float(team['lastLap'])
+            last_lap = get_last_lap(team['lastLap'])
+            sector_1 = get_last_lap(team['lastLapS1'])
+            sector_2 = get_last_lap(team['lastLapS2'])
             kart = int(team['kart'])
             team_number = int(team['number'])
             team_name = team['teamName']
             ontrack_time = time_to_int(team['totalOnTrack'])
-        except:
+        except Exception as e:
+            # import ipdb; ipdb.set_trace()
+            print(e)
             continue
 
         process_lap_lime(
@@ -44,7 +58,9 @@ def process_json(board_request: BoardRequest):
             pilot_name=pilot_name,
             kart=kart,
             ontrack=ontrack_time,
-            lap_time=last_lap
+            lap_time=last_lap,
+            sector_1=sector_1,
+            sector_2=sector_2
         )
 
 
@@ -56,16 +72,27 @@ def process_lap_lime(
         pilot_name: str,
         kart: int,
         ontrack: int,
-        lap_time: float
+        lap_time: float,
+        sector_1: float,
+        sector_2: float,
 ):
     print('Processing: ', locals())
     if ontrack < 120:
         return
 
-    if lap_time > 50:
+    if kart == 0:
+        # No updates, simply ignore this
+        return
+
+    if sector_1 > 60 or sector_2 > 60:
+        # Something is wrong here
         return
 
     last_lap_of_team = Lap.objects.filter(team_id=team_number).order_by('-created_at').first()
+
+    if abs(sector_1 + sector_2 - lap_time) > 0.05:
+        # Probably, middle of the lap, as sectors do not add up
+        return
 
     if last_lap_of_team and last_lap_of_team.kart == kart and last_lap_of_team.lap_time == lap_time:
         # Same lap probably, skip it
@@ -91,4 +118,6 @@ def process_lap_lime(
         race_time=race_time,
         stint=stint,
         lap_time=lap_time,
+        sector_1=sector_1,
+        sector_2=sector_2,
     )
