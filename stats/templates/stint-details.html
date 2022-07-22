@@ -7,11 +7,10 @@
 
 {% block body %}
     <h3>
-    Kart {{ stint.kart }} by {{ stint.pilot }} (Started on {{ race_time }})
+        <span class="kart-number">{{ stint.kart }}</span> by {{ stint.pilot }}<br><br>(Started on {{ race_time }})
     </h3>
 
     <b>Best lap: {{ stint.best_lap|floatformat:3 }}<br></b>
-    Average 40%: {{ stint.avg_40|floatformat:3 }}<br>
     Average 80%: {{ stint.avg_80|floatformat:3 }}<br>
 
     <h4>Laps:</h4>

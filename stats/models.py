@@ -57,8 +57,9 @@ class StintInfo(models.Model):
     laps_amount = models.IntegerField()
     lap_times = ArrayField(models.FloatField())
     best_lap = models.FloatField()
+    best_sector_1 = models.FloatField()
+    best_sector_2 = models.FloatField()
     avg_80 = models.FloatField()
-    avg_40 = models.FloatField()
 
     class Meta:
         db_table = 'stints_info'

@@ -13,7 +13,8 @@ class IndexView(LoginRequiredMixin, TemplateView):
     template_name = "karts.html"
 
     def get_context_data(self, **kwargs):
-        best_stints = StintInfo.objects.annotate(best_stint=RawSQL('ROW_NUMBER() OVER(partition by kart ORDER BY best_lap)', ())).order_by('best_lap')
+        best_stints = StintInfo.objects.annotate(
+            best_stint=RawSQL('ROW_NUMBER() OVER(partition by kart ORDER BY best_lap)', ())).order_by('best_lap')
         best_stints = [s for s in best_stints if s.best_stint == 1]
         for s in best_stints:
             s.pilot = s.pilot.replace(' ', '\n')
@@ -52,6 +53,15 @@ class TeamDetailsView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         team = get_object_or_404(Team, number=int(kwargs['team']))
         stints_by_team = StintInfo.objects.filter(team=int(kwargs['team'])).order_by('-stint')
+
+        for s in stints_by_team:
+            s.pilot = s.pilot.replace(' ', '\n')
+            s.started_at = int_to_time(
+                Lap.objects
+                .filter(kart=s.kart, team=s.team, stint=s.stint)
+                .order_by('created_at')
+                .first().race_time
+            )
         return {
             'stints': stints_by_team,
             'team': team

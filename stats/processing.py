@@ -13,7 +13,7 @@ def int_to_time(t: int) -> str:
     h = t // 3600
     m = (t - 3600 * h) // 60
     s = t - (h * 3600) - (m * 60)
-    return f'{h}:{m}:{s}'
+    return f'{h:2}:{m:02}:{s:02}'
 
 
 def get_last_lap(s):

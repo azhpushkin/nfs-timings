@@ -16,6 +16,8 @@ def recreate_stints_info_view():
                         kart,
                         count(*)                       as laps_amount,
                         min(lap_time) as best_lap,
+                        min(sector_1) as best_sector_1,
+                        min(sector_2) as best_sector_2,
                         array_agg(lap_time order by lap_time) as lap_times
                     from laps
                     group by team_id, stint, kart
@@ -23,8 +25,8 @@ def recreate_stints_info_view():
                 select
                     *,
                     concat(team_id, '-', stint) as stint_id,
-                    (select avg(m) from unnest(lap_times[:laps_amount * 0.8]) m) as avg_80,
-                    (select avg(m) from unnest(lap_times[:laps_amount * 0.4]) m) as avg_40
+                    (select avg(m) from unnest(lap_times[:laps_amount * 0.8]) m) as avg_80
+                    
                 from stints
             )
         """)

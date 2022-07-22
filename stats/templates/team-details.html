@@ -6,10 +6,33 @@
 
 
 {% block body %}
-    {% for stint in stints %}
-    <p>
-    # {{ stint.stint }} - kart {{ stint.kart }}, {{ stint.pilot }} ({{ stint.laps_amount }})
-    </p>
-    {% endfor %}
+    <h3>Stints of team {{ team.name }} (latest on top)</h3>
+    <table>
+        <thead>
+        <tr>
+            <th style="width: 3em; ">Kart</th>
+            <th class="pilot-name">Pilot</th>
+            <th>Laps<br>Start at</th>
+            <th>Best</th>
+            <th>80%</th>
+        </tr>
+
+        </thead>
+        {% for stint in stints %}
+
+            <tr>
+                <td style="width: 3em; vertical-align: middle">
+                    <span class="kart-number">
+                        {{ stint.kart }}
+                    </span>
+                </td>
+                <td class="pilot-name">{{ stint.pilot|linebreaksbr }}</td>
+                <td><a href="{% url 'stint-detail' stint.stint_id %}">~ {{ stint.laps_amount }}<br>{{ stint.started_at }}</a></td>
+                <td>{{ stint.best_lap|floatformat:3 }}</td>
+                <td>{{ stint.avg_80|floatformat:3 }}</td>
+            </tr>
+        {% endfor %}
+
+    </table>
 
 {% endblock %}
