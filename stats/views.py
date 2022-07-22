@@ -44,7 +44,8 @@ class TeamsView(LoginRequiredMixin, TemplateView):
                             'best_lap', best_lap,
                             'avg_80', avg_80,
                             'laps_amount', laps_amount,
-                            'pilot', pilot
+                            'pilot', pilot,
+                            'stint_started_at', stint_started_at
                         )
                     """,
                     ()
@@ -52,6 +53,8 @@ class TeamsView(LoginRequiredMixin, TemplateView):
                 best_lap=Min('best_lap')
             ).order_by('best_lap')
         )
+        for s in stints_by_teams:
+            s['stints'] = list(sorted(s['stints'], key=lambda x: -x['stint_started_at']))
         return {
             'teams': stints_by_teams
         }
