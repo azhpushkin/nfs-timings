@@ -61,11 +61,15 @@ class KartDetailsView(LoginRequiredMixin, TemplateView):
     template_name = "kart-details.html"
 
     def get_context_data(self, **kwargs):
-        stints = StintInfo.objects.filter(kart=int(kwargs['kart'])).order_by('best_lap')
+        sorting = self.request.GET.get('sort', 'best_lap')
+        if sorting not in ('best_lap', 'avg_80', 'best_sector_1', 'best_sector_2'):
+            raise Exception('Bad sorting!')
+        stints = StintInfo.objects.filter(kart=int(kwargs['kart'])).order_by(sorting)
 
         return {
             'kart': kwargs['kart'],
-            'stints': stints
+            'stints': stints,
+            'sorting': sorting
         }
 
 
