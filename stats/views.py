@@ -43,7 +43,8 @@ class TeamsView(LoginRequiredMixin, TemplateView):
                             'kart', kart,
                             'best_lap', best_lap,
                             'avg_80', avg_80,
-                            'laps_amount', laps_amount
+                            'laps_amount', laps_amount,
+                            'pilot', pilot
                         )
                     """,
                     ()

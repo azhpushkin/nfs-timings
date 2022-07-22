@@ -18,6 +18,18 @@ header {
     display: inline-block;
 }
 
+.kart-number-smaller {
+    font-family: 'Racing Sans One', cursive;
+    border: 3px solid black;
+    border-radius: 5px;
+    text-decoration: none;
+    color: black;
+    font-size: 1em;
+    width: 1.5em;
+    text-align: center;
+    display: inline-block;
+}
+
 td {
     vertical-align: middle;
 }
@@ -35,4 +47,16 @@ table {
     display: flex;
     max-width: 400px;
     justify-content: space-around;
+}
+
+.team-card {
+    padding: 5px;
+    border: 1px solid gray;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.team-card .title {
+    font-weight: bold;
+    text-align: center;
 }

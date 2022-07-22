@@ -10,7 +10,7 @@ def recreate_stints_info_view():
             create materialized view stints_info as (
                 with stints as (
                     select
-                        string_agg(distinct pilot_name, ' OR ') as pilot,
+                        mode() within group (order by pilot_name) as pilot,
                         team_id,
                         stint,
                         -- pick most common kart to avoid issues caused by wrong kart

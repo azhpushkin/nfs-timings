@@ -1,20 +1,35 @@
 {% extends "base.html" %}
+{% load nfsformat %}
 
 {% block title %}
 TEAMS
 {% endblock %}
 
 {% block body %}
+    <h4>! Teams are sorted by best lap</h4>
+
     {% for team in teams %}
 
-    <div><b>{{ team.team }} - {{ team.team__name }}</b>
-    Stints:
-    <ul>
+    <div class="team-card">
+        <div class="title">#{{ team.team }} - {{ team.team__name }}</div>
+
+        <table>
+
         {% for stint in team.stints %}
-            <li><span style="display: inline-block; width: 100px">Kart {{ stint.kart }}</span> - {{ stint.best_lap|floatformat:3 }}</li>
-            {% endfor %}
-    </ul>
-</div>
+            <tr>
+            <td style="width: 3em; vertical-align: middle">
+                <a href="{% url 'kart-detail' stint.kart %}" class="kart-number-smaller" style="margin-left: 10px">{{ stint.kart }}</a>
+            </td>
+
+                <td>{{ stint.pilot|split_pilot }}</td>
+            <td>Best: {{ stint.best_lap|floatformat:3 }}</td>
+            <td>Average: {{ stint.avg_80|floatformat:3 }}</td>
+                <td><a href="{% url 'stint-detail' stint.stint_id %}">Show more</a></td>
+            </tr>
+        {% endfor %}
+
+        </table>
+    </div>
     {% endfor %}
 
 {% endblock %}
