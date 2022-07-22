@@ -104,10 +104,10 @@ def process_lap_lime(
 
     if not last_lap_of_team:
         stint = 1
-    elif last_lap_of_team.kart == kart:
-        stint = last_lap_of_team.stint
-    else:
+    elif last_lap_of_team.ontrack > ontrack:
         stint = last_lap_of_team.stint + 1
+    else:
+        stint = last_lap_of_team.stint
 
     Lap.objects.create(
         board_request=board_request,
@@ -117,6 +117,7 @@ def process_lap_lime(
         kart=kart,
         race_time=race_time,
         stint=stint,
+        ontrack=ontrack,
         lap_time=lap_time,
         sector_1=sector_1,
         sector_2=sector_2,

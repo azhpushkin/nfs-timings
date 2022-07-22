@@ -13,14 +13,15 @@ def recreate_stints_info_view():
                         string_agg(distinct pilot_name, ' OR ') as pilot,
                         team_id,
                         stint,
-                        kart,
+                        -- pick most common kart to avoid issues caused by wrong kart
+                        mode() within group (order by kart) as kart,
                         count(*)                       as laps_amount,
                         min(lap_time) as best_lap,
                         min(sector_1) as best_sector_1,
                         min(sector_2) as best_sector_2,
                         array_agg(lap_time order by lap_time) as lap_times
                     from laps
-                    group by team_id, stint, kart
+                    group by team_id, stint
                 )
                 select
                     *,

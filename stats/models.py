@@ -38,6 +38,7 @@ class Lap(models.Model):
     kart = models.IntegerField(db_index=True)
 
     race_time = models.IntegerField()
+    ontrack = models.FloatField()
     stint = models.IntegerField()
 
     lap_time = models.FloatField()
