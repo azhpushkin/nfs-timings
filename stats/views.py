@@ -16,8 +16,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
         best_stints = StintInfo.objects.annotate(
             best_stint=RawSQL('ROW_NUMBER() OVER(partition by kart ORDER BY best_lap)', ())).order_by('best_lap')
         best_stints = [s for s in best_stints if s.best_stint == 1]
-        for s in best_stints:
-            s.pilot = s.pilot.replace(' ', '\n')
+
         return {
             'stints': best_stints
         }
@@ -55,7 +54,6 @@ class TeamDetailsView(LoginRequiredMixin, TemplateView):
         stints_by_team = StintInfo.objects.filter(team=int(kwargs['team'])).order_by('-stint')
 
         for s in stints_by_team:
-            s.pilot = s.pilot.replace(' ', '\n')
             s.started_at = int_to_time(
                 Lap.objects
                 .filter(kart=s.kart, team=s.team, stint=s.stint)

@@ -1,3 +1,4 @@
+{% load nfsformat %}
 {% extends "base.html" %}
 
 {% block title %}
@@ -26,7 +27,7 @@
                         {{ stint.kart }}
                     </span>
                 </td>
-                <td class="pilot-name">{{ stint.pilot|linebreaksbr }}</td>
+                <td class="pilot-name">{{ stint.pilot|split_pilot }}</td>
                 <td><a href="{% url 'stint-detail' stint.stint_id %}">~ {{ stint.laps_amount }}<br>{{ stint.started_at }}</a></td>
                 <td>{{ stint.best_lap|floatformat:3 }}</td>
                 <td>{{ stint.avg_80|floatformat:3 }}</td>

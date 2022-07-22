@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load nfsformat %}
 
 {% block title %}
     KARTS
@@ -12,19 +13,20 @@
     <table>
         <thead>
         <tr>
-            <th>Pilot</th>
+            <th class="pilot-name">Pilot</th>
             <th>Best</th>
-            <th>40%</th>
-            <th>80%</th>
-            <th>Full log</th>
+            <th>Sectors</th>
+            <th>Avg</th>
+            <th>Details</th>
         </tr>
 
         </thead>
         {% for stint in stints %}
 
             <tr>
-                <td>{{ stint.pilot }}</td>
+                <td class="pilot-name">{{ stint.pilot|split_pilot }}</td>
                 <td>{{ stint.best_lap|floatformat:3 }}</td>
+                <td>{{ stint.best_sector_1|floatformat:2 }}<br>{{ stint.best_sector_2|floatformat:2 }}</td>
                 <td>{{ stint.avg_80|floatformat:3 }}</td>
                 <td><a href="{% url 'stint-detail' stint.stint_id %}">Show</a></td>
             </tr>

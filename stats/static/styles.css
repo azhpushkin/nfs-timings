@@ -18,6 +18,10 @@ header {
     display: inline-block;
 }
 
+td {
+    vertical-align: middle;
+}
+
 table {
     table-layout: fixed;
 }

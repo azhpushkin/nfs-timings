@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load nfsformat %}
 
 {% block title %}
     KARTS
@@ -12,8 +13,8 @@
             <th style="width: 3em; ">Kart</th>
             <th class="pilot-name">Pilot</th>
             <th>Best</th>
-            <th>40%</th>
-            <th>80%</th>
+            <th>Sectors</th>
+            <th>Avg</th>
         </tr>
 
         </thead>
@@ -25,8 +26,9 @@
                         {{ stint.kart }}
                     </a>
                 </td>
-                <td class="pilot-name">{{ stint.pilot|linebreaksbr }}</td>
+                <td class="pilot-name">{{ stint.pilot|split_pilot }}</td>
                 <td>{{ stint.best_lap|floatformat:3 }}</td>
+                <td>{{ stint.best_sector_1|floatformat:2 }}<br>{{ stint.best_sector_2|floatformat:2 }}</td>
                 <td>{{ stint.avg_80|floatformat:3 }}</td>
             </tr>
         {% endfor %}
