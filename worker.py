@@ -81,8 +81,6 @@ def request_api():
         print(f'OK: {board_request} processed correctly, {board_request.laps.count()} written')
 
 
-
-
 @app.task("after task 'request_api'")
 def refresh_materialized():
     from django.db import connection

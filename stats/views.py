@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.aggregates import ArrayAgg, JSONBAgg
 from django.db.models import Min
 from django.db.models.expressions import RawSQL
+from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
 from stats.models import Lap, Team, StintInfo
@@ -42,6 +43,18 @@ class KartDetailsView(LoginRequiredMixin, TemplateView):
         return {
             'kart': kwargs['kart'],
             'stints': stints
+        }
+
+
+class TeamDetailsView(LoginRequiredMixin, TemplateView):
+    template_name = "team-details.html"
+
+    def get_context_data(self, **kwargs):
+        team = get_object_or_404(Team, number=int(kwargs['team']))
+        stints_by_team = StintInfo.objects.filter(team=int(kwargs['team'])).order_by('-stint')
+        return {
+            'stints': stints_by_team,
+            'team': team
         }
 
 

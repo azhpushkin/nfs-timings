@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+    KARTS
+{% endblock %}
+
+
+{% block body %}
+    {% for stint in stints %}
+    <p>
+    # {{ stint.stint }} - kart {{ stint.kart }}, {{ stint.pilot }} ({{ stint.laps_amount }})
+    </p>
+    {% endfor %}
+
+{% endblock %}
