@@ -8,7 +8,7 @@
 
 {% block body %}
     <h3>
-        <a class="kart-number"  href="{% url 'kart-detail' kart %}">{{ stint.kart }}</a> by {{ stint.pilot }}
+        <a class="kart-number"  href="{% url 'kart-detail' stint.kart %}">{{ stint.kart }}</a> by {{ stint.pilot }}
         -- (started at {{ stint.stint_started_at|format_racetime }})
     </h3>
 
@@ -19,7 +19,8 @@
     Best S2: {{ stint.best_sector_2|floatformat:2 }}<br><br>
     Best segments lap: {{ stint.best_theoretical|floatformat:3 }}<br><br>
 
-    <a href="{% url 'kart-detail' stint.kart %}">Go to kart details</a>
+    <a href="{% url 'kart-detail' stint.kart %}">Go to kart details</a><br>
+    <a href="{% url 'team-detail' team.number %}">Go to team #{{ team.number }} - {{ team.name }} details</a>
 
 
     <h4>Laps:</h4>

@@ -95,8 +95,10 @@ class StintDetailsView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         stint = StintInfo.objects.get(stint_id=kwargs['stint'])
         laps = Lap.objects.filter(team_id=stint.team_id, stint=stint.stint).order_by('race_time')
+        team = Team.objects.get(number=stint.team_id)
 
         return {
             'stint': stint,
             'laps': laps,
+            'team': team
         }
