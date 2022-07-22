@@ -26,9 +26,26 @@ class TeamsView(LoginRequiredMixin, TemplateView):
     template_name = "teams.html"
 
     def get_context_data(self, **kwargs):
-        stints_by_teams = StintInfo.objects.select_related('team').values('team', 'team__name').annotate(
-            stints=JSONBAgg(RawSQL("json_build_object('kart', kart, 'best_lap', best_lap)", ())),
-            best_lap=Min('best_lap')).order_by('best_lap')
+        stints_by_teams = (
+            StintInfo.objects
+            .select_related('team')
+            .values('team', 'team__name')
+            .annotate(
+                stints=JSONBAgg(RawSQL(
+                    """
+                        json_build_object(
+                            'stint_id', stint_id,
+                            'kart', kart,
+                            'best_lap', best_lap,
+                            'avg_80', avg_80,
+                            'laps_amount', laps_amount
+                        )
+                    """,
+                    ()
+                )),
+                best_lap=Min('best_lap')
+            ).order_by('best_lap')
+        )
         return {
             'teams': stints_by_teams
         }
@@ -53,13 +70,6 @@ class TeamDetailsView(LoginRequiredMixin, TemplateView):
         team = get_object_or_404(Team, number=int(kwargs['team']))
         stints_by_team = StintInfo.objects.filter(team=int(kwargs['team'])).order_by('-stint')
 
-        for s in stints_by_team:
-            s.started_at = int_to_time(
-                Lap.objects
-                .filter(kart=s.kart, team=s.team, stint=s.stint)
-                .order_by('created_at')
-                .first().race_time
-            )
         return {
             'stints': stints_by_team,
             'team': team
@@ -76,5 +86,4 @@ class StintDetailsView(LoginRequiredMixin, TemplateView):
         return {
             'stint': stint,
             'laps': laps,
-            'race_time': int_to_time(laps.first().race_time)
         }

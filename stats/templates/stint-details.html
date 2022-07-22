@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load nfsformat %}
 
 {% block title %}
     KARTS
@@ -7,7 +8,8 @@
 
 {% block body %}
     <h3>
-        <span class="kart-number">{{ stint.kart }}</span> by {{ stint.pilot }}<br><br>(Started on {{ race_time }})
+        <span class="kart-number">{{ stint.kart }}</span> by {{ stint.pilot }}
+        -- (started at {{ stint.stint_started_at|format_racetime }})
     </h3>
 
     <b>Best lap: {{ stint.best_lap|floatformat:3 }}</b><br>

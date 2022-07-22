@@ -52,9 +52,12 @@ class Lap(models.Model):
 class StintInfo(models.Model):
     stint_id = models.TextField(primary_key=True)
     pilot = models.TextField()
+
     team = models.ForeignKey(Team, on_delete=models.DO_NOTHING)
     stint = models.IntegerField()
     kart = models.IntegerField()
+    stint_started_at = models.IntegerField()
+
     laps_amount = models.IntegerField()
     lap_times = ArrayField(models.FloatField())
 

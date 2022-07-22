@@ -16,6 +16,7 @@ def recreate_stints_info_view():
                         -- pick most common kart to avoid issues caused by wrong kart
                         mode() within group (order by kart) as kart,
                         count(*)                       as laps_amount,
+                        min(race_time) as stint_started_at,
                         min(lap_time) as best_lap,
                         min(sector_1) as best_sector_1,
                         min(sector_2) as best_sector_2,

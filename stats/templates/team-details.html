@@ -28,7 +28,7 @@
                     </span>
                 </td>
                 <td class="pilot-name">{{ stint.pilot|split_pilot }}</td>
-                <td><a href="{% url 'stint-detail' stint.stint_id %}">~ {{ stint.laps_amount }}<br>{{ stint.started_at }}</a></td>
+                <td><a href="{% url 'stint-detail' stint.stint_id %}">~ {{ stint.laps_amount }}<br>{{ stint.stint_started_at|format_racetime }}</a></td>
                 <td>{{ stint.best_lap|floatformat:3 }}</td>
                 <td>{{ stint.avg_80|floatformat:3 }}</td>
             </tr>
