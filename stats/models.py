@@ -57,9 +57,11 @@ class StintInfo(models.Model):
     kart = models.IntegerField()
     laps_amount = models.IntegerField()
     lap_times = ArrayField(models.FloatField())
+
     best_lap = models.FloatField()
     best_sector_1 = models.FloatField()
     best_sector_2 = models.FloatField()
+    best_theoretical = models.FloatField()
     avg_80 = models.FloatField()
 
     class Meta:

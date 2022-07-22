@@ -10,8 +10,15 @@
         <span class="kart-number">{{ stint.kart }}</span> by {{ stint.pilot }}<br><br>(Started on {{ race_time }})
     </h3>
 
-    <b>Best lap: {{ stint.best_lap|floatformat:3 }}<br></b>
-    Average 80%: {{ stint.avg_80|floatformat:3 }}<br>
+    <b>Best lap: {{ stint.best_lap|floatformat:3 }}</b><br>
+    Average: {{ stint.avg_80|floatformat:3 }}<br><br>
+
+    Best S1: {{ stint.best_sector_1|floatformat:2 }}<br>
+    Best S2: {{ stint.best_sector_2|floatformat:2 }}<br><br>
+    Best segments lap: {{ stint.best_theoretical|floatformat:3 }}<br><br>
+
+    <a href="{% url 'kart-detail' stint.kart %}">Go to kart details</a>
+
 
     <h4>Laps:</h4>
     {% for lap in laps %}

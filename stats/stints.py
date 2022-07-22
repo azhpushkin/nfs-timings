@@ -26,6 +26,7 @@ def recreate_stints_info_view():
                 select
                     *,
                     concat(team_id, '-', stint) as stint_id,
+                    (best_sector_1 + best_sector_2) as best_theoretical,
                     (select avg(m) from unnest(lap_times[:laps_amount * 0.8]) m) as avg_80
                     
                 from stints
