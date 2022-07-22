@@ -21,7 +21,7 @@ TEAMS
     {% for team in teams %}
 
     <div class="team-card">
-        <div class="title" id="team-{{ team.team }}">#{{ team.team }} - {{ team.team__name }}</div>
+        <div class="title" id="team-{{ team.team }}"><a href="{% url 'team-detail' team.team %}">#{{ team.team }} - {{ team.team__name }}</a></div>
 
         <table>
 

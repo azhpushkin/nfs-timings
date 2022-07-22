@@ -8,7 +8,7 @@
 
 {% block body %}
     <h3>
-        <span class="kart-number">{{ stint.kart }}</span> by {{ stint.pilot }}
+        <a class="kart-number"  href="{% url 'kart-detail' kart %}">{{ stint.kart }}</a> by {{ stint.pilot }}
         -- (started at {{ stint.stint_started_at|format_racetime }})
     </h3>
 
