@@ -9,11 +9,12 @@ worker:
 sim:
 	cd simulation && python serve.py
 
-simone:
-	cd simulation && python serve.py single
-
 black:
 	python -m black .
 
 i:
 	python -m IPython  # easier to deal with venv
+
+compile-reqs:
+	pip-compile requirements.in --resolver=backtracking > requirements.txt
+
