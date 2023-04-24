@@ -1,4 +1,13 @@
-version: "3.9"
+x-django-service: &django-service
+  build: .
+  volumes:
+    - .:/code
+  depends_on:
+    db:
+      condition: service_healthy
+  environment:
+    DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/${POSTGRES_DB}"
+    DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY}"
 
 services:
   db:
@@ -16,25 +25,14 @@ services:
       retries: 5
 
   web:
-    build: .
+    <<: *django-service
     command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/nfs-timings
     ports:
       - "8000:8000"
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      DATABASE_URL: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db/${POSTGRES_DB}"
-      DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY}"
 
   worker:
-    build: .
-    command: python worker.py
-    depends_on:
-      db:
-        condition: service_healthy
+    <<: *django-service
+    command: python manage.py worker
 
 volumes:
   postgres_data:

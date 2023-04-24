@@ -13,10 +13,16 @@ class RaceLaunch(models.Model):
     class Meta:
         db_table = 'race_launches'
 
+    def __str__(self):
+        return f'<Race #{self.id} - {self.name}>'
+
 
 class BoardRequest(models.Model):
     created_at = models.DateTimeField()
     url = models.TextField()
+    race = models.ForeignKey(
+        RaceLaunch, on_delete=models.PROTECT, verbose_name='requests'
+    )
 
     status = models.IntegerField()
 
@@ -41,6 +47,7 @@ class Lap(models.Model):
     board_request = models.ForeignKey(
         BoardRequest, on_delete=models.PROTECT, related_name='laps'
     )
+    race = models.ForeignKey(RaceLaunch, on_delete=models.PROTECT, related_name='laps')
     created_at = models.DateTimeField()  # copied from board_request
 
     team = models.ForeignKey(Team, on_delete=models.PROTECT, related_name='laps')
