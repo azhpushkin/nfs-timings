@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()  # loads the configs from .env
+load_dotenv()  # loads the configs from .env.example
 
 import dj_database_url
 
