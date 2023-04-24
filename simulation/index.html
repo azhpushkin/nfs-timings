@@ -65,8 +65,10 @@
 				error_div.style.display = status ? 'block' : 'none';
 			}
 
-			const getData = async() => {
-				return fetch(endPoint, {
+			const getData = async(request_id) => {
+                let url = new URL(endPoint);
+                url.searchParams.append('req_id', request_id);
+				return fetch(url, {
 					method: 'GET',
 
 				});
@@ -109,7 +111,8 @@
 				const { isRace } = onTablo;
 
 				//race time
-				header.raceTime.innerHTML = onTablo.totalRaceTime;
+                header.raceTime.innerHTML = onTablo.totalRaceTime + ` (req ${data.request_id})`;
+
 				// $('.totalRaceTime').html(json.onTablo.totalRaceTime);
 
 				//best lap
@@ -379,7 +382,21 @@
 			// main update function
 			const updateData = async () => {
 				try {
-					const data = await(await getData()).json();
+
+
+                    let request_id = window.location.hash;
+                    if (!request_id) {
+                        request_id = '0';
+                        window.location.hash = '0';
+                    } else {
+                        request_id = request_id.substring(1);
+                    }
+
+                    log('Loading request ' + request_id, '', 'debug');
+                    const data_original = await(await getData(request_id)).json();
+
+                    const data = Object.assign(data_original, {request_id: request_id})
+
 
 					// test race mode
 					// data.onTablo.isRace = true;
@@ -387,15 +404,30 @@
 					updateState(data);
 					updateTable(data);
 					show_err_window(false);
-					setTimeout(updateData, UPDATE_INTERVAL);
+					// NO NEED FOR LOOP setTimeout(updateData, UPDATE_INTERVAL);
 					log('UPDATED', 'good', 'debug');
 				} catch ( e ) {
 					show_err_window(true);
-					setTimeout(updateData, UPDATE_INTERVAL_AFTER_FAIL);
+					// NO NEED FOR LOOP setTimeout(updateData, UPDATE_INTERVAL_AFTER_FAIL);
 					log(`UPDATE FAILED: ${e}`, 'bad', 'debug');
 				}
 
 			}
+
+            // EXTRA LISTENER
+            document.addEventListener('keydown', function(event) {
+                const key = event.key;
+                const current_hash = document.location.hash.substring(1);
+
+                if (key === "ArrowLeft") {
+                    const new_hash = parseInt(current_hash) - 1;
+                    document.location.hash = new_hash;
+                } else if (key == 'ArrowRight') {
+                    const new_hash = parseInt(current_hash) + 1;
+                    document.location.hash = new_hash;
+                }
+                updateData();
+            });
 
 			updateData();
 

@@ -163,3 +163,7 @@ cython_debug/
 
 
 simulation/*-samples/
+
+
+*.parquet
+!requests-40min.parquet

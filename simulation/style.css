@@ -602,7 +602,8 @@ a, button {
 .bh_race_time_box {
   padding: 15px 20px;
    font-size: 0.8em;
-  width: 30%;
+  /* ORIGINAL VALUE: width: 30%;*/
+  width: 40%
 }
 .bh_race_time {
  font-size: 3.5em;
@@ -1560,7 +1561,7 @@ body#light {
     padding: 5px;
   }
 
- 
+ .bh_race_time_box
 
   .oib_item_title,
   #onboard_marafon .oib_ri_position .oib_ri_item_title {

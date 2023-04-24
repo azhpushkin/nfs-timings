@@ -1,36 +1,39 @@
-import json
-import sys
 from http import server
+import re
 
-import psycopg2
+import pandas as pd
+import pathlib
 
-request_id = sys.argv[1]
-print("Serving request", request_id)
 
-conn = psycopg2.connect(dbname='nfs')
+# 1985 is start of the race (last request before the race)
+# 40min covers first 40 minutes of the race ( requests bounds are #1980 - #2435 )
+REQUESTS_FILE = pathlib.Path(__file__).parent.parent / "requests-40min.parquet"
 
-with conn:
-    with conn.cursor() as cursor:
-        cursor.execute(
-            'select status, response_json from requests where id = %s',
-            [request_id, ]
-        )
-        status, response = cursor.fetchone()
+print("Loading", REQUESTS_FILE)
 
-if status != 200:
-    raise RuntimeError(f'Status is {status}')
+df = pd.read_parquet(REQUESTS_FILE)
+# Print dataframe to see bounds of requests
+print(df)
+
 
 class CustomHTTPHandler(server.SimpleHTTPRequestHandler):
     def do_GET(self) -> None:
-        print(self.path, self.path == "/getmaininfo.json")
-        print(response)
-        if self.path == "/getmaininfo.json":
 
-            data = json.dumps(response)
-            self.send_response(code=200)
-            self.send_header(keyword="Content-type", value="application/json")
-            self.end_headers()
-            self.wfile.write(data.encode("utf-8"))
+        if self.path.startswith("/getmaininfo.json"):
+            req_id_match = re.search(r"req_id=(\d+)", self.path)
+            req_id = int(req_id_match.group(1)) if req_id_match else 0
+            recorded_request = df.loc[req_id]
+
+            if recorded_request["status"] == 200:
+                self.send_response(code=200)
+                self.send_header(keyword="Content-type", value="application/json")
+                self.end_headers()
+                self.wfile.write(eval(recorded_request["response"]))
+            else:
+                self.send_response(code=500)
+                self.end_headers()
+                self.wfile.write(b"CONNECTION ERROR")
+
         else:
             return super().do_GET()
 
