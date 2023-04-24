@@ -17,4 +17,3 @@ def split_pilot(value):
 @register.filter
 def format_racetime(value):
     return int_to_time(value)
-

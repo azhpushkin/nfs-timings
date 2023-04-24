@@ -35,7 +35,6 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'stats',
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -79,9 +78,7 @@ WSGI_APPLICATION = 'timings.wsgi.application'
 
 
 DATABASE_URL = os.getenv('DATABASE_URL', 'postgresql://postgres@localhost:5432/nfs')
-DATABASES = {
-    'default': dj_database_url.parse(DATABASE_URL)
-}
+DATABASES = {'default': dj_database_url.parse(DATABASE_URL)}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
@@ -108,7 +105,7 @@ LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
 
-LOGIN_URL='/admin/login'
+LOGIN_URL = '/admin/login'
 
 USE_I18N = True
 

@@ -3,10 +3,13 @@ from django.db import connection
 
 def recreate_stints_info_view():
     with connection.cursor() as cursor:
-        cursor.execute("""
+        cursor.execute(
+            """
             drop materialized view if exists stints_info
-        """)
-        cursor.execute("""
+        """
+        )
+        cursor.execute(
+            """
             create materialized view stints_info as (
                 with stints as (
                     select
@@ -32,7 +35,8 @@ def recreate_stints_info_view():
                     
                 from stints
             )
-        """)
+        """
+        )
 
 
 def refresh_stints_info_view():

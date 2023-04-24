@@ -10,7 +10,7 @@ sim:
 	cd simulation && python serve.py
 
 black:
-	python -m black .
+	python -m black --extend-exclude migrations --skip-string-normalization .
 
 i:
 	python -m IPython  # easier to deal with venv

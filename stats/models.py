@@ -30,7 +30,9 @@ class Team(models.Model):
 
 
 class Lap(models.Model):
-    board_request = models.ForeignKey(BoardRequest, on_delete=models.PROTECT, related_name='laps')
+    board_request = models.ForeignKey(
+        BoardRequest, on_delete=models.PROTECT, related_name='laps'
+    )
     created_at = models.DateTimeField()  # copied from board_request
 
     team = models.ForeignKey(Team, on_delete=models.PROTECT, related_name='laps')

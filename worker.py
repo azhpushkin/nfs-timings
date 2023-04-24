@@ -25,7 +25,6 @@ task_logger = logging.getLogger('redengine.task')
 task_logger.addHandler(handler)
 
 
-
 kiev_timezone = pytz.timezone('Europe/Kiev')
 
 
@@ -46,7 +45,7 @@ def request_api():
             status=0,
             response=traceback.format_exc(),
             response_json={},
-            is_processed=True  # nothing to do here
+            is_processed=True,  # nothing to do here
         )
         print(f'FAIL: request to {api_url} failed')
         return
@@ -60,7 +59,7 @@ def request_api():
             status=response.status_code,
             response=response.content,
             response_json=response.json(),
-            is_processed=False
+            is_processed=False,
         )
         print(f'OK: {board_request} saved fine')
         process_json(board_request)
@@ -72,21 +71,23 @@ def request_api():
             status=response.status_code,
             response=response.content,
             response_json={},
-            is_processed=True  # nothing to do here as well
+            is_processed=True,  # nothing to do here as well
         )
         print(f'FAIL: {b} written for debugging purposes')
     else:
         board_request.is_processed = True
         board_request.save(update_fields=['is_processed'])
-        print(f'OK: {board_request} processed correctly, {board_request.laps.count()} written')
+        print(
+            f'OK: {board_request} processed correctly, {board_request.laps.count()} written'
+        )
 
 
 @app.task("after task 'request_api'")
 def refresh_materialized():
     from django.db import connection
+
     with connection.cursor() as cursor:
         cursor.execute('refresh materialized view stints_info')
-
 
 
 if __name__ == "__main__":

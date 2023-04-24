@@ -14,20 +14,26 @@ class IndexView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         sorting = self.request.GET.get('sort', 'best_lap')
-        if sorting not in ('best_lap', 'avg_80', 'optimal', 'best_sector_1', 'best_sector_2'):
+        if sorting not in (
+            'best_lap',
+            'avg_80',
+            'optimal',
+            'best_sector_1',
+            'best_sector_2',
+        ):
             raise Exception('Bad sorting!')
 
         field = sorting
         if sorting == 'optimal':
             field = 'best_theoretical'
         best_stints = StintInfo.objects.annotate(
-            best_stint=RawSQL(f'ROW_NUMBER() OVER(partition by kart ORDER BY {field})', ())).order_by(field)
+            best_stint=RawSQL(
+                f'ROW_NUMBER() OVER(partition by kart ORDER BY {field})', ()
+            )
+        ).order_by(field)
         best_stints = [s for s in best_stints if s.best_stint == 1]
 
-        return {
-            'sorting': sorting,
-            'stints': best_stints
-        }
+        return {'sorting': sorting, 'stints': best_stints}
 
 
 class TeamsView(LoginRequiredMixin, TemplateView):
@@ -35,12 +41,12 @@ class TeamsView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         stints_by_teams = (
-            StintInfo.objects
-            .select_related('team')
+            StintInfo.objects.select_related('team')
             .values('team', 'team__name')
             .annotate(
-                stints=JSONBAgg(RawSQL(
-                    """
+                stints=JSONBAgg(
+                    RawSQL(
+                        """
                         json_build_object(
                             'stint_id', stint_id,
                             'kart', kart,
@@ -51,16 +57,18 @@ class TeamsView(LoginRequiredMixin, TemplateView):
                             'stint_started_at', stint_started_at
                         )
                     """,
-                    ()
-                )),
-                best_lap=Min('best_lap')
-            ).order_by('best_lap')
+                        (),
+                    )
+                ),
+                best_lap=Min('best_lap'),
+            )
+            .order_by('best_lap')
         )
         for s in stints_by_teams:
-            s['stints'] = list(sorted(s['stints'], key=lambda x: -x['stint_started_at']))
-        return {
-            'teams': stints_by_teams
-        }
+            s['stints'] = list(
+                sorted(s['stints'], key=lambda x: -x['stint_started_at'])
+            )
+        return {'teams': stints_by_teams}
 
 
 class KartDetailsView(LoginRequiredMixin, TemplateView):
@@ -68,7 +76,13 @@ class KartDetailsView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         sorting = self.request.GET.get('sort', 'best_lap')
-        if sorting not in ('best_lap', 'avg_80', 'optimal', 'best_sector_1', 'best_sector_2'):
+        if sorting not in (
+            'best_lap',
+            'avg_80',
+            'optimal',
+            'best_sector_1',
+            'best_sector_2',
+        ):
             raise Exception('Bad sorting!')
 
         field = sorting
@@ -76,11 +90,7 @@ class KartDetailsView(LoginRequiredMixin, TemplateView):
             field = 'best_theoretical'
         stints = StintInfo.objects.filter(kart=int(kwargs['kart'])).order_by(field)
 
-        return {
-            'kart': kwargs['kart'],
-            'stints': stints,
-            'sorting': sorting
-        }
+        return {'kart': kwargs['kart'], 'stints': stints, 'sorting': sorting}
 
 
 class TeamDetailsView(LoginRequiredMixin, TemplateView):
@@ -88,12 +98,11 @@ class TeamDetailsView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         team = get_object_or_404(Team, number=int(kwargs['team']))
-        stints_by_team = StintInfo.objects.filter(team=int(kwargs['team'])).order_by('-stint')
+        stints_by_team = StintInfo.objects.filter(team=int(kwargs['team'])).order_by(
+            '-stint'
+        )
 
-        return {
-            'stints': stints_by_team,
-            'team': team
-        }
+        return {'stints': stints_by_team, 'team': team}
 
 
 class StintDetailsView(LoginRequiredMixin, TemplateView):
@@ -101,11 +110,9 @@ class StintDetailsView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         stint = StintInfo.objects.get(stint_id=kwargs['stint'])
-        laps = Lap.objects.filter(team_id=stint.team_id, stint=stint.stint).order_by('race_time')
+        laps = Lap.objects.filter(team_id=stint.team_id, stint=stint.stint).order_by(
+            'race_time'
+        )
         team = Team.objects.get(number=stint.team_id)
 
-        return {
-            'stint': stint,
-            'laps': laps,
-            'team': team
-        }
+        return {'stint': stint, 'laps': laps, 'team': team}

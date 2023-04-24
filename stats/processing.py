@@ -19,7 +19,7 @@ def int_to_time(t: int) -> str:
 def get_last_lap(s):
     if ':' in s:
         minutes, seconds = s.split(':')
-        return float(seconds) + int(minutes)*60
+        return float(seconds) + int(minutes) * 60
     else:
         return float(s)
 
@@ -60,21 +60,21 @@ def process_json(board_request: BoardRequest):
             ontrack=ontrack_time,
             lap_time=last_lap,
             sector_1=sector_1,
-            sector_2=sector_2
+            sector_2=sector_2,
         )
 
 
 def process_lap_lime(
-        board_request: BoardRequest,
-        race_time: int,
-        team_number: int,
-        team_name: str,
-        pilot_name: str,
-        kart: int,
-        ontrack: int,
-        lap_time: float,
-        sector_1: float,
-        sector_2: float,
+    board_request: BoardRequest,
+    race_time: int,
+    team_number: int,
+    team_name: str,
+    pilot_name: str,
+    kart: int,
+    ontrack: int,
+    lap_time: float,
+    sector_1: float,
+    sector_2: float,
 ):
     print('Processing: ', locals())
     if ontrack < 120:
@@ -88,19 +88,28 @@ def process_lap_lime(
         # Something is wrong here
         return
 
-    last_lap_of_team = Lap.objects.filter(team_id=team_number).order_by('-created_at').first()
+    last_lap_of_team = (
+        Lap.objects.filter(team_id=team_number).order_by('-created_at').first()
+    )
 
     if abs(sector_1 + sector_2 - lap_time) > 0.05:
         # Probably, middle of the lap, as sectors do not add up
         return
 
-    if last_lap_of_team and last_lap_of_team.kart == kart and last_lap_of_team.lap_time == lap_time:
+    if (
+        last_lap_of_team
+        and last_lap_of_team.kart == kart
+        and last_lap_of_team.lap_time == lap_time
+    ):
         # Same lap probably, skip it
         return
 
-    team, _ = Team.objects.get_or_create(number=team_number, defaults={
-        'name': team_name,
-    })
+    team, _ = Team.objects.get_or_create(
+        number=team_number,
+        defaults={
+            'name': team_name,
+        },
+    )
 
     if not last_lap_of_team:
         stint = 1

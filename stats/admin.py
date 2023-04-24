@@ -3,15 +3,10 @@ from django.db.models import Count
 
 from stats.models import BoardRequest, Config, Team, Lap
 
+
 class LapInline(admin.TabularInline):
     model = Lap
-    readonly_fields = (
-        'id',
-        'team',
-        'pilot_name',
-        'kart',
-        'lap_time'
-    )
+    readonly_fields = ('id', 'team', 'pilot_name', 'kart', 'lap_time')
     fields = readonly_fields
     extra = 0
     show_change_link = True
@@ -27,9 +22,7 @@ class LapInline(admin.TabularInline):
 class BoardRequestAdmin(admin.ModelAdmin):
     list_display = ('id', 'url', 'created_at', 'race_time', 'laps_count')
     list_per_page = 30
-    inlines = [
-        LapInline
-    ]
+    inlines = [LapInline]
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
