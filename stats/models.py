@@ -2,8 +2,16 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 
-class Config(models.Model):
-    api_url = models.URLField()
+class RaceLaunch(models.Model):
+    api_url = models.URLField(
+        default='https://nfs-stats.herokuapp.com/getmaininfo.json'
+    )
+    created_at = models.DateTimeField()
+    name = models.CharField(max_length=64)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        db_table = 'race_launches'
 
 
 class BoardRequest(models.Model):

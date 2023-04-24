@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db.models import Count
 
-from stats.models import BoardRequest, Config, Team, Lap
+from stats.models import BoardRequest, RaceLaunch, Team, Lap
 
 
 class LapInline(admin.TabularInline):
@@ -46,6 +46,6 @@ class TeamAdmin(admin.ModelAdmin):
     list_display = ('id', 'pilot_name', 'kart', 'lap_time')
 
 
-@admin.register(Config)
-class ConfigAdmin(admin.ModelAdmin):
-    list_display = ('id', 'api_url')
+@admin.register(RaceLaunch)
+class RaceLaunchAdmin(admin.ModelAdmin):
+    list_display = ('id', 'created_at', 'name', 'is_active')

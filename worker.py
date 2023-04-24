@@ -13,7 +13,7 @@ import pytz
 os.environ['DJANGO_SETTINGS_MODULE'] = 'timings.settings'
 django.setup()
 
-from stats.models import Lap, Config, BoardRequest
+from stats.models import Lap, BoardRequest
 from stats.processing import process_json
 
 app = RedEngine()
@@ -30,11 +30,11 @@ kiev_timezone = pytz.timezone('Europe/Kiev')
 
 @app.task('every 5 seconds')
 def request_api():
-    config = Config.objects.first()
-    if config and config.api_url:
-        api_url = config.api_url
-    else:
-        api_url = 'https://nfs-stats.herokuapp.com/getmaininfo.json'
+    # config = Config.objects.first()
+    # if config and config.api_url:
+    #     api_url = config.api_url
+    # else:
+    #     api_url = 'https://nfs-stats.herokuapp.com/getmaininfo.json'
 
     try:
         response = requests.get(api_url)
