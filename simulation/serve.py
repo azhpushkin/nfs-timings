@@ -1,5 +1,6 @@
 from http import server
 import re
+import sys
 
 import pandas as pd
 import pathlib
@@ -7,7 +8,8 @@ import pathlib
 
 # 1985 is start of the race (last request before the race)
 # 40min covers first 40 minutes of the race ( requests bounds are #1980 - #2435 )
-REQUESTS_FILE = pathlib.Path(__file__).parent.parent / "requests-40min.parquet"
+filename = pathlib.Path(sys.argv[1]).name
+REQUESTS_FILE = pathlib.Path(__file__).parent.parent / 'recordings' / filename
 
 print("Loading", REQUESTS_FILE)
 
