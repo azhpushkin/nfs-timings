@@ -2,28 +2,33 @@
 
 <!doctype html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-{#  <link rel="preconnect" href="https://fonts.googleapis.com">#}
-{#<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>#}
-<link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap" rel="stylesheet">
-   <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
 
     <title>{% block title %}{% endblock %}</title>
-  </head>
-  <body>
-  <header>
-      <a href="{% url 'karts' %}"><i class="fa-solid fa-car-side"></i> Karts overview</a>
-      <a href="{% url 'teams' %}"><i class="fa-solid fa-people-group"></i> Teams overview</a>
-
-  </header>
-    {% block body %}{% endblock %}
 
 
-  </body>
+    {% block extra_head %} {% endblock %}
+</head>
+<body>
+{% block header %}
+    <header>
+        <a href="{% url 'karts' %}"><i class="fa-solid fa-car-side"></i> Karts overview</a>
+        <a href="{% url 'teams' %}"><i class="fa-solid fa-people-group"></i> Teams overview</a>
+
+    </header>
+{% endblock %}
+{% block body %}{% endblock %}
+
+
+</body>
 </html>

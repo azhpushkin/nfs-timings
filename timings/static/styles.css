@@ -47,3 +47,21 @@ table {
     font-weight: bold;
     text-align: center;
 }
+
+
+#login-form {
+    text-align: center;
+    /*padding: auto;*/
+}
+
+#login-form input {
+    margin: auto;
+}
+
+#login-form .errorlist {
+    border: 2px solid #ff4141;
+    background-color: #ebc3bf;
+    border-radius: 6px;
+    max-width: 500px;
+    margin: auto;
+}
