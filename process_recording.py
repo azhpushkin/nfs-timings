@@ -4,7 +4,12 @@ import sys
 
 def transform_csv_into_parquet(filename: str):
     df_raw = pd.read_csv(f'recordings/{filename}.csv')
-    df = df_raw.sort_values('id').drop(columns=['id']).reset_index()
+    df = (
+        df_raw.sort_values('id')
+        .reset_index(drop=True)
+        .reset_index()
+        .drop(columns=['id'])
+    )
     df.to_parquet(f'recordings/{filename}.parquet', compression='gzip')
 
 
