@@ -167,3 +167,4 @@ simulation/*-samples/
 
 *.parquet
 !requests-40min.parquet
+recordings/
