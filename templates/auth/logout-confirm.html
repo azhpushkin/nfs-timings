@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    Login
+{% endblock %}
+
+
+{% block body %}
+
+    <h2 style="text-align: center">
+        &#9888;
+        You are about to log out
+        &#9888;
+    </h2>
+    <br>
+    <div style="text-align: center">
+        <a href="{% url 'logout' %}">
+            <button>Yeah, bye &#128075;</button>
+        </a>
+    </div>
+
+
+{% endblock %}
