@@ -28,7 +28,7 @@ urlpatterns = [
         name='login',
     ),
     path(
-        'logout-confirm/',
+        'logout-confirm',
         TemplateView.as_view(template_name='auth/logout-confirm.html'),
         name='logout-confirm',
     ),

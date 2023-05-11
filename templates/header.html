@@ -1,0 +1,17 @@
+<header>
+    <a href="{% url 'karts' %}">
+        <button {% if request.path == '/' %}class="active-tab"{% endif %}>
+            &#128640; <br> Karts
+        </button>
+    </a>
+    <a href="{% url 'teams' %}">
+        <button {% if request.path == '/teams' %}class="active-tab"{% endif %}>
+            &#128203; <br> Teams
+        </button>
+    </a>
+    <a href="{% url 'logout-confirm' %}">
+        <button {% if request.path == '/logout-confirm' %}class="active-tab"{% endif %}>
+            &#128072; <br> Logout
+        </button>
+    </a>
+</header>

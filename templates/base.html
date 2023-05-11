@@ -18,12 +18,7 @@
 </head>
 <body>
 {% block header %}
-    <header>
-        <a href="{% url 'karts' %}">&#128640; Karts</a>
-        <a href="{% url 'teams' %}">&#128203; Teams</a>
-        <a href="{% url 'logout-confirm' %}">&#128072; Logout</a>
-
-    </header>
+    {% include 'header.html' %}
 {% endblock %}
 {% block body %}{% endblock %}
 

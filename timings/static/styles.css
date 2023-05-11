@@ -1,10 +1,27 @@
 header {
     display: flex;
     justify-content: space-around;
-    border-bottom: 1px solid black;
     padding-bottom: 20px;
     margin-bottom: 10px;
 }
+
+
+header a {
+    text-align: center;
+    width: 100%;
+}
+
+header a button {
+    width: 80%;
+}
+
+header a button.active-tab {
+    background-color: #eeeeee;
+    border: 1px solid #0096BF;
+    box-shadow: #0096BF 0px 1px 4px;
+}
+
+
 
 .kart-number {
     font-family: 'Racing Sans One', cursive;
