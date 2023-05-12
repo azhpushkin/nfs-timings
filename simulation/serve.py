@@ -11,8 +11,9 @@ import pathlib
 
 # 1985 is start of the race (last request before the race)
 # 40min covers first 40 minutes of the race ( requests bounds are #1980 - #2435 )
-filename = pathlib.Path(sys.argv[1]).name
+filename = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else '').name
 REQUESTS_FILE = pathlib.Path(__file__).parent.parent / 'recordings' / filename
+assert REQUESTS_FILE.is_file(), f'{REQUESTS_FILE} must be a file'
 
 print("Loading", REQUESTS_FILE)
 df = pd.read_parquet(REQUESTS_FILE)
