@@ -1,17 +1,25 @@
 <header>
-    <a href="{% url 'karts' %}">
-        <button {% if request.path == '/' %}class="active-tab"{% endif %}>
-            &#128640; <br> Karts
-        </button>
-    </a>
-    <a href="{% url 'teams' %}">
-        <button {% if request.path == '/teams' %}class="active-tab"{% endif %}>
-            &#128203; <br> Teams
-        </button>
-    </a>
-    <a href="{% url 'logout-confirm' %}">
-        <button {% if request.path == '/logout-confirm' %}class="active-tab"{% endif %}>
-            &#128072; <br> Logout
-        </button>
-    </a>
+    <h3 id="header-title">
+        &#128640;
+        &#127937;
+        &#127942;
+        NFS Telega
+    </h3>
+    <nav>
+        <a href="{% url 'karts' %}">
+            <button {% if request.path == '/' %}class="active-tab"{% endif %}>
+                &#128640; <br> Karts
+            </button>
+        </a>
+        <a href="{% url 'teams' %}">
+            <button {% if request.path == '/teams' %}class="active-tab"{% endif %}>
+                &#128203; <br> Teams
+            </button>
+        </a>
+        <a href="{% url 'logout-confirm' %}">
+            <button {% if request.path == '/logout-confirm' %}class="active-tab"{% endif %}>
+                &#128072; <br> Logout
+            </button>
+        </a>
+    </nav>
 </header>

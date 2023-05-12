@@ -1,21 +1,29 @@
 header {
-    display: flex;
-    justify-content: space-around;
+
     padding-bottom: 20px;
     margin-bottom: 10px;
 }
 
-
-header a {
+header #header-title {
     text-align: center;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+}
+
+nav a {
+    width: 33%;
+}
+
+nav a button {
     width: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
-header a button {
-    width: 80%;
-}
-
-header a button.active-tab {
+nav a button.active-tab {
     background-color: #eeeeee;
     border: 1px solid #0096BF;
     box-shadow: #0096BF 0px 1px 4px;

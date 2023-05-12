@@ -34,7 +34,8 @@
 
         </thead>
         {% for stint in stints %}
-
+            {# TODO: move stints tables to the separate component! #}
+            {# TODO: highlight column which is now sorted by #}
             <tr>
                 <td style="width: 2em; vertical-align: middle">
                     <a class="kart-number" href="{% url 'kart-detail' stint.kart %}">
