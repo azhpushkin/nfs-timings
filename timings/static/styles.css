@@ -31,6 +31,7 @@ header a button.active-tab {
     color: black;
     font-size: 1.1em;
     width: 1.5em;
+    height: 1.5em;
     text-align: center;
     display: inline-block;
 }
@@ -43,11 +44,6 @@ table {
     table-layout: fixed;
 }
 
-/*.pilot-name {*/
-
-/*    width: 8em;*/
-/*}*/
-
 .sorting-options {
     display: flex;
     max-width: 400px;
@@ -58,12 +54,44 @@ table {
     border: 1px solid gray;
     border-radius: 10px;
     margin-bottom: 10px;
+    padding: 10px 5px;
 }
 
-.team-card .title {
-    font-weight: bold;
-    text-align: center;
+
+.team-card-line {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
 }
+
+
+.team-card-line {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.team-card-line-team .title {
+    font-weight: bold;
+}
+
+.team-card-line-team .pilot-names {
+    font-size: 0.8em;
+}
+
+.team-card-line-karts {
+    display: flex;
+    align-items: center;
+}
+
+.team-card-line-link {
+    display: flex;
+    align-items: center;
+}
+
+.team-card .collapsed {
+    display: none;
+}
+
 
 
 #login-form {
