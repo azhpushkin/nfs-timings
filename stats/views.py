@@ -5,7 +5,7 @@ from django.db.models.expressions import RawSQL
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 
-from stats.models import Lap, Team, StintInfo
+from stats.models import Lap, Team, StintInfo, BoardRequest
 from stats.processing import int_to_time
 
 
@@ -40,6 +40,18 @@ class TeamsView(LoginRequiredMixin, TemplateView):
     template_name = "teams.html"
 
     def get_context_data(self, **kwargs):
+        # TODO: Better way to sort teams would be nice
+        # Maybe, save some metadata to BoardRequest or some proxy object (e.g. teams order)
+        # and then either use it, of if that metadata is absent - use default ordering and log warning
+
+        last_request = Lap.objects.order_by('created_at').last().board_request
+
+        teams_midlaps = {
+            int(team_data['number']): float(team_data['midLap'])
+            for team_data in last_request.response_json['onTablo']['teams']
+        }
+        # print(a)
+
         stints_by_teams = (
             StintInfo.objects.select_related('team')
             .values('team', 'team__name')
@@ -63,6 +75,9 @@ class TeamsView(LoginRequiredMixin, TemplateView):
                 best_lap=Min('best_lap'),
             )
             .order_by('best_lap')
+        )
+        stints_by_teams = sorted(
+            stints_by_teams, key=lambda x: teams_midlaps[x['team']]
         )
         for s in stints_by_teams:
             s['stints'] = list(

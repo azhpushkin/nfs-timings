@@ -94,6 +94,7 @@ def process_lap_lime(
 
     if abs(sector_1 + sector_2 - lap_time) > 0.05:
         # Probably, middle of the lap, as sectors do not add up
+        raise ValueError(f'Cannot process {board_request}, sectors do not add up')
         return
 
     if (
