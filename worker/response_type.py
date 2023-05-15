@@ -43,14 +43,14 @@ class LapTime(str):
             return f'{self.seconds}.{self.ms}'
 
 
-class TeamDict(BaseModel):
+class TeamEntry(BaseModel):
     pilotName: str  # name of the current pilot, might be changed during the stint
     teamName: str  # name of the team, might be changed (needs to be checked)
 
     # TODO: check rain format
-    lastLap: LapTime  # last lap in seconds in format AA.BB (
-    lastLapS1: LapTime
-    lastLapS2: LapTime
+    lastLap: Optional[LapTime]  # last lap in seconds in format AA.BB (
+    lastLapS1: Optional[LapTime]
+    lastLapS2: Optional[LapTime]
     lapCount: int
 
     number: int  # TODO: what does it mean
@@ -60,7 +60,7 @@ class TeamDict(BaseModel):
 
     # segments: bool  # TODO: define
 
-    @validator('bestLapOnSegment', pre=True)
+    @validator('lastLap', 'lastLapS1', 'lastLapS2', 'bestLapOnSegment', pre=True)
     def skip_empty_time_on_first_lap(cls, v: str):
         return None if v == '' else v
 
@@ -74,11 +74,11 @@ class TeamDict(BaseModel):
             return v
 
 
-class OnTabloDict(BaseModel):
+class RaceInfo(BaseModel):
     isRace: bool
     totalRaceTime: time
-    teams: List[TeamDict]
+    teams: List[TeamEntry]
 
 
 class NFSResponseDict(BaseModel):
-    onTablo: OnTabloDict
+    onTablo: RaceInfo
