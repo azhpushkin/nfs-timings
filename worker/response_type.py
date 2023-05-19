@@ -39,15 +39,17 @@ class LapTime(str):
         self.ms = int(value.group('ms').ljust(3, '0')[:3])
         self.precision = min(len(value.group('ms')), 3)
 
-
     @classmethod
     def __get_validators__(cls):
         yield cls
 
     def __repr__(self):
         minutes_prefix = f'{self.minutes}:' if self.minutes else ''
-        ms_suffix = str(self.ms).rjust(3, '0')[:self.precision]
+        ms_suffix = str(self.ms).rjust(3, '0')[: self.precision]
         return f'{minutes_prefix}{self.seconds}.{ms_suffix}'
+
+    def to_float(self) -> float:
+        return self.minutes * 60 + self.seconds + self.ms / 1000
 
 
 class TeamEntry(BaseModel):

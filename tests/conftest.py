@@ -37,4 +37,3 @@ def bg_recording() -> List[NFSResponseDict]:
             raise ValueError(f'Failed response #{i}, bad value "{value}"')
 
     return parsed_responses
-
