@@ -21,7 +21,7 @@ class LapInline(admin.TabularInline):
 
 @admin.register(BoardRequest)
 class BoardRequestAdmin(admin.ModelAdmin):
-    list_display = ('id', 'url', 'created_at', 'race_time', 'laps_count')
+    list_display = ('id', 'url', 'created_at', 'race_time', 'race_id', 'laps_count')
     list_per_page = 30
     inlines = [LapInline]
 
