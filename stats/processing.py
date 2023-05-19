@@ -1,3 +1,7 @@
+import traceback
+from datetime import time
+
+from processing.response_type import NFSResponseDict, TeamEntry
 from stats.models import Lap, BoardRequest, Team, RaceLaunch
 
 
@@ -25,99 +29,84 @@ def get_last_lap(s):
 
 
 def process_json(board_request: BoardRequest, race: RaceLaunch):
-    data = board_request.response_json.get('onTablo', {})
-    if not data.get('isRace'):
-        return
-
-    total_race_time = time_to_int(data['totalRaceTime'])
-
-    for team in data['teams']:
-        if not (team.get('pilotName') or team.get('teamName')):
-            # Probably this is Vovan
-            continue
-
-        try:
-            pilot_name = team['pilotName']
-            last_lap = get_last_lap(team['lastLap'])
-            sector_1 = get_last_lap(team['lastLapS1'])
-            sector_2 = get_last_lap(team['lastLapS2'])
-            kart = int(team['kart'])
-            team_number = int(team['number'])
-            team_name = team['teamName']
-            ontrack_time = time_to_int(team['totalOnTrack'])
-        except Exception as e:
-            # import ipdb; ipdb.set_trace()
-            print(e)
-            continue
-
-        process_lap_lime(
-            board_request,
-            race=race,
-            race_time=total_race_time,
-            team_number=team_number,
-            team_name=team_name,
-            pilot_name=pilot_name,
-            kart=kart,
-            ontrack=ontrack_time,
-            lap_time=last_lap,
-            sector_1=sector_1,
-            sector_2=sector_2,
+    try:
+        response_parsed: NFSResponseDict = NFSResponseDict.parse_obj(
+            board_request.response_json
         )
+        if not response_parsed.onTablo.isRace:
+            return
+    except:
+        traceback.print_exc()
+        return
+
+    for entry in response_parsed.onTablo.teams:
+        try:
+            process_lap_entry(
+                board_request, race, response_parsed.onTablo.totalRaceTime, entry
+            )
+        except:
+            traceback.print_exc()
+            continue
 
 
-def process_lap_lime(
-    board_request: BoardRequest,
-    race: RaceLaunch,
-    race_time: int,
-    team_number: int,
-    team_name: str,
-    pilot_name: str,
-    kart: int,
-    ontrack: int,
-    lap_time: float,
-    sector_1: float,
-    sector_2: float,
+def time_to_float(t: time):
+    return t.hour * 3600 + t.minute * 60 + t.second
+
+
+def process_lap_entry(
+    board_request: BoardRequest, race: RaceLaunch, race_time: time, entry: TeamEntry
 ):
-    print('Processing: ', locals())
-    if ontrack < 120:
+
+    if not (entry.lastLapS1 and entry.lastLapS2):
         return
 
-    if kart == 0:
-        # No updates, simply ignore this
-        return
-
-    if sector_1 > 60 or sector_2 > 60:
+    if (
+        entry.lastLapS1
+        and entry.lastLapS2
+        and (entry.lastLapS1.to_float() > 60 or entry.lastLapS2.to_float() > 60)
+    ):
         # Something is wrong here
         return
 
     team, _ = Team.objects.get_or_create(
-        number=team_number,
+        number=entry.number,
         race=race,
         defaults={
-            'name': team_name,
+            'name': entry.teamName,
         },
     )
+    if team.name != entry.teamName:
+        team.name = entry.teamName
+        team.save(update_fields=['name'])
 
-    last_lap_of_team = (
+    last_lap_of_team: Lap = (
         Lap.objects.filter(race=race, team_id=team.id).order_by('-created_at').first()
     )
+    print('Processing: ', entry)
 
-    if abs(sector_1 + sector_2 - lap_time) >= 0.01:
-        # Probably, middle of the lap, as sectors do not add up
-        print(f'Cannot process {board_request}, sectors do not add up')
+    if last_lap_of_team and last_lap_of_team.lap_number == entry.lapCount:
         return
 
     if (
-        last_lap_of_team
-        and last_lap_of_team.kart == kart
-        and last_lap_of_team.lap_time == lap_time
+        entry.lastLapS1
+        and entry.lastLapS2
+        and abs(
+            entry.lastLapS1.to_float()
+            + entry.lastLapS2.to_float()
+            - entry.lastLap.to_float()
+        )
+        >= 0.010001
     ):
-        # Same lap probably, skip it
+        # Probably, middle of the lap, as sectors do not add up
+        print(
+            f'Cannot process {board_request}, sectors of team number={entry.number} do not add up'
+            f'(s1: {entry.lastLapS1}, s2: {entry.lastLapS2}, total: {entry.lastLap})'
+        )
         return
 
     if not last_lap_of_team:
         stint = 1
-    elif last_lap_of_team.ontrack > ontrack:
+    elif last_lap_of_team.ontrack > time_to_float(entry.totalOnTrack):
         stint = last_lap_of_team.stint + 1
     else:
         stint = last_lap_of_team.stint
@@ -127,12 +116,14 @@ def process_lap_lime(
         board_request_id=board_request.id,
         team_id=team.id,
         created_at=board_request.created_at,
-        pilot_name=pilot_name,
-        kart=kart,
-        race_time=race_time,
+        pilot_name=entry.pilotName,
+        kart=entry.kart,
+        race_time=time_to_float(race_time),
         stint=stint,
-        ontrack=ontrack,
-        lap_time=lap_time,
-        sector_1=sector_1,
-        sector_2=sector_2,
+        ontrack=time_to_float(entry.totalOnTrack),
+        lap_time=entry.lastLap.to_float(),
+        lap_number=entry.lapCount,
+        sector_1=entry.lastLapS1.to_float(),
+        sector_2=entry.lastLapS2.to_float(),
     )
+    print(f'Created LAP for number={entry.number}, {entry.lapCount}')

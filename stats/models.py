@@ -66,6 +66,7 @@ class Lap(models.Model):
     race_time = models.IntegerField()
     ontrack = models.FloatField()
     stint = models.IntegerField()
+    lap_number = models.IntegerField()
 
     lap_time = models.FloatField()
     sector_1 = models.FloatField()

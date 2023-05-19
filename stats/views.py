@@ -1,12 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.postgres.aggregates import ArrayAgg, JSONBAgg
+from django.contrib.postgres.aggregates import JSONBAgg
 from django.db.models import Min
 from django.db.models.expressions import RawSQL
 from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView
 
-from stats.models import Lap, Team, StintInfo, BoardRequest, RaceLaunch
-from stats.processing import int_to_time
+from stats.models import Lap, Team, StintInfo, RaceLaunch
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -148,7 +147,6 @@ class StintDetailsView(LoginRequiredMixin, TemplateView):
         laps = Lap.objects.filter(team_id=team.id, stint=stint.stint).order_by(
             'race_time'
         )
-        team = Team.objects.get(number=stint.team_id)
 
         return {'stint': stint, 'laps': laps, 'team': team}
 
