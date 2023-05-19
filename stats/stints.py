@@ -20,7 +20,7 @@ def recreate_stints_info_view():
                 stints as (
                     select
                         mode() within group (order by pilot_name) as pilot,
-                        team_id,
+                        teams.number team_id,
                         stint,
                         -- pick most common kart to avoid issues caused by wrong kart
                         mode() within group (order by kart) as kart,
@@ -32,8 +32,10 @@ def recreate_stints_info_view():
                         array_agg(lap_time order by lap_time) as lap_times
                     from laps
                     join race on
-                        laps.race_id = race.id    
-                    group by team_id, stint
+                        laps.race_id = race.id
+                    join teams
+                        on laps.team_id = teams.id  
+                    group by teams.number, stint
                 )
                 select
                     *,

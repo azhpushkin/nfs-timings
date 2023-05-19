@@ -1,4 +1,4 @@
-from stats.models import Lap, BoardRequest, Team
+from stats.models import Lap, BoardRequest, Team, RaceLaunch
 
 
 def time_to_int(t: str) -> int:
@@ -24,7 +24,7 @@ def get_last_lap(s):
         return float(s)
 
 
-def process_json(board_request: BoardRequest):
+def process_json(board_request: BoardRequest, race: RaceLaunch):
     data = board_request.response_json.get('onTablo', {})
     if not data.get('isRace'):
         return
@@ -52,6 +52,7 @@ def process_json(board_request: BoardRequest):
 
         process_lap_lime(
             board_request,
+            race=race,
             race_time=total_race_time,
             team_number=team_number,
             team_name=team_name,
@@ -66,6 +67,7 @@ def process_json(board_request: BoardRequest):
 
 def process_lap_lime(
     board_request: BoardRequest,
+    race: RaceLaunch,
     race_time: int,
     team_number: int,
     team_name: str,
@@ -88,13 +90,21 @@ def process_lap_lime(
         # Something is wrong here
         return
 
-    last_lap_of_team = (
-        Lap.objects.filter(team_id=team_number).order_by('-created_at').first()
+    team, _ = Team.objects.get_or_create(
+        number=team_number,
+        race=race,
+        defaults={
+            'name': team_name,
+        },
     )
 
-    if abs(sector_1 + sector_2 - lap_time) > 0.05:
+    last_lap_of_team = (
+        Lap.objects.filter(race=race, team_id=team.id).order_by('-created_at').first()
+    )
+
+    if abs(sector_1 + sector_2 - lap_time) >= 0.01:
         # Probably, middle of the lap, as sectors do not add up
-        raise ValueError(f'Cannot process {board_request}, sectors do not add up')
+        print(f'Cannot process {board_request}, sectors do not add up')
         return
 
     if (
@@ -105,13 +115,6 @@ def process_lap_lime(
         # Same lap probably, skip it
         return
 
-    team, _ = Team.objects.get_or_create(
-        number=team_number,
-        defaults={
-            'name': team_name,
-        },
-    )
-
     if not last_lap_of_team:
         stint = 1
     elif last_lap_of_team.ontrack > ontrack:
@@ -120,9 +123,10 @@ def process_lap_lime(
         stint = last_lap_of_team.stint
 
     Lap.objects.create(
-        board_request=board_request,
+        race_id=race.id,
+        board_request_id=board_request.id,
+        team_id=team.id,
         created_at=board_request.created_at,
-        team=team,
         pilot_name=pilot_name,
         kart=kart,
         race_time=race_time,
@@ -131,5 +135,4 @@ def process_lap_lime(
         lap_time=lap_time,
         sector_1=sector_1,
         sector_2=sector_2,
-        race_id=2,
     )

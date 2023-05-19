@@ -55,18 +55,19 @@ class TeamsView(LoginRequiredMixin, TemplateView):
         # TODO: Better way to sort teams would be nice
         # Maybe, save some metadata to BoardRequest or some proxy object (e.g. teams order)
         # and then either use it, of if that metadata is absent - use default ordering and log warning
-
-        last_request = Lap.objects.order_by('created_at').last().board_request
+        race = RaceLaunch.get_current()
+        last_request = (
+            Lap.objects.filter(race=race).order_by('created_at').last().board_request
+        )
+        team_names = {team.number: team.name for team in Team.objects.filter(race=race)}
 
         teams_midlaps = {
             int(team_data['number']): float(team_data['midLap'])
             for team_data in last_request.response_json['onTablo']['teams']
         }
-        # print(a)
 
         stints_by_teams = (
-            StintInfo.objects.select_related('team')
-            .values('team', 'team__name')
+            StintInfo.objects.values('team')
             .annotate(
                 stints=JSONBAgg(
                     RawSQL(
@@ -93,10 +94,9 @@ class TeamsView(LoginRequiredMixin, TemplateView):
         )
 
         for s in stints_by_teams:
-            s['stints'] = list(
-                sorted(s['stints'], key=lambda x: x['stint_started_at'])
-            )
+            s['stints'] = list(sorted(s['stints'], key=lambda x: x['stint_started_at']))
             s['pilots'] = set(x['pilot'] for x in s['stints'])
+            s['team__name'] = team_names[s['team']]
         return {'teams': stints_by_teams}
 
 
@@ -126,7 +126,8 @@ class TeamDetailsView(LoginRequiredMixin, TemplateView):
     template_name = "team-details.html"
 
     def get_context_data(self, **kwargs):
-        team = get_object_or_404(Team, number=int(kwargs['team']))
+        race: RaceLaunch = RaceLaunch.get_current()
+        team = get_object_or_404(Team, race=race, number=int(kwargs['team']))
         stints_by_team = StintInfo.objects.filter(team=int(kwargs['team'])).order_by(
             'stint'
         )
@@ -138,8 +139,13 @@ class StintDetailsView(LoginRequiredMixin, TemplateView):
     template_name = "stint-details.html"
 
     def get_context_data(self, **kwargs):
+        race = RaceLaunch.get_current()
         stint = StintInfo.objects.get(stint_id=kwargs['stint'])
-        laps = Lap.objects.filter(team_id=stint.team_id, stint=stint.stint).order_by(
+
+        # TODO: team_id to team_number
+        team = Team.objects.filter(race=race, number=stint.team_id).first()
+
+        laps = Lap.objects.filter(team_id=team.id, stint=stint.stint).order_by(
             'race_time'
         )
         team = Team.objects.get(number=stint.team_id)

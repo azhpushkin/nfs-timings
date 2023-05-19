@@ -1,4 +1,5 @@
 import traceback
+from typing import Optional
 
 import requests
 from django.utils import timezone
@@ -7,17 +8,17 @@ from stats.models import BoardRequest, RaceLaunch
 from stats.processing import process_json
 
 
-def request_api():
+def request_api() -> Optional[BoardRequest]:
     current_race: RaceLaunch = RaceLaunch.objects.filter(is_active=True).first()
     if not current_race:
         print('OK: No race in progress')
-        return
+        return None
     api_url = current_race.api_url
 
     try:
         response = requests.get(api_url, headers={'User-Agent': 'Pushkin timings app'})
     except Exception as e:
-        BoardRequest.objects.create(
+        board_request = BoardRequest.objects.create(
             url=api_url,
             race=current_race,
             created_at=timezone.now(),
@@ -27,37 +28,40 @@ def request_api():
             is_processed=True,  # nothing to do here
         )
         print(f'FAIL: request to {api_url} failed')
-        return
+        return board_request
 
     try:
-        if response.status_code != 200:
-            raise ValueError('Not 200 status')
-        board_request = BoardRequest.objects.create(
-            url=api_url,
-            race=current_race,
-            created_at=timezone.now(),
-            status=response.status_code,
-            response=response.content,
-            response_json=response.json(),
-            is_processed=False,
-        )
-        print(f'OK: {board_request} saved fine')
-        process_json(board_request)
+        response_json = response.json()
     except:
-        print(f'FAIL: Detected issue, status {response.status_code}')
-        b = BoardRequest.objects.create(
-            url=api_url,
-            race=current_race,
-            created_at=timezone.now(),
-            status=response.status_code,
-            response=response.content,
-            response_json={},
-            is_processed=True,  # nothing to do here as well
-        )
-        print(f'FAIL: {b} written for debugging purposes')
+        response_json = {}
+
+    board_request = BoardRequest.objects.create(
+        url=api_url,
+        race=current_race,
+        created_at=timezone.now(),
+        status=response.status_code,
+        response=response.content,
+        response_json=response_json,
+        is_processed=False,
+    )
+
+    if response.status_code != 200:
+        print(f'FAIL: not 200 status')
+        return board_request
+    elif not response_json:
+        print(f'FAIL: no json')
+        return board_request
+
+    try:
+        process_json(board_request, current_race)
+    except:
+        print(f'FAIL: Detected issue during processing')
+        traceback.print_exc()
     else:
         board_request.is_processed = True
         board_request.save(update_fields=['is_processed'])
         print(
             f'OK: {board_request} processed correctly, {board_request.laps.count()} written'
         )
+
+    return board_request

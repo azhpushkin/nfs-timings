@@ -44,8 +44,9 @@ class BoardRequest(models.Model):
 
 
 class Team(models.Model):
-    number = models.IntegerField(primary_key=True)
+    number = models.IntegerField()
     name = models.TextField()
+    race = models.ForeignKey(RaceLaunch, on_delete=models.PROTECT, related_name='teams')
 
     class Meta:
         db_table = 'teams'

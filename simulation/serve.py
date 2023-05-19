@@ -1,3 +1,4 @@
+import logging
 from http import server
 import re
 import json
@@ -94,11 +95,28 @@ HEALTH_HTML = f'''
 
 
 class CustomHTTPHandler(server.SimpleHTTPRequestHandler):
+    COUNTER = 0
+
     def do_GET(self) -> None:
 
         if self.path.startswith("/getmaininfo.json"):
-            req_id_match = re.search(r"req_id=(\d+)", self.path)
-            req_id = int(req_id_match.group(1)) if req_id_match else 0
+            if 'use_counter' in self.path:
+                req_id = self.__class__.COUNTER
+                print('Return request', req_id)
+                self.__class__.COUNTER = req_id + 1
+
+                if req_id >= len(df):
+                    self.send_response(
+                        code=508
+                    )  # custom http header instead of generic status code
+                    self.end_headers()
+                    self.wfile.write(b"NO CONNECTION")
+                    return
+
+            else:
+                req_id_match = re.search(r"req_id=(\d+)", self.path)
+                req_id = int(req_id_match.group(1)) if req_id_match else 0
+
             recorded_request = df.loc[req_id]
 
             if recorded_request["status"] == 200:
@@ -110,16 +128,25 @@ class CustomHTTPHandler(server.SimpleHTTPRequestHandler):
                 self.send_response(code=500)
                 self.end_headers()
                 self.wfile.write(b"CONNECTION ERROR")
+                self.wfile.close()
         elif self.path.startswith('/health'):
             self.send_response(code=200)
             self.end_headers()
             self.wfile.write(HEALTH_HTML.encode('utf-8'))
+            self.wfile.close()
+        elif self.path.startswith('/reset'):
+            self.__class__.COUNTER = 0
+
+            self.send_response(code=200)
+            self.end_headers()
+            self.wfile.write(b'RESETED!')
+            self.wfile.close()
         else:
             return super().do_GET()
 
 
 if __name__ == "__main__":
-    address = ("", 7000)
+    address = ("0.0.0.0", 7000)
     httpd = server.HTTPServer(address, CustomHTTPHandler)
     print("Start serving on localhost:7000")
     httpd.serve_forever()
