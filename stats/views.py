@@ -94,7 +94,7 @@ class TeamsView(LoginRequiredMixin, TemplateView):
 
         for s in stints_by_teams:
             s['stints'] = list(
-                sorted(s['stints'], key=lambda x: -x['stint_started_at'])
+                sorted(s['stints'], key=lambda x: x['stint_started_at'])
             )
             s['pilots'] = set(x['pilot'] for x in s['stints'])
         return {'teams': stints_by_teams}
@@ -128,7 +128,7 @@ class TeamDetailsView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         team = get_object_or_404(Team, number=int(kwargs['team']))
         stints_by_team = StintInfo.objects.filter(team=int(kwargs['team'])).order_by(
-            '-stint'
+            'stint'
         )
 
         return {'stints': stints_by_team, 'team': team}

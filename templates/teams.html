@@ -6,7 +6,6 @@ TEAMS
 {% endblock %}
 
 {% block body %}
-    <h4>Stints show latest first </h4>
     {% for team in teams %}
 
     <div class="team-card">
@@ -33,10 +32,19 @@ TEAMS
         </div>
 
         <table class="collapsed" id="stints-info-{{ team.team }}">
+            <tr>
+            <th style="width: 2.5em; vertical-align: middle"></th>
+            <th class="pilot-name">Pilot</th>
+            <th>Best</th>
+            <th>Avg</th>
+            <th>Details</th>
+            </tr>
         {% for stint in team.stints %}
             {# TODO: show when stint happened, how long ago (or if ongoing) #}
+
+        </tr>
             <tr>
-            <td style="width: 2em; vertical-align: middle">
+            <td style="width: 2.5em; vertical-align: middle">
                 <a href="{% url 'kart-detail' stint.kart %}" class="kart-number" style="margin-left: 10px">{{ stint.kart }}</a>
             </td>
 
@@ -45,8 +53,8 @@ TEAMS
                     <br>
                     <span class="stint-timeframe">&#128336; {{ stint.stint_started_at|format_racetime }}</span>
                 </td>
-            <td>Best: {{ stint.best_lap|floatformat:3 }}</td>
-            <td>Average: {{ stint.avg_80|floatformat:3 }}</td>
+            <td>{{ stint.best_lap|floatformat:3 }}</td>
+            <td>{{ stint.avg_80|floatformat:3 }}</td>
                 <td><a href="{% url 'stint-detail' stint.stint_id %}">Show more</a></td>
             </tr>
         {% endfor %}
