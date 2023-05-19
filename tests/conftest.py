@@ -7,7 +7,7 @@ import pathlib
 
 from pydantic import ValidationError
 
-from worker.response_type import NFSResponseDict
+from processing.response_type import NFSResponseDict
 
 BASE_TESTS_PATH = pathlib.Path(__file__).resolve().parent
 TEST_RECORDING_PATH = BASE_TESTS_PATH / 'bg_13_may_q1h.parquet'

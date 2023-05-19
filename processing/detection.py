@@ -1,6 +1,6 @@
 from typing import Dict, Generator
 
-from worker.response_type import NFSResponseDict, RaceInfo, TeamEntry
+from processing.response_type import NFSResponseDict, RaceInfo, TeamEntry
 
 
 def get_response() -> NFSResponseDict:

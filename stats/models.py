@@ -10,6 +10,8 @@ class RaceLaunch(models.Model):
     name = models.CharField(max_length=64)
     is_active = models.BooleanField(default=True)
 
+    skip_first_stint = models.BooleanField(default=False)
+
     class Meta:
         db_table = 'race_launches'
 

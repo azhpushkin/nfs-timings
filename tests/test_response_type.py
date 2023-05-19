@@ -1,6 +1,6 @@
 import pytest
 
-from worker.response_type import LapTime
+from processing.response_type import LapTime
 
 
 @pytest.mark.parametrize(

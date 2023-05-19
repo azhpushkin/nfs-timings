@@ -1,7 +1,7 @@
 from typing import List
 
-from worker.detection import LapDetector
-from worker.response_type import NFSResponseDict
+from processing.detection import LapDetector
+from processing.response_type import NFSResponseDict
 
 
 def test_check_simple_10_laps(bg_recording: List[NFSResponseDict]):

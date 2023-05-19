@@ -7,7 +7,7 @@ from stats.stints import request_api, refresh_stints_info_view
 
 
 class Command(BaseCommand):
-    help = "Launches worker that performs requests to API"
+    help = "Launches processing that performs requests to API"
 
     def handle(self, *args, **options):
         app = RedEngine()
@@ -18,7 +18,7 @@ class Command(BaseCommand):
         task_logger = logging.getLogger('redengine.task')
         task_logger.addHandler(handler)
 
-        # register tasks in the worker
+        # register tasks in the processing
         app.task('every 5 seconds')(request_api)
         app.task("after task 'request_api'")(refresh_stints_info_view)
 
