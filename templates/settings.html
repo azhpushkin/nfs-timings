@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    SETTINGS
+{% endblock %}
+
+
+{% block body %}
+
+    <a href="{% url 'logout-confirm' %}">
+        <button>
+            &#128072; <br> Logout
+        </button>
+    </a>
+
+{% endblock %}

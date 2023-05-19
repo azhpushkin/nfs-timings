@@ -8,4 +8,6 @@ urlpatterns = [
     path('teams/<team>', views.TeamDetailsView.as_view(), name='team-detail'),
     path('kart/<kart>', views.KartDetailsView.as_view(), name='kart-detail'),
     path('stint/<stint>', views.StintDetailsView.as_view(), name='stint-detail'),
+
+    path('settings', views.SettingsView.as_view(), name='settings'),
 ]

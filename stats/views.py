@@ -133,3 +133,8 @@ class StintDetailsView(LoginRequiredMixin, TemplateView):
         team = Team.objects.get(number=stint.team_id)
 
         return {'stint': stint, 'laps': laps, 'team': team}
+
+
+class SettingsView(LoginRequiredMixin, TemplateView):
+    template_name = 'settings.html'
+
