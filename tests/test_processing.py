@@ -1,6 +1,6 @@
 from typing import List
 
-from worker.processing import LapDetector
+from worker.detection import LapDetector
 from worker.response_type import NFSResponseDict
 
 
