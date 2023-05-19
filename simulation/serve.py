@@ -9,6 +9,13 @@ import pandas as pd
 import pathlib
 
 
+def try_parse_json(data) -> dict:
+    try:
+        return json.loads(data)
+    except:
+        return {}
+
+
 # 1985 is start of the race (last request before the race)
 # 40min covers first 40 minutes of the race ( requests bounds are #1980 - #2435 )
 filename = pathlib.Path(sys.argv[1] if len(sys.argv) > 1 else '').name
@@ -19,7 +26,10 @@ print("Loading", REQUESTS_FILE)
 df = pd.read_parquet(REQUESTS_FILE)
 
 tqdm.pandas(desc='Parse json')
-df['parsed_json'] = df['response_json'].progress_apply(json.loads)
+if 'response_json' not in df.columns:
+    df['response_json'] = df['response'].apply(lambda x: eval(x).decode('utf-8'))
+
+df['parsed_json'] = df['response_json'].progress_apply(try_parse_json)
 
 df['parsed_created_at'] = df['created_at'].apply(datetime.fromisoformat)
 # Print dataframe to see bounds of requests
@@ -50,7 +60,6 @@ for _, row in tqdm(
             <td {race_time_color}>
                 {on_tablo_data.get('totalRaceTime', 'NO TIME')}
             </td>
-            <td>{row['is_processed'] == 't'}</td>
         </tr>
     '''
     )
@@ -77,7 +86,6 @@ HEALTH_HTML = f'''
             <td>Status code</td>
             <td>Is Race</td>
             <td>Race time</td>
-            <td>is processed</td>
         </tr>
         {table_trs}
     </table>
