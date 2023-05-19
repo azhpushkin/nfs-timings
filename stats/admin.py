@@ -44,6 +44,7 @@ class TeamAdmin(admin.ModelAdmin):
 @admin.register(Lap)
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('id', 'pilot_name', 'kart', 'lap_time')
+    raw_id_fields = ('board_request',)
 
 
 @admin.register(RaceLaunch)
