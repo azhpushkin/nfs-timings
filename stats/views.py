@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView
 
 from stats.models import Lap, Team, StintInfo, RaceLaunch
+from stats.stints import refresh_stints_info_view
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -161,4 +162,6 @@ def change_skip_first_stint_view(request):
     if race:
         race.skip_first_stint = skip_first_stint
         race.save(update_fields=['skip_first_stint'])
+
+    refresh_stints_info_view()
     return redirect('karts')
