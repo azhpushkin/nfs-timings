@@ -1,3 +1,5 @@
+from typing import Optional
+
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
@@ -17,6 +19,10 @@ class RaceLaunch(models.Model):
 
     def __str__(self):
         return f'<Race #{self.id} - {self.name}>'
+
+    @classmethod
+    def get_current(cls) -> Optional['RaceLaunch']:
+        return RaceLaunch.objects.order_by('-is_active', '-created_at').first()
 
 
 class BoardRequest(models.Model):

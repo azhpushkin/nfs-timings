@@ -7,6 +7,26 @@
 
 
 {% block body %}
+    <div class="skip-first-stint">
+        <form action="/skip-first-stint" method="post">
+            {% csrf_token %}
+            <span>Skip first stint from stats</span>
+            &nbsp;&nbsp;&nbsp;
+            <label><input onchange="this.form.submit();"
+                          type="radio"
+                          name="skip_first_stint"
+                          value="0"
+                          {% if not skip_first_stint %}checked="checked"{% endif %}>
+                No</label>
+
+            <label><input onchange="this.form.submit();"
+                          type="radio"
+                          name="skip_first_stint"
+                          value="1"
+                          {% if skip_first_stint %}checked="checked"{% endif %}>
+                Yes</label>
+        </form>
+    </div>
     <div>
     Order by:
         <ul class="sorting-options">

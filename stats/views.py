@@ -2,10 +2,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.aggregates import ArrayAgg, JSONBAgg
 from django.db.models import Min
 from django.db.models.expressions import RawSQL
-from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView
+from django.shortcuts import get_object_or_404, redirect
+from django.views.generic import TemplateView, FormView
 
-from stats.models import Lap, Team, StintInfo, BoardRequest
+from stats.models import Lap, Team, StintInfo, BoardRequest, RaceLaunch
 from stats.processing import int_to_time
 
 
@@ -13,6 +13,8 @@ class IndexView(LoginRequiredMixin, TemplateView):
     template_name = "karts.html"
 
     def get_context_data(self, **kwargs):
+        race: RaceLaunch = RaceLaunch.get_current()
+
         sorting = self.request.GET.get('sort', 'best_lap')
         if sorting not in (
             'best_lap',
@@ -26,14 +28,23 @@ class IndexView(LoginRequiredMixin, TemplateView):
         field = sorting
         if sorting == 'optimal':
             field = 'best_theoretical'
-        best_stints = StintInfo.objects.annotate(
+
+        stints = StintInfo.objects.all()
+        if race.skip_first_stint:
+            stints = stints.exclude(stint=1)
+
+        best_stints = stints.annotate(
             best_stint=RawSQL(
                 f'ROW_NUMBER() OVER(partition by kart ORDER BY {field})', ()
             )
         ).order_by(field)
         best_stints = [s for s in best_stints if s.best_stint == 1]
 
-        return {'sorting': sorting, 'stints': best_stints}
+        return {
+            'sorting': sorting,
+            'stints': best_stints,
+            'skip_first_stint': race.skip_first_stint,
+        }
 
 
 class TeamsView(LoginRequiredMixin, TemplateView):
@@ -138,3 +149,11 @@ class StintDetailsView(LoginRequiredMixin, TemplateView):
 class SettingsView(LoginRequiredMixin, TemplateView):
     template_name = 'settings.html'
 
+
+def change_skip_first_stint_view(request):
+    skip_first_stint = int(request.POST.get('skip_first_stint'))
+    race = RaceLaunch.get_current()
+    if race:
+        race.skip_first_stint = skip_first_stint
+        race.save(update_fields=['skip_first_stint'])
+    return redirect('karts')

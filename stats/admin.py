@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.db.models import Count
 
 from stats.models import BoardRequest, RaceLaunch, Team, Lap
-from stats.stints import recreate_stints_info_view
 
 
 class LapInline(admin.TabularInline):
@@ -50,8 +49,3 @@ class TeamAdmin(admin.ModelAdmin):
 @admin.register(RaceLaunch)
 class RaceLaunchAdmin(admin.ModelAdmin):
     list_display = ('id', 'created_at', 'name', 'is_active')
-
-    def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
-
-        recreate_stints_info_view(obj.id)

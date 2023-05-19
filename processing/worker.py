@@ -15,9 +15,7 @@ def request_api():
     api_url = current_race.api_url
 
     try:
-        response = requests.get(api_url, headers={
-            'User-Agent': 'Pushkin timings app'
-        })
+        response = requests.get(api_url, headers={'User-Agent': 'Pushkin timings app'})
     except Exception as e:
         BoardRequest.objects.create(
             url=api_url,

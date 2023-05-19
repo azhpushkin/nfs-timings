@@ -52,4 +52,3 @@ def refresh_stints_info_view():
             cursor.execute("""refresh materialized view stints_info""")
     except DatabaseError as e:
         print('Error updating view: ' + str(e))
-
