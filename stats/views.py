@@ -22,6 +22,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
             'optimal',
             'best_sector_1',
             'best_sector_2',
+            'kart',
         ):
             raise Exception('Bad sorting!')
 

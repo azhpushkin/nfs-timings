@@ -10,36 +10,40 @@
     <h3>
     Stints on <a class="kart-number"  href="{% url 'kart-detail' kart %}">{{ kart }}</a>
     </h3>
-    <div>
-    Order by:
-        <ul class="sorting-options">
-            <li>{% if sorting != 'best_lap' %}<a href="{% url 'kart-detail' kart %}">Best</a>{% else %}<b>Best</b>{% endif %}</li>
-            <li>{% if sorting != 'avg_80' %}<a href="{% url 'kart-detail' kart %}?sort=avg_80">Avg</a>{% else %}<b>Avg</b>{% endif %}</li>
-            <li>{% if sorting != 'optimal' %}<a href="{% url 'kart-detail' kart %}?sort=optimal">Optimal</a>{% else %}<b>Optimal</b>{% endif %}</li>
-            <li>{% if sorting != 'best_sector_1' %}<a href="{% url 'kart-detail' kart %}?sort=best_sector_1">S1</a>{% else %}<b>S1</b>{% endif %}</li>
-            <li>{% if sorting != 'best_sector_2' %}<a href="{% url 'kart-detail' kart %}?sort=best_sector_2">S2</a>{% else %}<b>S2</b>{% endif %}</li>
-        </ul>
-    </div>
+
     <table>
         <thead>
         <tr>
             <th class="pilot-name">Pilot</th>
-            {% if sorting == 'optimal' %}
-            <th>Optimal</th>
+
+
+            <th {% if sorting == 'best_lap' %}class="selected-sorting"{% endif %}>
+                <a href="{% url 'kart-detail' kart %}">Best</a>
+            </th>
+
+            {% if sorting == 'best_sector_1' %}
+                <th class="selected-sorting"><a href="{% url 'kart-detail' kart %}?sort=best_sector_2">by S1</a></th>
+            {% elif sorting == 'best_sector_2' %}
+                <th class="selected-sorting"><a href="{% url 'kart-detail' kart %}?sort=best_sector_1">by S2</a></th>
             {% else %}
-            <th>Best</th>
+                <th><a href="{% url 'kart-detail' kart %}?sort=best_sector_1">Sectors</a></th>
             {% endif %}
 
-            <th>Sectors</th>
-            <th>Avg</th>
-            <th>Details</th>
+            <th {% if sorting == 'avg_80' %}class="selected-sorting"{% endif %}>
+                <a href="{% url 'kart-detail' kart %}?sort=avg_80">Avg</a>
+            </th>
+        <th>Details</th>
+
+
         </tr>
 
         </thead>
         {% for stint in stints %}
 
             <tr>
-                <td class="pilot-name">{{ stint.pilot|split_pilot }}</td>
+                <td class="pilot-name">
+                    {{ stint.pilot|pilot_surname }}
+                </td>
             {% if sorting == 'optimal' %}
             <td style="font-weight: bold">
             {{ stint.best_theoretical|floatformat:3 }}

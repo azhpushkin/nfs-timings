@@ -15,5 +15,11 @@ def split_pilot(value):
 
 
 @register.filter
+@stringfilter
+def pilot_surname(value):
+    return value.split(' ')[0]
+
+
+@register.filter
 def format_racetime(value):
     return int_to_time(value)

@@ -52,6 +52,15 @@ table {
     table-layout: fixed;
 }
 
+table th a {
+    color: black;
+    text-decoration: none; /* no underline */
+}
+
+table th.selected-sorting {
+    background-color: yellow;
+}
+
 .sorting-options {
     display: flex;
     max-width: 400px;
