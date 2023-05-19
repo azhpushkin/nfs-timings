@@ -90,7 +90,7 @@ class TeamsView(LoginRequiredMixin, TemplateView):
             .order_by('best_lap')
         )
         stints_by_teams = sorted(
-            stints_by_teams, key=lambda x: teams_midlaps[x['team']]
+            stints_by_teams, key=lambda x: teams_midlaps.get(x['team'], 999)
         )
 
         for s in stints_by_teams:
