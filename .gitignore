@@ -166,4 +166,5 @@ simulation/*-samples/
 
 
 *.parquet
+!bg_13_may_q1h.parquet
 recordings/
