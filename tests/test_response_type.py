@@ -35,6 +35,7 @@ def test_lap_time_parsing(lap_str, minutes, seconds, ms):
     ('2.0', 1),
     ('2.23', 2),
     ('2.00', 2),
+    ('2.04', 2),
     ('2.234', 3),
     ('2.000', 3),
     ('2.020', 3),
@@ -42,4 +43,4 @@ def test_lap_time_parsing(lap_str, minutes, seconds, ms):
 def test_lap_time_precision(lap_str, precision):
     lap_time = LapTime(lap_str)
     assert lap_time.precision == precision
-    assert str(lap_time) == lap_str
+    assert repr(lap_time) == lap_str

@@ -46,7 +46,7 @@ class LapTime(str):
 
     def __repr__(self):
         minutes_prefix = f'{self.minutes}:' if self.minutes else ''
-        ms_suffix = str(self.ms).ljust(3, '0')[:self.precision]
+        ms_suffix = str(self.ms).rjust(3, '0')[:self.precision]
         return f'{minutes_prefix}{self.seconds}.{ms_suffix}'
 
 
