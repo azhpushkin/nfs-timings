@@ -40,7 +40,11 @@ TEAMS
                 <a href="{% url 'kart-detail' stint.kart %}" class="kart-number" style="margin-left: 10px">{{ stint.kart }}</a>
             </td>
 
-                <td>{{ stint.pilot|split_pilot }}</td>
+                <td class="pilot-name">
+                    {{ stint.pilot|pilot_surname }}
+                    <br>
+                    <span class="stint-timeframe">&#128336; {{ stint.stint_started_at|format_racetime }}</span>
+                </td>
             <td>Best: {{ stint.best_lap|floatformat:3 }}</td>
             <td>Average: {{ stint.avg_80|floatformat:3 }}</td>
                 <td><a href="{% url 'stint-detail' stint.stint_id %}">Show more</a></td>

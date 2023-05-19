@@ -66,7 +66,11 @@
                         {{ stint.kart }}
                     </a>
                 </td>
-                <td class="pilot-name">{{ stint.pilot|pilot_surname }}</td>
+                <td class="pilot-name">
+                    {{ stint.pilot|pilot_surname }}
+                    <br>
+                    <span class="stint-timeframe">&#128336; {{ stint.stint_started_at|format_racetime }}</span>
+                </td>
                  {% if sorting == 'optimal' %}
             <td style="font-weight: bold">
             {{ stint.best_theoretical|floatformat:3 }}

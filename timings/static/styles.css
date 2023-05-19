@@ -61,10 +61,19 @@ table th.selected-sorting {
     background-color: yellow;
 }
 
+.stint-timeframe {
+    font-size: 0.8em;
+}
+
 .sorting-options {
     display: flex;
     max-width: 400px;
     justify-content: space-around;
+}
+
+.pilot-name {
+    line-height: 1em;
+    color: black;
 }
 
 .team-card {
