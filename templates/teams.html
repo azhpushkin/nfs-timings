@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load nfsformat %}
 
 {% block title %}
 TEAMS
@@ -45,6 +44,7 @@ TEAMS
         </tr>
             <tr>
             <td style="width: 2.5em; vertical-align: middle">
+                {# TODO: cant use kart component due to extra style #}
                 <a href="{% url 'kart-detail' stint.kart %}" class="kart-number" style="margin-left: 10px">{{ stint.kart }}</a>
             </td>
 

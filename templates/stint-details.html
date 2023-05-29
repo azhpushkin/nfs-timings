@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load nfsformat %}
 
 {% block title %}
     KARTS
@@ -8,7 +7,7 @@
 
 {% block body %}
     <h3>
-        <a class="kart-number"  href="{% url 'kart-detail' stint.kart %}">{{ stint.kart }}</a> by {{ stint.pilot }}
+        {% kart number=stint.kart %} by {{ stint.pilot }}
         -- (started at {{ stint.stint_started_at|format_racetime }})
     </h3>
 

@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% load nfsformat %}
 
 {% block title %}
     KARTS
@@ -23,9 +22,7 @@
 
             <tr>
                 <td style="width: 2em; vertical-align: middle">
-                    <a class="kart-number" href="{% url 'kart-detail' stint.kart %}">
-                        {{ stint.kart }}
-                    </a>
+                    {% kart number=stint.kart %}
                 </td>
                 <td class="pilot-name">
                     {{ stint.pilot|pilot_surname }}

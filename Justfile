@@ -22,3 +22,5 @@ dbshell:
 black:
     {{docker-exec}} web black --extend-exclude migrations --skip-string-normalization .
 
+compile:
+    pip-compile requirements.in --resolver=backtracking > requirements.txt
