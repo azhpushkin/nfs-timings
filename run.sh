@@ -10,15 +10,6 @@ download_requests() {
   python process_recording.py transform $name
 }
 
-i() {
-  python -m IPython
-}
-
-
-webui() {
-  python manage.py runserver
-}
-
 
 worker() {
   python3 worker.py
@@ -31,10 +22,6 @@ sim() {
 
 black() {
   python -m black --extend-exclude migrations --skip-string-normalization .
-}
-
-i() {
-  python -m IPython  # easier to deal with venv
 }
 
 compile_reqs() {
