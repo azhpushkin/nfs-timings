@@ -1,4 +1,5 @@
 x-django-service: &django-service
+  user: "${UID}:${GID}"
   build: .
   volumes:
     - .:/code

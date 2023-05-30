@@ -168,3 +168,5 @@ simulation/*-samples/
 *.parquet
 !tests/bg_13_may_q1h.parquet
 recordings/
+
+staticfiles
