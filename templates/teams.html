@@ -20,7 +20,7 @@ TEAMS
 
             <div class="team-card-line-karts" id="team-card-line-karts-{{ team.team }}">
                 {% for stint in team.stints %}
-                    <span class="kart-number">{{ stint.kart }} </span>&nbsp;
+                    {% kart number=stint.kart style="margin-left: 3px;" nolink %}
                 {% endfor %}
             </div>
 
@@ -44,8 +44,7 @@ TEAMS
         </tr>
             <tr>
             <td style="width: 2.5em; vertical-align: middle">
-                {# TODO: cant use kart component due to extra style #}
-                <a href="{% url 'kart-detail' stint.kart %}" class="kart-number" style="margin-left: 10px">{{ stint.kart }}</a>
+                {% kart number=stint.kart style="margin-left: 5px"%}
             </td>
 
                 <td class="pilot-name">
