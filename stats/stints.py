@@ -23,8 +23,12 @@ def recreate_stints_info_view():
                         teams.number team_id,
                         stint,
                         -- pick most common kart to avoid issues caused by wrong kart
-                        mode() within group (order by kart) as kart,
-                        count(*)                       as laps_amount,
+                        -- do not calculate `0` in
+                        mode() within group (
+                            order by case when kart = 0 then null else kart end
+                        ) as kart,
+                        
+                        count(*) as laps_amount,
                         min(race_time) as stint_started_at,
                         min(lap_time) as best_lap,
                         min(sector_1) as best_sector_1,
@@ -43,7 +47,7 @@ def recreate_stints_info_view():
                     (best_sector_1 + best_sector_2) as best_theoretical,
                     (select avg(m) from unnest(lap_times[:laps_amount * 0.8]) m) as avg_80
                 from stints
-                where kart != 0
+                where kart is not null
             )
         """
         )
