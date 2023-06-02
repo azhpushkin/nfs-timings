@@ -96,6 +96,7 @@ class TeamsView(LoginRequiredMixin, TemplateView):
             s['stints'] = list(sorted(s['stints'], key=lambda x: x['stint_started_at']))
             s['pilots'] = set(x['pilot'] for x in s['stints'])
             s['team__name'] = team_names[s['team']]
+            s['team__midlap'] = teams_midlaps[s['team']]
         return {'teams': stints_by_teams}
 
 

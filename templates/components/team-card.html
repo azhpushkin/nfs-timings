@@ -4,6 +4,8 @@
             <div class="title" id="team-{{ team.team }}-line">
                 {{ team.team__name }}
                 <span style="color: gray; display: inline !important;"> #{{ team.team }}</span>
+                <br>
+                <span style="font-size: 0.7em; color: gray;">Mid: {{ team.team__midlap }}</span>
             </div>
             <div class="pilot-names">
                 {% for pilot in team.pilots %}
