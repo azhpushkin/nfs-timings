@@ -30,26 +30,6 @@ nav a button.active-tab {
 }
 
 
-td {
-    vertical-align: middle;
-}
-
-table {
-    table-layout: fixed;
-}
-
-table th a {
-    color: black;
-    text-decoration: none; /* no underline */
-}
-
-table th.selected-sorting {
-    background-color: yellow;
-}
-
-.stint-timeframe {
-    font-size: 0.8em;
-}
 
 .sorting-options {
     display: flex;
@@ -57,6 +37,7 @@ table th.selected-sorting {
     justify-content: space-around;
 }
 
+/* TODO: refactor usages of this class */
 .pilot-name {
     line-height: 1em;
     color: black;

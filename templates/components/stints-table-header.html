@@ -1,0 +1,39 @@
+<thead>
+    <tr>
+        <th {% if sorting == 'kart' %}class='selected-sorting'{% endif %} style="width: 2em; vertical-align: middle">
+            <a href="?sort=kart">#</a>
+        </th>
+
+        {% if columns.pilot %}
+            <th>
+                Pilot
+            </th>
+        {% endif %}
+
+        {% if columns.best %}
+            <th {% if sorting == 'best' or not sorting %}class='selected-sorting'{% endif %}>
+                <a href="?sort=best">Best</a>
+            </th>
+        {% endif %}
+
+        {% if columns.sectors %}
+            {% if sorting == 's1' %}
+                <th class="selected-sorting"><a href="?sort=s2">by S1</a></th>
+            {% elif sorting == 's2' %}
+                <th class="selected-sorting"><a href="?sort=s1">by S2</a></th>
+            {% else %}
+                <th><a href="?sort=s1">Sectors</a></th>
+            {% endif %}
+        {% endif %}
+
+        {% if columns.average %}
+            <th {% if sorting == 'average' %}class='selected-sorting'{% endif %}>
+                <a href="?sort=average">Avg</a>
+            </th>
+        {% endif %}
+
+        {% if columns.link %}
+            <th>Link</th>
+        {% endif %}
+    </tr>
+</thead>

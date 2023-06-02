@@ -1,0 +1,25 @@
+table.stints {
+    table-layout: fixed;
+}
+
+table.stints td {
+    vertical-align: middle;
+}
+
+
+table.stints th {
+    color: black;
+}
+
+table.stints th a {
+    color: black;
+    /*text-decoration: none; !* no underline *!*/
+}
+
+table.stints th.selected-sorting {
+    background-color: yellow;
+}
+
+table.stints .stint-timeframe {
+    font-size: 0.8em;
+}

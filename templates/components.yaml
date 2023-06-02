@@ -1,3 +1,5 @@
 components:
-  kart: "components/kart.html"
-  team-card: "components/team-card.html"
+  kart: 'components/kart.html'
+  team-card: 'components/team-card.html'
+  stints-table: 'components/stints-table.html'
+  stints-table-header: 'components/stints-table-header.html'

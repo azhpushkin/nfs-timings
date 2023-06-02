@@ -1,0 +1,84 @@
+{# Input params: columns, sortable, sorting #}
+
+{% var columns=columns|parse_stints_table_columns %}
+
+{% if sortable %}
+{# TODO: rework this #}
+<style>
+.stints .{{ sorting }} {
+    font-weight: bold;
+}
+</style>
+{% endif %}
+
+{{ request.path }}
+
+<table class="stints">
+    {# TABLE HEADER START #}
+    {% if sortable %}
+
+        {% stints-table-header columns=columns sorting=sorting %}
+
+    {% else %}
+
+        <thead>
+            <tr>
+                <th style="width: 2em; vertical-align: middle">#</th>
+                {% if columns.pilot %}<th>Pilot</th>{% endif %}
+                {% if columns.best %}<th>Best</th>{% endif %}
+                {% if columns.sectors %}<th>Sectors</th>{% endif %}
+                {% if columns.average %}<th>Avg</th>{% endif %}
+                {% if columns.link %}<th>Link</th>{% endif %}
+            </tr>
+        </thead>
+
+    {% endif %}
+
+    {# TABLE HEADER END #}
+
+    {% for stint in stints %}
+        <tr>
+            <td style="width: 2em; vertical-align: middle">
+                {% kart number=stint.kart %}
+            </td>
+
+            {% if columns.pilot %}
+                <td class="pilot-name">
+                    {{ stint.pilot|pilot_surname }}
+                    <br>
+                    <span class="stint-timeframe">&#128336; {{ stint.stint_started_at|format_racetime }}</span>
+                </td>
+            {% endif %}
+
+            {% if columns.best %}
+                <td class="best">{{ stint.best_lap|floatformat:3 }}</td>
+            {% endif %}
+
+            {% if columns.sectors %}
+                <td>
+                    <span class="s1">{{ stint.best_sector_1|floatformat:2 }}</span>
+                    <br>
+                    <span class="s2">{{ stint.best_sector_2|floatformat:2 }}</span>
+                </td>
+            {% endif %}
+
+            {% if columns.average %}
+                <td class="average">{{ stint.avg_80|floatformat:3 }}</td>
+            {% endif %}
+
+            {% if columns.link %}
+                <td><a href="{% url 'stint-detail' stint.stint_id %}">Details</a></td>
+            {% endif %}
+
+
+
+
+
+
+
+
+
+        </tr>
+    {% endfor %}
+
+</table>

@@ -27,64 +27,6 @@
         </form>
     </div>
     <br>
-    <table>
-        <thead>
-        <tr>
-            <th style="width: 2em; " {% if sorting == 'kart' %}class="selected-sorting"{% endif %}>
-                <a href="{% url 'karts' %}?sort=kart">#</a>
-            </th>
-            <th class="pilot-name">Pilot</th>
-
-
-            <th {% if sorting == 'best_lap' %}class="selected-sorting"{% endif %}>
-                <a href="{% url 'karts' %}">Best</a>
-            </th>
-
-            {% if sorting == 'best_sector_1' %}
-                <th class="selected-sorting"><a href="{% url 'karts' %}?sort=best_sector_2">by S1</a></th>
-            {% elif sorting == 'best_sector_2' %}
-                <th class="selected-sorting"><a href="{% url 'karts' %}?sort=best_sector_1">by S2</a></th>
-            {% else %}
-                <th><a href="{% url 'karts' %}?sort=best_sector_1">Sectors</a></th>
-            {% endif %}
-
-            <th {% if sorting == 'avg_80' %}class="selected-sorting"{% endif %}>
-                <a href="{% url 'karts' %}?sort=avg_80">Avg</a>
-            </th>
-
-
-        </tr>
-
-        </thead>
-        {% for stint in stints %}
-            {# TODO: move stints tables to the separate component! #}
-            {# TODO: highlight column which is now sorted by #}
-            <tr>
-                <td style="width: 2em; vertical-align: middle">
-                        {% kart number=stint.kart %}
-                </td>
-                <td class="pilot-name">
-                    {{ stint.pilot|pilot_surname }}
-                    <br>
-                    <span class="stint-timeframe">&#128336; {{ stint.stint_started_at|format_racetime }}</span>
-                </td>
-                 {% if sorting == 'optimal' %}
-            <td style="font-weight: bold">
-            {{ stint.best_theoretical|floatformat:3 }}
-            </td>
-
-            {% else %}
-            <td {% if sorting == 'best_lap' %}style="font-weight: bold;"{% endif %}>{{ stint.best_lap|floatformat:3 }}</td>
-            {% endif %}
-                <td>
-                    <span {% if sorting == 'best_sector_1' %}style="font-weight: bold;"{% endif %}>{{ stint.best_sector_1|floatformat:2 }}</span>
-                    <br>
-                    <span {% if sorting == 'best_sector_2' %}style="font-weight: bold;"{% endif %}>{{ stint.best_sector_2|floatformat:2 }}</span>
-                </td>
-                <td {% if sorting == 'avg_80' %}style="font-weight: bold;"{% endif %}>{{ stint.avg_80|floatformat:3 }}</td>
-            </tr>
-        {% endfor %}
-
-    </table>
+    {% stints-table stints=stints columns='PBSA' sortable sorting=request.GET.sort %}
 
 {% endblock %}

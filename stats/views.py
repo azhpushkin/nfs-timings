@@ -9,26 +9,26 @@ from stats.models import Lap, Team, StintInfo, RaceLaunch
 from stats.stints import refresh_stints_info_view
 
 
+SORT_MAPPING = {
+    'best': 'best_lap',
+    'average': 'avg_80',
+    's1': 'best_sector_1',
+    's2': 'best_sector_2',
+    'kart': 'kart',
+}
+
+
 class IndexView(LoginRequiredMixin, TemplateView):
     template_name = "karts.html"
 
     def get_context_data(self, **kwargs):
         race: RaceLaunch = RaceLaunch.get_current()
 
-        sorting = self.request.GET.get('sort', 'best_lap')
-        if sorting not in (
-            'best_lap',
-            'avg_80',
-            'optimal',
-            'best_sector_1',
-            'best_sector_2',
-            'kart',
-        ):
+        sorting = self.request.GET.get('sort', 'best')
+        if sorting not in SORT_MAPPING:
             raise Exception('Bad sorting!')
 
-        field = sorting
-        if sorting == 'optimal':
-            field = 'best_theoretical'
+        field = SORT_MAPPING[sorting]
 
         stints = StintInfo.objects.all()
         if race.skip_first_stint:
@@ -42,7 +42,6 @@ class IndexView(LoginRequiredMixin, TemplateView):
         best_stints = [s for s in best_stints if s.best_stint == 1]
 
         return {
-            'sorting': sorting,
             'stints': best_stints,
             'skip_first_stint': race.skip_first_stint,
         }
