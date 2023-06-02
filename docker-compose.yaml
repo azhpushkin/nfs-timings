@@ -34,7 +34,7 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
-      - "{DEV_PORT}:8000"
+      - "${DEV_PORT}:8000"
 
   worker:
     <<: *django-service
