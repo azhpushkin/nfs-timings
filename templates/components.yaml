@@ -1,2 +1,3 @@
 components:
   kart: "components/kart.html"
+  team-card: "components/team-card.html"

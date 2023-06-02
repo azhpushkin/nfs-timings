@@ -6,60 +6,7 @@ TEAMS
 
 {% block body %}
     {% for team in teams %}
-
-    <div class="team-card">
-        <div class="team-card-line" id="team-card-line-{{ team.team }}">
-            <div class="team-card-line-team" >
-                <div class="title" id="team-{{ team.team }}-line">
-                {{ team.team__name }} &nbsp; <span style="color: gray"> - &nbsp; #{{ team.team }}</span>
-                </div>
-                <div class="pilot-names">
-                    {{ team.pilots|join:', ' }}
-                </div>
-            </div>
-
-            <div class="team-card-line-karts" id="team-card-line-karts-{{ team.team }}">
-                {% for stint in team.stints %}
-                    {% kart number=stint.kart style="margin-left: 3px;" nolink %}
-                {% endfor %}
-            </div>
-
-            <div class="team-card-line-link collapsed" id="team-card-line-link-{{ team.team }}">
-                <a href="{% url 'team-detail' team.team %}"><button>Go to team page</button></a>
-
-            </div>
-        </div>
-
-        <table class="collapsed" id="stints-info-{{ team.team }}">
-            <tr>
-            <th style="width: 2.5em; vertical-align: middle"></th>
-            <th class="pilot-name">Pilot</th>
-            <th>Best</th>
-            <th>Avg</th>
-            <th>Details</th>
-            </tr>
-        {% for stint in team.stints %}
-            {# TODO: show when stint happened, how long ago (or if ongoing) #}
-
-        </tr>
-            <tr>
-            <td style="width: 2.5em; vertical-align: middle">
-                {% kart number=stint.kart style="margin-left: 5px"%}
-            </td>
-
-                <td class="pilot-name">
-                    {{ stint.pilot|pilot_surname }}
-                    <br>
-                    <span class="stint-timeframe">&#128336; {{ stint.stint_started_at|format_racetime }}</span>
-                </td>
-            <td>{{ stint.best_lap|floatformat:3 }}</td>
-            <td>{{ stint.avg_80|floatformat:3 }}</td>
-                <td><a href="{% url 'stint-detail' stint.stint_id %}">Show more</a></td>
-            </tr>
-        {% endfor %}
-        </table>
-
-    </div>
+        {% team-card team=team %}
     {% endfor %}
 {% endblock %}
 
@@ -74,7 +21,6 @@ TEAMS
                 document.querySelector('#stints-info-'+team_id).classList.toggle('collapsed');
                 document.querySelector('#team-card-line-karts-'+team_id).classList.toggle('collapsed');
                 document.querySelector('#team-card-line-link-'+team_id).classList.toggle('collapsed');
-                console.log(card_line_div);
             });
         });
     })

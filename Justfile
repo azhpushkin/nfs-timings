@@ -24,3 +24,9 @@ black:
 
 compile:
     pip-compile requirements.in --resolver=backtracking > requirements.txt
+
+sim file:
+    cd simulation && python serve.py {{file}}
+
+sample_upload name:
+    {{docker-exec}} web python manage.py upload_sample --name {{name}} --url http://host.docker.internal:7000/getmaininfo.json?use_counter=1
