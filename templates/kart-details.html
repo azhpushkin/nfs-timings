@@ -10,59 +10,6 @@
     Stints on {% kart number=kart %}
     </h3>
 
-    <table>
-        <thead>
-        <tr>
-            <th class="pilot-name">Pilot</th>
-
-
-            <th {% if sorting == 'best_lap' %}class="selected-sorting"{% endif %}>
-                <a href="{% url 'kart-detail' kart %}">Best</a>
-            </th>
-
-            {% if sorting == 'best_sector_1' %}
-                <th class="selected-sorting"><a href="{% url 'kart-detail' kart %}?sort=best_sector_2">by S1</a></th>
-            {% elif sorting == 'best_sector_2' %}
-                <th class="selected-sorting"><a href="{% url 'kart-detail' kart %}?sort=best_sector_1">by S2</a></th>
-            {% else %}
-                <th><a href="{% url 'kart-detail' kart %}?sort=best_sector_1">Sectors</a></th>
-            {% endif %}
-
-            <th {% if sorting == 'avg_80' %}class="selected-sorting"{% endif %}>
-                <a href="{% url 'kart-detail' kart %}?sort=avg_80">Avg</a>
-            </th>
-        <th>Details</th>
-
-
-        </tr>
-
-        </thead>
-        {% for stint in stints %}
-
-            <tr>
-                <td class="pilot-name">
-                    {{ stint.pilot|pilot_surname }}
-                    <br>
-                    <span class="stint-timeframe">&#128336; {{ stint.stint_started_at|format_racetime }}</span>
-                </td>
-            {% if sorting == 'optimal' %}
-            <td style="font-weight: bold">
-            {{ stint.best_theoretical|floatformat:3 }}
-            </td>
-
-            {% else %}
-            <td {% if sorting == 'best_lap' %}style="font-weight: bold;"{% endif %}>{{ stint.best_lap|floatformat:3 }}</td>
-            {% endif %}
-                <td>
-                    <span {% if sorting == 'best_sector_1' %}style="font-weight: bold;"{% endif %}>{{ stint.best_sector_1|floatformat:2 }}</span>
-                    <br>
-                    <span {% if sorting == 'best_sector_2' %}style="font-weight: bold;"{% endif %}>{{ stint.best_sector_2|floatformat:2 }}</span>
-                </td>
-                <td {% if sorting == 'avg_80' %}style="font-weight: bold;"{% endif %}>{{ stint.avg_80|floatformat:3 }}</td>
-                <td><a href="{% url 'stint-detail' stint.stint_id %}">Show</a></td>
-            </tr>
-        {% endfor %}
-
-    </table>
+    {% stints-table stints=stints columns='PBSAL' sortable sorting=request.GET.sort %}
 
 {% endblock %}

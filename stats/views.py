@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.aggregates import JSONBAgg
-from django.db.models import Min
+from django.db.models import Min, QuerySet
 from django.db.models.expressions import RawSQL
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView
@@ -103,19 +103,11 @@ class KartDetailsView(LoginRequiredMixin, TemplateView):
     template_name = "kart-details.html"
 
     def get_context_data(self, **kwargs):
-        sorting = self.request.GET.get('sort', 'best_lap')
-        if sorting not in (
-            'best_lap',
-            'avg_80',
-            'optimal',
-            'best_sector_1',
-            'best_sector_2',
-        ):
+        sorting = self.request.GET.get('sort', 'best')
+        if sorting not in SORT_MAPPING:
             raise Exception('Bad sorting!')
 
-        field = sorting
-        if sorting == 'optimal':
-            field = 'best_theoretical'
+        field = SORT_MAPPING[sorting]
         stints = StintInfo.objects.filter(kart=int(kwargs['kart'])).order_by(field)
 
         return {'kart': kwargs['kart'], 'stints': stints, 'sorting': sorting}

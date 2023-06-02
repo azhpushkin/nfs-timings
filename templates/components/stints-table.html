@@ -5,7 +5,7 @@
 {% if sortable %}
 {# TODO: rework this #}
 <style>
-.stints .{{ sorting }} {
+.stints .{{ sorting|default:"best" }} {
     font-weight: bold;
 }
 </style>
@@ -51,7 +51,7 @@
             {% endif %}
 
             {% if columns.best %}
-                <td class="best">{{ stint.best_lap|floatformat:3 }}</td>
+                <td class="best">{{ stint.best_lap|floatformat:2 }}</td>
             {% endif %}
 
             {% if columns.sectors %}
@@ -63,7 +63,7 @@
             {% endif %}
 
             {% if columns.average %}
-                <td class="average">{{ stint.avg_80|floatformat:3 }}</td>
+                <td class="average">{{ stint.avg_80|floatformat:2 }}</td>
             {% endif %}
 
             {% if columns.link %}

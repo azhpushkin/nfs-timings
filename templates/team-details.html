@@ -6,35 +6,8 @@
 
 
 {% block body %}
-    <h3>Stints of team {{ team.name }} (latest on top)</h3>
-    <table>
-        <thead>
-        <tr>
-            <th style="width: 2em; "><i class="fa-solid fa-car-side"></i></th>
-            <th class="pilot-name">Pilot</th>
-            <th>Laps<br>Start at</th>
-            <th>Best</th>
-            <th>Avg</th>
-        </tr>
-
-        </thead>
-        {% for stint in stints %}
-
-            <tr>
-                <td style="width: 2em; vertical-align: middle">
-                    {% kart number=stint.kart %}
-                </td>
-                <td class="pilot-name">
-                    {{ stint.pilot|pilot_surname }}
-                    <br>
-                    <span class="stint-timeframe">&#128336; {{ stint.stint_started_at|format_racetime }}</span>
-                </td>
-                <td><a href="{% url 'stint-detail' stint.stint_id %}">~ {{ stint.laps_amount }}<br>{{ stint.stint_started_at|format_racetime }}</a></td>
-                <td>{{ stint.best_lap|floatformat:3 }}</td>
-                <td>{{ stint.avg_80|floatformat:3 }}</td>
-            </tr>
-        {% endfor %}
-
-    </table>
+    <h3>{{ team.name }} - # {{ team.number }}</h3>
+    <div style="font-size: 0.8em">(Stints are shown from first to last)</div><br>
+    {% stints-table stints=stints columns='PBSAL' %}
 
 {% endblock %}
