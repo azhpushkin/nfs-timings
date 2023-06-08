@@ -8,10 +8,13 @@
 
 {% block body %}
 
-    <a href="{% url 'logout-confirm' %}">
-        <button>
-            &#128072; <br> Logout
-        </button>
-    </a>
+    <div style="text-align: center">
+        <form method="POST" action="{% url 'reset-race-pick' %}">
+            {% csrf_token %}
+            <button type="submit">
+                &#128072; <br> Закрити гонку (або вийти)
+            </button>
+        </form>
+    </div>
 
 {% endblock %}

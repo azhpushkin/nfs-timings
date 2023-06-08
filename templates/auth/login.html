@@ -10,18 +10,13 @@
 
 {% block body %}
 
-    <h2 style="text-align: center">
-        NFS Telega
-        <br>
-        &#128640;
-        &#127937;
-        &#127942;
-    </h2>
+    {% include 'components/logo-header.html' %}
+
     <form method="post" id="login-form">
 
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Log In</button>
+        <button type="submit">Увійти</button>
     </form>
 
 

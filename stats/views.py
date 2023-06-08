@@ -4,6 +4,7 @@ from django.db.models import Min
 from django.db.models.expressions import RawSQL
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
+from django.views import View
 from django.views.generic import TemplateView
 
 from stats.models import Lap, Team, StintInfo, Race
@@ -26,8 +27,30 @@ def _get_race(request) -> Race:
     return Race.objects.get(id=request.session[SESSION_CURRENT_RACE_KEY])
 
 
+class RacePickRequiredMixin(LoginRequiredMixin):
+    def dispatch(self, request, *args, **kwargs):
+        current_race = request.session.get(SESSION_CURRENT_RACE_KEY)
+
+        # TODO: this is bad
+        if not current_race:
+            return redirect('race-picker')
+        if not RacePass.objects.filter(
+            user=request.user, race_id=current_race
+        ).exists():
+            request.session.pop(SESSION_CURRENT_RACE_KEY)
+            return redirect('race-picker')
+
+        return super().dispatch(request, *args, **kwargs)
+
+
 class RacePickerView(LoginRequiredMixin, TemplateView):
     template_name = 'race-picker.html'
+
+    def get(self, request, *args, **kwargs):
+        if request.session.get(SESSION_CURRENT_RACE_KEY):
+            return redirect('karts')
+
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         return {
@@ -38,7 +61,6 @@ class RacePickerView(LoginRequiredMixin, TemplateView):
 
     def post(self, request, *args, **kwargs):
         race_id_raw = request.POST.get('race_id')
-        print(race_id_raw)
         try:
             race_id = int(race_id_raw)
             RacePass.objects.get(user=request.user, race_id=race_id)
@@ -50,13 +72,16 @@ class RacePickerView(LoginRequiredMixin, TemplateView):
         return redirect('karts')
 
 
-class IndexView(LoginRequiredMixin, TemplateView):
+class ResetRacePickView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        request.session.pop(SESSION_CURRENT_RACE_KEY)
+        return redirect('race-picker')
+
+
+class IndexView(RacePickRequiredMixin, TemplateView):
     template_name = "karts.html"
 
     def get(self, request, *args, **kwargs):
-        current_race = request.session.get(SESSION_CURRENT_RACE_KEY)
-        if not current_race:
-            return redirect('race-picker')
 
         print(self, request.session.get('current-race'), args, kwargs)
         return super().get(request, *args, **kwargs)
@@ -87,7 +112,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
         }
 
 
-class TeamsView(LoginRequiredMixin, TemplateView):
+class TeamsView(RacePickRequiredMixin, TemplateView):
     template_name = "teams.html"
 
     def get_context_data(self, **kwargs):
@@ -140,7 +165,7 @@ class TeamsView(LoginRequiredMixin, TemplateView):
         return {'teams': stints_by_teams}
 
 
-class KartDetailsView(LoginRequiredMixin, TemplateView):
+class KartDetailsView(RacePickRequiredMixin, TemplateView):
     template_name = "kart-details.html"
 
     def get_context_data(self, **kwargs):
@@ -154,7 +179,7 @@ class KartDetailsView(LoginRequiredMixin, TemplateView):
         return {'kart': kwargs['kart'], 'stints': stints, 'sorting': sorting}
 
 
-class TeamDetailsView(LoginRequiredMixin, TemplateView):
+class TeamDetailsView(RacePickRequiredMixin, TemplateView):
     template_name = "team-details.html"
 
     def get_context_data(self, **kwargs):
@@ -167,7 +192,7 @@ class TeamDetailsView(LoginRequiredMixin, TemplateView):
         return {'stints': stints_by_team, 'team': team}
 
 
-class StintDetailsView(LoginRequiredMixin, TemplateView):
+class StintDetailsView(RacePickRequiredMixin, TemplateView):
     template_name = "stint-details.html"
 
     def get_context_data(self, **kwargs):
@@ -184,7 +209,7 @@ class StintDetailsView(LoginRequiredMixin, TemplateView):
         return {'stint': stint, 'laps': laps, 'team': team}
 
 
-class SettingsView(LoginRequiredMixin, TemplateView):
+class SettingsView(RacePickRequiredMixin, TemplateView):
     template_name = 'settings.html'
 
 

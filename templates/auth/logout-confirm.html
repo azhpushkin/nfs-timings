@@ -5,18 +5,19 @@
     Login
 {% endblock %}
 
+{% block header %}
+{% endblock %}
 
 {% block body %}
 
-    <h2 style="text-align: center">
-        &#9888;
-        You are about to log out
-        &#9888;
-    </h2>
-    <br>
+    {% include 'components/logo-header.html' %}
+
+
     <div style="text-align: center">
+        <h3>Точно хочеш розлогінитися?</h3>
+
         <a href="{% url 'logout' %}">
-            <button>Yeah, bye &#128075;</button>
+            <button>Так, бувай! &#128075;</button>
         </a>
     </div>
 

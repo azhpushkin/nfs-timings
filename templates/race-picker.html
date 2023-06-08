@@ -10,35 +10,41 @@
 
 {% block body %}
 
-     <h2 style="text-align: center">
-        NFS Telega
-        <br>
-        &#128640;
-        &#127937;
-        &#127942;
-    </h2>
+    {% include 'components/logo-header.html' %}
 
     <div style="text-align: center">
+
+        <h4>
+            Привіт, {{ user.username }} <br>
+            Вибери гонку
+        </h4>
 
         {% if error is not None %}
             <div style="background-color: #ffb6b6; border: 3px solid red; max-width: 400px; margin: 20px auto;">
                 Cannot select race {{ error }}
             </div>
         {% endif %}
-
-        <h3>Select a race</h3>
         <form method="post">
             {% csrf_token %}
             {% for race in races %}
                 <button type="submit" name="race_id", value="{{ race.id }}">
                     {{ race.name }}
                     {% if not race.is_active %}
-                        - &#9989; active now
+                        - &#9989; активна
                     {% endif %}
                 </button>
                 <br>
             {% endfor %}
         </form>
+
+        <br><br>
+
+        <a href="{% url 'logout-confirm' %}">
+            <button>
+                &#128072; <br> Розлогінитися
+            </button>
+        </a>
+
     </div>
 
 
