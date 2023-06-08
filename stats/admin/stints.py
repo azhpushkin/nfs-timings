@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.db.models import Count
 
-from stats.models.race import BoardRequest, Team, Lap
+from stats.models import BoardRequest, Team, Lap
 
 
 class LapInline(admin.TabularInline):
