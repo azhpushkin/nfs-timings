@@ -6,7 +6,8 @@ from django.contrib import admin, messages
 from django.db import connection
 from django.http import HttpResponse
 
-from stats.models.race import Race
+from stats.models import User
+from stats.models.race import Race, RacePass
 
 
 class UnClosableTempFile(tempfile.SpooledTemporaryFile):
@@ -25,10 +26,23 @@ class UnClosableTempFile(tempfile.SpooledTemporaryFile):
             super().close()
 
 
+class RacePassInline(admin.TabularInline):
+    model = RacePass
+    fields = ('id', 'race', 'user')
+    extra = 1
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+
 @admin.register(Race)
 class RaceAdmin(admin.ModelAdmin):
-    list_display = ('id', 'created_at', 'name', 'is_active')
+    list_display = ('id', 'name', 'created_at', 'is_active')
+    list_display_links = ('id', 'name')
     actions = ['download_requests']
+    inlines = [
+        RacePassInline,
+    ]
 
     @admin.action(description='Download requests in parquet format')
     def download_requests(self, request, queryset):
@@ -79,4 +93,11 @@ class RaceAdmin(admin.ModelAdmin):
             ] = f'attachment; filename="{filename}.parquet"'
             return response
 
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
 
+        if not change:
+            superusers = User.objects.filter(is_superuser=True, is_active=True)
+            RacePass.objects.bulk_create(
+                [RacePass(race=obj, user=superuser) for superuser in superusers]
+            )
