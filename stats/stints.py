@@ -12,8 +12,8 @@ def recreate_stints_info_view():
             f"""
             create materialized view stints_info as (
                 with race as (
-                    select id, skip_first_stint
-                    from race_launches
+                    select id
+                    from races
                     order by is_active desc, created_at desc
                     limit 1
                 ),
@@ -38,7 +38,7 @@ def recreate_stints_info_view():
                     join race on
                         laps.race_id = race.id
                     join teams
-                        on laps.team_id = teams.id  
+                        on laps.team = teams.id  
                     group by teams.number, stint
                 )
                 select
