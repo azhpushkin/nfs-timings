@@ -2,7 +2,7 @@ import traceback
 from datetime import time
 
 from processing.response_type import NFSResponseDict, TeamEntry
-from stats.models.race import Lap, BoardRequest, Team, Race
+from stats.models import Lap, BoardRequest, Team, Race
 
 
 def time_to_int(t: str) -> int:

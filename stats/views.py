@@ -5,7 +5,7 @@ from django.db.models.expressions import RawSQL
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView
 
-from stats.models.race import Lap, Team, StintInfo, Race
+from stats.models import Lap, Team, StintInfo, Race
 from stats.stints import refresh_stints_info_view
 
 
