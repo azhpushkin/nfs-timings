@@ -38,7 +38,8 @@ services:
 
   worker:
     <<: *django-service
-    command: python manage.py worker
+    command: python processing/worker.py
+    restart: always
     extra_hosts:
       - "host.docker.internal:host-gateway"
 

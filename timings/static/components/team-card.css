@@ -29,6 +29,8 @@
 
 .team-card-line-karts {
     margin-top: 10px;
+    display: flex;
+    gap: 0.4em;
 }
 
 .team-card-line-link {

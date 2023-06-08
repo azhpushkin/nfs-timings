@@ -8,7 +8,7 @@ db:
     docker-compose up -d db
 
 run: db
-    docker-compose up web
+    docker-compose up -d web
 
 shell:
     {{docker-exec}} web bash

@@ -39,12 +39,13 @@
         <th>Details</th>
         </tr>
     {% for stint in team.stints %}
+        {# TODO: show stints component #}
         {# TODO: show when stint happened, how long ago (or if ongoing) #}
 
     </tr>
         <tr>
-        <td style="width: 2.5em; vertical-align: middle">
-            {% kart number=stint.kart style="margin-left: 5px"%}
+        <td style="width: 2.5em; vertical-align: middle; padding-left: 5px">
+            {% kart number=stint.kart%}
         </td>
 
             <td class="pilot-name">

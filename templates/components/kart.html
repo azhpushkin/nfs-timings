@@ -1,9 +1,13 @@
+{% if accent %}
+    {% var style="background-color: "|add:accent %}
+{% endif %}
+
 {% if nolink %}
-    <span class="kart-number" {% attrs style %}>
+    <span class="kart-number" {% attrs style badge %}>
         {{ number }}
     </span>
 {% else %}
-    <a class="kart-number" href="{% url 'kart-detail' number %}" {% attrs style %}>
+    <a class="kart-number" href="{% url 'kart-detail' number %}" {% attrs style badge %}>
         {{ number }}
     </a>
 {% endif %}

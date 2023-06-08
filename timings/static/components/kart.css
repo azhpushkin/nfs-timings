@@ -4,9 +4,40 @@
     border-radius: 5px;
     text-decoration: none;
     color: black;
-    font-size: 1.1em;
+    font-size: 1.2em;
     width: 1.5em;
     height: 1.5em;
     text-align: center;
-    display: inline-block;
+    display: block;
+    position: relative;
+}
+
+.kart-number[badge]:after {
+    position: absolute;
+    width: 1em;
+    height: 1em;
+    line-height: 1em;
+    font-size: 0.8em;
+    border: 1px solid black;
+    border-radius: 50%;
+    display: block;
+    top: -0.5em;
+    font-family: sans-serif;
+    font-weight: bold;
+    right: -0.5em;
+}
+
+.kart-number[badge="question"]:after {
+    content: "?";
+    background-color: #ffe641;
+}
+
+.kart-number[badge="good"]:after {
+    content: "+";
+    background-color: #00ff11;
+}
+
+.kart-number[badge="bad"]:after {
+    content: "\2715";
+    background-color: #ff6565;
 }
