@@ -18,7 +18,7 @@ class Command(BaseCommand):
     def handle(self, *args, url: str, name: str, **options):
         # e.g. --url http://host.docker.internal:7000/getmaininfo.json?use_counter=1
         RaceLaunch.objects.update(is_active=False)
-        RaceLaunch.objects.create(
+        rl = RaceLaunch.objects.create(
             created_at=datetime.now(), api_url=url, name=name, is_active=True
         )
 
@@ -30,3 +30,5 @@ class Command(BaseCommand):
             print(br.response_json.get('onTablo', {}).get('totalRaceTime', 'NO TIME'))
 
         refresh_stints_info_view()
+        rl.is_active = False
+        rl.save()

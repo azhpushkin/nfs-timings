@@ -34,6 +34,11 @@ df['parsed_json'] = df['response_json'].progress_apply(try_parse_json)
 
 df['parsed_created_at'] = df['created_at'].apply(datetime.fromisoformat)
 # Print dataframe to see bounds of requests
+if 'index' not in df.columns and 'id' in df.columns:
+    df['index'] = df['id']
+    print('Populate index from id column')
+
+
 print(df)
 
 

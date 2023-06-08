@@ -62,8 +62,12 @@ class TeamEntry(BaseModel):
     lastLapS2: Optional[LapTime]
     lapCount: int
 
+    # TODO: hardcode that number 44 during marathon is Vovan
     number: int  # TODO: what does it mean
     kart: int  # TODO: check if empty
+    pitstops: int  # TODO: use pitspots to determine stint number (is this really good solution??)
+    # TODO: create StintDetector and compare results in it and in pitstops
+    isOnPit: bool  # TODO: skip laps when isOnPit is true
     totalOnTrack: time
     bestLapOnSegment: Optional[LapTime]
 
