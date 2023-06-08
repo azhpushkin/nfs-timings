@@ -10,6 +10,9 @@ db:
 run: db
     docker-compose up -d web
 
+logs:
+    docker-compose logs -f web
+
 shell:
     {{docker-exec}} web bash
 
@@ -21,6 +24,9 @@ dbshell:
 
 black:
     {{docker-exec}} web black --extend-exclude migrations --skip-string-normalization .
+
+exec cmd:
+    {{docker-exec}} web {{cmd}}
 
 compile:
     pip-compile requirements.in --resolver=backtracking > requirements.txt

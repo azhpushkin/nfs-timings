@@ -3,11 +3,24 @@ import tempfile
 
 import pandas as pd
 from django.contrib import admin, messages
+from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.models import Group
 from django.db import connection
 from django.db.models import Count
 from django.http import HttpResponse
 
-from stats.models import BoardRequest, RaceLaunch, Team, Lap
+from stats.models.race import BoardRequest, Race, Team, Lap
+from stats.models.user import User
+
+
+admin.site.unregister(Group)
+
+
+@admin.register(User)
+class CustomUserAdmin(UserAdmin):
+    list_display = ('username', 'is_superuser', 'is_active')
+    filter_horizontal = []
+    list_filter = []
 
 
 class LapInline(admin.TabularInline):
@@ -69,8 +82,8 @@ class UnClosableTempFile(tempfile.SpooledTemporaryFile):
             super().close()
 
 
-@admin.register(RaceLaunch)
-class RaceLaunchAdmin(admin.ModelAdmin):
+@admin.register(Race)
+class RaceAdmin(admin.ModelAdmin):
     list_display = ('id', 'created_at', 'name', 'is_active')
     actions = ['download_requests']
 
@@ -81,7 +94,7 @@ class RaceLaunchAdmin(admin.ModelAdmin):
                 request, 'Select SINGLE race launch please', messages.ERROR
             )
 
-        race_launch: RaceLaunch = queryset.first()
+        race_launch: Race = queryset.first()
 
         requests_csv = io.StringIO()
         with connection.cursor() as cursor:

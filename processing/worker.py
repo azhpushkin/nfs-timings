@@ -4,12 +4,12 @@ from typing import Optional
 import requests
 from django.utils import timezone
 
-from stats.models import BoardRequest, RaceLaunch
+from stats.models.race import BoardRequest, Race
 from stats.processing import process_json
 
 
 def request_api() -> Optional[BoardRequest]:
-    current_race: RaceLaunch = RaceLaunch.objects.filter(is_active=True).first()
+    current_race: Race = Race.objects.filter(is_active=True).first()
     if not current_race:
         print('OK: No race in progress')
         return None

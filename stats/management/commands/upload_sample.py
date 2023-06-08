@@ -1,10 +1,9 @@
-import logging
 from datetime import datetime
 
 from django.core.management.base import BaseCommand
 
 from processing.worker import request_api
-from stats.models import RaceLaunch
+from stats.models.race import Race
 from stats.stints import refresh_stints_info_view
 
 
@@ -17,8 +16,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, url: str, name: str, **options):
         # e.g. --url http://host.docker.internal:7000/getmaininfo.json?use_counter=1
-        RaceLaunch.objects.update(is_active=False)
-        rl = RaceLaunch.objects.create(
+        Race.objects.update(is_active=False)
+        rl = Race.objects.create(
             created_at=datetime.now(), api_url=url, name=name, is_active=True
         )
 

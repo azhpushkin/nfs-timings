@@ -1,11 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.aggregates import JSONBAgg
-from django.db.models import Min, QuerySet
+from django.db.models import Min
 from django.db.models.expressions import RawSQL
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView
 
-from stats.models import Lap, Team, StintInfo, RaceLaunch
+from stats.models.race import Lap, Team, StintInfo, Race
 from stats.stints import refresh_stints_info_view
 
 
@@ -22,7 +22,7 @@ class IndexView(LoginRequiredMixin, TemplateView):
     template_name = "karts.html"
 
     def get_context_data(self, **kwargs):
-        race: RaceLaunch = RaceLaunch.get_current()
+        race: Race = Race.get_current()
 
         sorting = self.request.GET.get('sort', 'best')
         if sorting not in SORT_MAPPING:
@@ -54,7 +54,7 @@ class TeamsView(LoginRequiredMixin, TemplateView):
         # TODO: Better way to sort teams would be nice
         # Maybe, save some metadata to BoardRequest or some proxy object (e.g. teams order)
         # and then either use it, of if that metadata is absent - use default ordering and log warning
-        race = RaceLaunch.get_current()
+        race = Race.get_current()
         last_request = (
             Lap.objects.filter(race=race).order_by('created_at').last().board_request
         )
@@ -118,7 +118,7 @@ class TeamDetailsView(LoginRequiredMixin, TemplateView):
     template_name = "team-details.html"
 
     def get_context_data(self, **kwargs):
-        race: RaceLaunch = RaceLaunch.get_current()
+        race: Race = Race.get_current()
         team = get_object_or_404(Team, race=race, number=int(kwargs['team']))
         stints_by_team = StintInfo.objects.filter(team=int(kwargs['team'])).order_by(
             'stint'
@@ -131,7 +131,7 @@ class StintDetailsView(LoginRequiredMixin, TemplateView):
     template_name = "stint-details.html"
 
     def get_context_data(self, **kwargs):
-        race = RaceLaunch.get_current()
+        race = Race.get_current()
         stint = StintInfo.objects.get(stint_id=kwargs['stint'])
 
         # TODO: team_id to team_number
@@ -150,7 +150,7 @@ class SettingsView(LoginRequiredMixin, TemplateView):
 
 def change_skip_first_stint_view(request):
     skip_first_stint = int(request.POST.get('skip_first_stint'))
-    race = RaceLaunch.get_current()
+    race = Race.get_current()
     if race:
         race.skip_first_stint = skip_first_stint
         race.save(update_fields=['skip_first_stint'])

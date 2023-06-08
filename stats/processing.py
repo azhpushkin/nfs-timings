@@ -2,7 +2,7 @@ import traceback
 from datetime import time
 
 from processing.response_type import NFSResponseDict, TeamEntry
-from stats.models import Lap, BoardRequest, Team, RaceLaunch
+from stats.models.race import Lap, BoardRequest, Team, Race
 
 
 def time_to_int(t: str) -> int:
@@ -28,7 +28,7 @@ def get_last_lap(s):
         return float(s)
 
 
-def process_json(board_request: BoardRequest, race: RaceLaunch):
+def process_json(board_request: BoardRequest, race: Race):
     try:
         response_parsed: NFSResponseDict = NFSResponseDict.parse_obj(
             board_request.response_json
@@ -54,7 +54,7 @@ def time_to_float(t: time):
 
 
 def process_lap_entry(
-    board_request: BoardRequest, race: RaceLaunch, race_time: time, entry: TeamEntry
+    board_request: BoardRequest, race: Race, race_time: time, entry: TeamEntry
 ):
 
     if not (entry.lastLapS1 and entry.lastLapS2):
