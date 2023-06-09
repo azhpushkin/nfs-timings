@@ -2,7 +2,7 @@ import logging
 from typing import List
 
 from processing.api import request_api, Resolutions
-from processing.detection import LapDetector, LapIndex
+from processing.detection import LapDetector, LapIndex, team_entry_to_lap
 from processing.response_type import NFSResponseDict
 from stats.models import Race, Lap
 
@@ -15,10 +15,7 @@ class Worker:
         self.race = race
 
         latest_laps = self._get_latest_laps()
-        latest_laps_indexes = [
-            LapIndex(team=lap.team, lap_number=lap.lap_number, stint=lap.stint)
-            for lap in latest_laps
-        ]
+        latest_laps_indexes = [LapIndex.from_db_lap(lap) for lap in latest_laps]
         self.lap_detector = LapDetector(latest_laps_indexes)
 
     def refresh_race(self):
@@ -31,7 +28,7 @@ class Worker:
                 from (
                     select
                         *,
-                        row_number() over (partition by team_id order by lap_number desc) rn
+                        row_number() over (partition by team order by lap_number desc) rn
                     from laps
                     where race_id = %s
                 ) t
@@ -44,6 +41,8 @@ class Worker:
     def perform_request(self):
         board_request = request_api(self.race)
         board_request.save()
+        if board_request.resolution != Resolutions.JSON_DECODED:
+            return
 
         try:
             response_parsed: NFSResponseDict = NFSResponseDict.parse_obj(
@@ -66,7 +65,16 @@ class Worker:
 
         for new_entry in self.lap_detector.process_race_info(response_parsed.onTablo):
             try:
-                pass  # TODO: process
+                lap = team_entry_to_lap(
+                    race=self.race,
+                    board_request=board_request,
+                    board_response=response_parsed,
+                    entry=new_entry,
+                )
+                lap.save()
+                logger.info(
+                    'Lap created', extra={'request': board_request.id, 'lap': lap.id}
+                )
             except Exception:
                 logger.exception(
                     'Cannot process TeamEntry',

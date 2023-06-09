@@ -51,7 +51,7 @@ class BoardRequest(models.Model):
 
     response_status = models.IntegerField()
     response_body = models.TextField()
-    response_json = models.JSONField(default=None)
+    response_json = models.JSONField(default=dict)
 
     resolution = models.CharField(max_length=64)
 
