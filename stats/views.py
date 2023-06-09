@@ -2,29 +2,29 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.aggregates import JSONBAgg
 from django.db.models import Min
 from django.db.models.expressions import RawSQL
-from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic import TemplateView
 
 from stats.models import Lap, Team, StintInfo, Race
 from stats.models.race import RacePass
+from stats.services.repo import SortOrder
 from stats.stints import refresh_stints_info_view
 
-
-SORT_MAPPING = {
-    'best': 'best_lap',
-    'average': 'avg_80',
-    's1': 'best_sector_1',
-    's2': 'best_sector_2',
-    'kart': 'kart',
-}
 
 SESSION_CURRENT_RACE_KEY = 'current-race'
 
 
 def _get_race(request) -> Race:
     return Race.objects.get(id=request.session[SESSION_CURRENT_RACE_KEY])
+
+
+def _get_sorting(request) -> SortOrder:
+    sorting = request.GET.get('sort')
+    try:
+        return SortOrder(sorting)
+    except ValueError:
+        return SortOrder.BEST
 
 
 class RacePickRequiredMixin(LoginRequiredMixin):
@@ -89,22 +89,9 @@ class IndexView(RacePickRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         race: Race = _get_race(self.request)
 
-        sorting = self.request.GET.get('sort', 'best')
-        if sorting not in SORT_MAPPING:
-            raise Exception('Bad sorting!')
 
-        field = SORT_MAPPING[sorting]
 
-        stints = StintInfo.objects.all()
-        # if race.skip_first_stint:
-        #     stints = stints.exclude(stint=1)
 
-        best_stints = stints.annotate(
-            best_stint=RawSQL(
-                f'ROW_NUMBER() OVER(partition by kart ORDER BY {field})', ()
-            )
-        ).order_by(field)
-        best_stints = [s for s in best_stints if s.best_stint == 1]
 
         return {
             'stints': best_stints,

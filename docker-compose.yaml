@@ -30,7 +30,7 @@ services:
 
   web:
     <<: *django-service
-    command: python manage.py runserver 0.0.0.0:8000
+    command: ${RUNSERVER_CMD}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     ports:
