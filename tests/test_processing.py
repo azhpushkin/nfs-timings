@@ -8,7 +8,7 @@ def test_check_simple_10_laps(bg_recording: List[NFSResponseDict]):
     # 679 - 764 cover start of the race and first 10 laps of it
     all_results = []
 
-    detector = LapDetector(bg_recording[674])
+    detector = LapDetector()
     for response in bg_recording[675:764]:
         laps = detector.process_race_info(response.onTablo)
         all_results.extend(laps)

@@ -3,7 +3,7 @@ import logging
 from django.core.management.base import BaseCommand
 from redengine import RedEngine
 
-from processing.worker import request_api
+from processing.api import request_api
 from stats.stints import refresh_stints_info_view
 
 

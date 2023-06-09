@@ -1,4 +1,5 @@
-from typing import Dict, Generator
+import dataclasses
+from typing import Dict, Generator, Optional
 
 from processing.response_type import NFSResponseDict, RaceInfo, TeamEntry
 
@@ -7,13 +8,19 @@ def get_response() -> NFSResponseDict:
     pass
 
 
+@dataclasses.dataclass
+class LapIndex:
+    team: int
+    lap_number: int
+    stint: int
+
+
 class LapDetector:
-    previous_info: RaceInfo
+    previous_info: Optional[RaceInfo]
     previous_laps: Dict[int, TeamEntry]
 
-    def __init__(self, initial_info):
-        # First RaceInfo will have no lap times so there is no need to process it
-        self.previous_info = initial_info
+    def __init__(self):
+        self.previous_info = None
         self.previous_laps = {}
 
     def process_race_info(self, info: RaceInfo) -> Generator[TeamEntry, None, None]:

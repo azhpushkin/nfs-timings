@@ -29,7 +29,7 @@ def get_stints(
     race: Race,
     team: Optional[int] = None,
     kart: Optional[int] = None,
-    sort_by: Optional[SortOrder] = None
+    sort_by: Optional[SortOrder] = None,
 ) -> QuerySet[StintInfo]:
     stints = StintInfo.objects.all()
 
@@ -46,5 +46,7 @@ def get_stints(
 
 def pick_best_kart_by(qs: QuerySet[StintInfo], sort_by: SortOrder) -> List[StintInfo]:
     field = SORT_MAPPING[sort_by]
-    qs = qs.annotate(index=RawSQL(f'ROW_NUMBER() OVER(partition by kart ORDER BY {field})', ()))
+    qs = qs.annotate(
+        index=RawSQL(f'ROW_NUMBER() OVER(partition by kart ORDER BY {field})', ())
+    )
     return [stint for stint in qs if stint.index == 1]

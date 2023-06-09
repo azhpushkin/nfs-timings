@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.core.management.base import BaseCommand
 
-from processing.worker import request_api
+from processing.api import request_api
 from stats.models.race import Race
 from stats.stints import refresh_stints_info_view
 

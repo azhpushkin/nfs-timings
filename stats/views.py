@@ -89,10 +89,6 @@ class IndexView(RacePickRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         race: Race = _get_race(self.request)
 
-
-
-
-
         return {
             'stints': best_stints,
             # 'skip_first_stint': race.skip_first_stint,
