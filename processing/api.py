@@ -53,6 +53,13 @@ def request_api(race: Race) -> BoardRequest:
         board_request.response_body = str(response.content)
 
     if response.status_code != 200:
+        logger.error(
+            'Server error',
+            extra={
+                'board_request_id': board_request.id,
+                'status_code': response.status_code,
+            },
+        )
         board_request.resolution = Resolutions.SERVER_ERROR
         return board_request
 

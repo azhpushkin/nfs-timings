@@ -4,8 +4,7 @@ from typing import List
 from processing.api import request_api, Resolutions
 from processing.detection import LapDetector, LapIndex, team_entry_to_lap
 from processing.response_type import NFSResponseDict
-from stats.models import Race, Lap
-
+from stats.models import Race, Lap, BoardRequest
 
 logger = logging.getLogger(__name__)
 
