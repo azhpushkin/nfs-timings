@@ -1,21 +1,27 @@
 import logging
-from typing import List
+from typing import List, Dict
 
 from processing.api import request_api, Resolutions
 from processing.detection import LapDetector, LapIndex, team_entry_to_lap
-from processing.response_type import NFSResponseDict
-from stats.models import Race, Lap, BoardRequest
+from processing.response_type import NFSResponseDict, TeamEntry
+from stats.models import Race, Lap, BoardRequest, Team
 
 logger = logging.getLogger(__name__)
 
 
 class Worker:
+    race: Race
+    lap_detector: LapDetector
+    teams: Dict[int, Team]
+
     def __init__(self, race: Race):
         self.race = race
 
         latest_laps = self._get_latest_laps()
         latest_laps_indexes = [LapIndex.from_db_lap(lap) for lap in latest_laps]
         self.lap_detector = LapDetector(latest_laps_indexes)
+
+        self.teams = {team.number: team for team in self._get_teams()}
 
     def refresh_race(self):
         self.race.refresh_from_db()
@@ -36,6 +42,20 @@ class Worker:
             [self.race.id],
         )
         return list(latest_laps)
+
+    def _get_teams(self) -> List[Team]:
+        return Team.objects.filter(race=self.race)
+
+    def _process_team(self, entry: TeamEntry):
+        if team := self.teams.get(entry.number):
+            if team.name != entry.teamName:
+                team.name = entry.teamName
+                team.save(update_fields=['name'])
+        else:
+            new_team = Team.objects.create(
+                race=self.race, name=entry.teamName, number=entry.number
+            )
+            self.teams[entry.number] = new_team
 
     def perform_request(self):
         board_request = request_api(self.race)
@@ -74,6 +94,8 @@ class Worker:
                 logger.info(
                     'Lap created', extra={'request': board_request.id, 'lap': lap.id}
                 )
+                self._process_team(new_entry)
+
             except Exception:
                 logger.exception(
                     'Cannot process TeamEntry',

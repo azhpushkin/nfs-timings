@@ -21,16 +21,15 @@ class Command(BaseCommand):
         overrides = [o.split('->') for o in overrides]
         overrides = {o[0]: o[1] for o in overrides}
 
-        return
-
+        Race.objects.update(is_active=False)
         race = Race.objects.create(
             created_at=datetime.now(),
             api_url=url,
             name=name,
             is_active=True,
-            overrides=overrides,
+            kart_overrides=overrides,
         )
-        Race.objects.update(is_active=False)
+
         current_worker = Worker(race)
         while True:
             current_worker.perform_request()
