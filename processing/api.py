@@ -13,7 +13,9 @@ class Resolutions:
     REQUEST_FAILED = 'request_failed'
     SERVER_ERROR = 'server_error'
     JSON_ERROR = 'json_error'
+    JSON_DECODED = 'json_decoded'
     JSON_PARSED = 'json_parsed'
+    JSON_NOT_RACE = 'json_not_race'
     JSON_PROCESSED = 'json_processed'
 
 
@@ -67,5 +69,5 @@ def request_api(race: Race) -> BoardRequest:
         board_request.resolution = Resolutions.JSON_ERROR
         return board_request
 
-    board_request.resolution = Resolutions.JSON_PARSED
+    board_request.resolution = Resolutions.JSON_DECODED
     return board_request
