@@ -51,9 +51,9 @@ class Lap(models.Model):
         db_table = 'laps'
 
 
-class StintInfo(models.Model):
+class Stint(models.Model):
     """
-    StintInfo is generated using materialized view.
+    Stint is generated using materialized view.
     Contains aggregated data for each stint, along with some pre-calculations
     """
 
@@ -79,5 +79,5 @@ class StintInfo(models.Model):
     avg_80 = models.FloatField()
 
     class Meta:
-        db_table = 'stints_info'
+        db_table = 'stint'
         managed = False

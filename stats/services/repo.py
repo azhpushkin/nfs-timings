@@ -5,7 +5,7 @@ from typing import Optional, List
 from django.db.models import QuerySet
 from django.db.models.expressions import RawSQL
 
-from stats.models import Race, StintInfo
+from stats.models import Race, Stint
 
 
 class SortOrder(Enum):
@@ -30,8 +30,8 @@ def get_stints(
     team: Optional[int] = None,
     kart: Optional[int] = None,
     sort_by: Optional[SortOrder] = None,
-) -> QuerySet[StintInfo]:
-    stints = StintInfo.objects.all()
+) -> QuerySet[Stint]:
+    stints = Stint.objects.all()
 
     if team:
         stints = stints.filter(team)
@@ -44,7 +44,7 @@ def get_stints(
     return stints
 
 
-def pick_best_kart_by(qs: QuerySet[StintInfo], sort_by: SortOrder) -> List[StintInfo]:
+def pick_best_kart_by(qs: QuerySet[Stint], sort_by: SortOrder) -> List[Stint]:
     field = SORT_MAPPING[sort_by]
     qs = qs.annotate(
         index=RawSQL(f'ROW_NUMBER() OVER(partition by kart ORDER BY {field})', ())

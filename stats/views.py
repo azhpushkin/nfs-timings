@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic import TemplateView
 
-from stats.models import Lap, Team, StintInfo, Race
+from stats.models import Lap, Team, Stint, Race
 from stats.models.race import RacePass
 from stats.services.repo import SortOrder, get_stints, pick_best_kart_by
 from stats.stints import refresh_stints_info_view
@@ -109,6 +109,7 @@ class TeamsView(RacePickRequiredMixin, TemplateView):
         last_request = (
             Lap.objects.filter(race=race).order_by('created_at').last().board_request
         )
+        teams = {team.number: team for team in Team.objects.filter(race=race)}
         team_names = {team.number: team.name for team in Team.objects.filter(race=race)}
 
         teams_midlaps = {
@@ -117,7 +118,7 @@ class TeamsView(RacePickRequiredMixin, TemplateView):
         }
 
         stints_by_teams = (
-            StintInfo.objects.values('team')
+            Stint.objects.values('team')
             .annotate(
                 stints=JSONBAgg(
                     RawSQL(
@@ -160,7 +161,7 @@ class KartDetailsView(RacePickRequiredMixin, TemplateView):
             raise Exception('Bad sorting!')
 
         field = SORT_MAPPING[sorting]
-        stints = StintInfo.objects.filter(kart=int(kwargs['kart'])).order_by(field)
+        stints = Stint.objects.filter(kart=int(kwargs['kart'])).order_by(field)
 
         return {'kart': kwargs['kart'], 'stints': stints, 'sorting': sorting}
 
@@ -171,7 +172,7 @@ class TeamDetailsView(RacePickRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         race = _get_race(self.request)
         team = get_object_or_404(Team, race=race, number=int(kwargs['team']))
-        stints_by_team = StintInfo.objects.filter(team=int(kwargs['team'])).order_by(
+        stints_by_team = Stint.objects.filter(team=int(kwargs['team'])).order_by(
             'stint'
         )
 
@@ -183,7 +184,7 @@ class StintDetailsView(RacePickRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         race = _get_race(self.request)
-        stint = StintInfo.objects.get(stint_id=kwargs['stint'])
+        stint = Stint.objects.get(stint_id=kwargs['stint'])
 
         # TODO: team_id to team_number
         team = Team.objects.filter(race=race, number=stint.team_id).first()

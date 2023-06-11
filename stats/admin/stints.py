@@ -38,7 +38,7 @@ class BoardRequestAdmin(admin.ModelAdmin):
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'number')
+    list_display = ('id', 'name', 'number')
 
 
 @admin.register(Lap)
