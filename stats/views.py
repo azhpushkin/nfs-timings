@@ -142,14 +142,13 @@ class KartDetailsView(RacePickRequiredMixin, TemplateView):
     template_name = "kart-details.html"
 
     def get_context_data(self, **kwargs):
-        sorting = self.request.GET.get('sort', 'best')
-        if sorting not in SORT_MAPPING:
-            raise Exception('Bad sorting!')
+        race: Race = _get_race(self.request)
 
-        field = SORT_MAPPING[sorting]
-        stints = Stint.objects.filter(kart=int(kwargs['kart'])).order_by(field)
+        stints = get_stints(
+            race, kart=int(kwargs['kart']), sort_by=_get_sorting(self.request)
+        )
 
-        return {'kart': kwargs['kart'], 'stints': stints, 'sorting': sorting}
+        return {'kart': kwargs['kart'], 'stints': stints}
 
 
 class TeamDetailsView(RacePickRequiredMixin, TemplateView):
@@ -172,14 +171,18 @@ class StintDetailsView(RacePickRequiredMixin, TemplateView):
         race = _get_race(self.request)
         stint = Stint.objects.get(stint_id=kwargs['stint'])
 
-        # TODO: team_id to team_number
-        team = Team.objects.filter(race=race, number=stint.team_id).first()
-
-        laps = Lap.objects.filter(team_id=team.id, stint=stint.stint).order_by(
-            'race_time'
+        team = Team.objects.filter(race=race, number=stint.team).first()
+        laps = Lap.objects.filter(team=stint.team, stint=stint.stint).order_by(
+            'lap_number'
         )
 
-        return {'stint': stint, 'laps': laps, 'team': team}
+        # TODO: configurable close_to_best?
+        return {
+            'stint': stint,
+            'laps': laps,
+            'team': team,
+            'close_to_best': stint.best_lap + 0.15,
+        }
 
 
 class SettingsView(RacePickRequiredMixin, TemplateView):

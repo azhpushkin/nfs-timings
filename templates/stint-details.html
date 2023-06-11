@@ -22,9 +22,31 @@
     <a href="{% url 'team-detail' team.number %}">Go to team #{{ team.number }} - {{ team.name }} details</a>
 
 
-    <h4>Laps:</h4>
-    {% for lap in laps %}
-        {{ lap.lap_time }}<br>
-    {% endfor %}
+    <table>
+        <thead>
+            <tr>
+                <th>Lap #</th>
+                <th>Time</th>
+                <th>S1</th>
+                <th>S2</th>
+            </tr>
+        </thead>
+
+        {% for lap in laps %}
+            <tr
+                    {% if lap.lap_time == stint.best_lap %}
+                        style="background-color: #f79fff"
+                    {% elif lap.lap_time < close_to_best %}
+                        style="background-color: #afff9f"
+                    {% endif %}>
+
+                <td>{{ close_to_best }}</td>
+                <td>{{ lap.lap_time }}</td>
+                <td>{{ lap.sector_1 }}</td>
+                <td>{{ lap.sector_2 }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
 
 {% endblock %}
