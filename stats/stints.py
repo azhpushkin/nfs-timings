@@ -11,39 +11,33 @@ def recreate_stints_info_view():
         cursor.execute(
             f"""
             create materialized view stints_info as (
-                with race as (
-                    select id
-                    from races
-                    order by is_active desc, created_at desc
-                    limit 1
-                ),
-                stints as (
+                with stints as (
                     select
+                        race_id,
+                        
+                        -- pick most common kart number to avoid issues caused by wrong kart 
+                        --  (0 means kart number is not set)
+                        mode() within group (order by case when kart = 0 then null else kart end) as kart,
+                        
                         mode() within group (order by pilot_name) as pilot,
-                        teams.number team_id,
+                        team,
                         stint,
-                        -- pick most common kart to avoid issues caused by wrong kart
-                        -- do not calculate `0` in
-                        mode() within group (
-                            order by case when kart = 0 then null else kart end
-                        ) as kart,
+                        min(race_time) as stint_started_at,
                         
                         count(*) as laps_amount,
-                        min(race_time) as stint_started_at,
+                        array_agg(lap_time order by lap_time) as lap_times,
+                        
                         min(lap_time) as best_lap,
                         min(sector_1) as best_sector_1,
-                        min(sector_2) as best_sector_2,
-                        array_agg(lap_time order by lap_time) as lap_times
+                        min(sector_2) as best_sector_2
+                        
                     from laps
-                    join race on
-                        laps.race_id = race.id
-                    join teams
-                        on laps.team = teams.id  
-                    group by teams.number, stint
+                    group by race_id, team, stint
                 )
                 select
                     *,
-                    concat(team_id, '-', stint) as stint_id,
+                    -- TODO: coalesce (kart, -1) to indicate unknown kart
+                    concat(team, '-', stint) as stint_id,
                     (best_sector_1 + best_sector_2) as best_theoretical,
                     (select avg(m) from unnest(lap_times[:laps_amount * 0.8]) m) as avg_80
                 from stints

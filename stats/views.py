@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 
 from stats.models import Lap, Team, StintInfo, Race
 from stats.models.race import RacePass
-from stats.services.repo import SortOrder
+from stats.services.repo import SortOrder, get_stints, pick_best_kart_by
 from stats.stints import refresh_stints_info_view
 
 
@@ -89,8 +89,11 @@ class IndexView(RacePickRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         race: Race = _get_race(self.request)
 
+        stints = get_stints(race, sort_by=_get_sorting(self.request))
+        stints = pick_best_kart_by(stints, SortOrder.BEST)
+
         return {
-            'stints': best_stints,
+            'stints': stints
             # 'skip_first_stint': race.skip_first_stint,
         }
 

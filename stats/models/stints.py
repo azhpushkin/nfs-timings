@@ -58,7 +58,10 @@ class StintInfo(models.Model):
     """
 
     # TODO: on deploy - refresh materialized view along with `manage.py migrate`
+
+    # not really primary key, but django requires one
     stint_id = models.TextField(primary_key=True)
+    race_id = models.TextField()
     pilot = models.TextField()
 
     team = models.IntegerField()
