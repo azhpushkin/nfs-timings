@@ -1,11 +1,11 @@
 from django.db import connection, DatabaseError
 
 
-def recreate_stints_info_view():
+def recreate_stints_view():
     with connection.cursor() as cursor:
         cursor.execute(
             """
-            drop materialized view if exists stints_info
+            drop materialized view if exists stints
         """
         )
         cursor.execute(
@@ -48,7 +48,7 @@ def recreate_stints_info_view():
         )
 
 
-def refresh_stints_info_view():
+def refresh_stints_view():
     try:
         with connection.cursor() as cursor:
             cursor.execute("""refresh materialized view stints_info""")

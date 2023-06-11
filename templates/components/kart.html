@@ -2,7 +2,11 @@
     {% var style="background-color: "|add:accent %}
 {% endif %}
 
-{% if nolink %}
+{% if number == None %}
+    <span class="kart-number">
+        ?
+    </span>
+{% elif nolink %}
     <span class="kart-number" {% attrs style badge %}>
         {{ number }}
     </span>

@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 from redengine import RedEngine
 
 from processing.api import request_api
-from stats.stints import refresh_stints_info_view
+from stats.stints import refresh_stints_view
 
 
 class Command(BaseCommand):
@@ -21,6 +21,6 @@ class Command(BaseCommand):
 
         # register tasks in the processing
         app.task('every 5 seconds')(request_api)
-        app.task("after task 'request_api'")(refresh_stints_info_view)
+        app.task("after task 'request_api'")(refresh_stints_view)
 
         app.run()

@@ -9,7 +9,7 @@ from django.views.generic import TemplateView
 from stats.models import Lap, Team, Stint, Race
 from stats.models.race import RacePass
 from stats.services.repo import SortOrder, get_stints, pick_best_kart_by
-from stats.stints import refresh_stints_info_view
+from stats.stints import refresh_stints_view
 
 
 SESSION_CURRENT_RACE_KEY = 'current-race'
@@ -207,5 +207,5 @@ def change_skip_first_stint_view(request):
         race.skip_first_stint = skip_first_stint
         race.save(update_fields=['skip_first_stint'])
 
-    refresh_stints_info_view()
+    refresh_stints_view()
     return redirect('karts')
