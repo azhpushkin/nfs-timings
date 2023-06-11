@@ -79,5 +79,5 @@ class Stint(models.Model):
     avg_80 = models.FloatField()
 
     class Meta:
-        db_table = 'stint'
+        db_table = 'stints'
         managed = False

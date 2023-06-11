@@ -10,7 +10,7 @@ def recreate_stints_info_view():
         )
         cursor.execute(
             f"""
-            create materialized view stints_info as (
+            create materialized view stints as (
                 with stints as (
                     select
                         race_id,
@@ -19,7 +19,7 @@ def recreate_stints_info_view():
                         --  (0 means kart number is not set)
                         mode() within group (order by case when kart = 0 then null else kart end) as kart,
                         
-                        mode() within group (order by pilot_name) as pilot,
+                        (array_agg(pilot_name order by lap_number desc))[1] as pilot,
                         team,
                         stint,
                         min(race_time) as stint_started_at,
@@ -41,7 +41,8 @@ def recreate_stints_info_view():
                     (best_sector_1 + best_sector_2) as best_theoretical,
                     (select avg(m) from unnest(lap_times[:laps_amount * 0.8]) m) as avg_80
                 from stints
-                where kart is not null
+                -- only 20 teams in BG, usually mechanics test karts during race using team #44 or team #69
+                where team <= 20
             )
         """
         )
