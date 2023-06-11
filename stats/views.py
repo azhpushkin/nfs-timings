@@ -1,3 +1,5 @@
+import itertools
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.postgres.aggregates import JSONBAgg
 from django.db.models import Min
@@ -110,46 +112,30 @@ class TeamsView(RacePickRequiredMixin, TemplateView):
             Lap.objects.filter(race=race).order_by('created_at').last().board_request
         )
         teams = {team.number: team for team in Team.objects.filter(race=race)}
-        team_names = {team.number: team.name for team in Team.objects.filter(race=race)}
 
-        teams_midlaps = {
+        teams_average_laps = {
             int(team_data['number']): float(team_data['midLap'])
             for team_data in last_request.response_json['onTablo']['teams']
         }
 
-        stints_by_teams = (
-            Stint.objects.values('team')
-            .annotate(
-                stints=JSONBAgg(
-                    RawSQL(
-                        """
-                        json_build_object(
-                            'stint_id', stint_id,
-                            'kart', kart,
-                            'best_lap', best_lap,
-                            'avg_80', avg_80,
-                            'laps_amount', laps_amount,
-                            'pilot', pilot,
-                            'stint_started_at', stint_started_at
-                        )
-                    """,
-                        (),
-                    )
-                ),
-                best_lap=Min('best_lap'),
-            )
-            .order_by('best_lap')
-        )
-        stints_by_teams = sorted(
-            stints_by_teams, key=lambda x: teams_midlaps.get(x['team'], 999)
-        )
+        stints = get_stints(race=race).order_by('team', 'stint')
 
-        for s in stints_by_teams:
-            s['stints'] = list(sorted(s['stints'], key=lambda x: x['stint_started_at']))
-            s['pilots'] = set(x['pilot'] for x in s['stints'])
-            s['team__name'] = team_names[s['team']]
-            s['team__midlap'] = teams_midlaps[s['team']]
-        return {'teams': stints_by_teams}
+        stints_grouped = itertools.groupby(stints, key=lambda s: s.team)
+        stints_grouped = [(team, list(stints)) for team, stints in stints_grouped]
+
+        teams = [
+            {
+                'number': team,
+                'name': teams[team].name,
+                'average_lap': teams_average_laps.get(team, 99),
+                'pilots': set(s.pilot for s in team_stints),
+                'stints': list(team_stints),
+            }
+            for team, team_stints in stints_grouped
+        ]
+        print(teams)
+
+        return {'teams': sorted(teams, key=lambda team: team['average_lap'])}
 
 
 class KartDetailsView(RacePickRequiredMixin, TemplateView):

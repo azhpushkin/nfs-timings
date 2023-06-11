@@ -1,11 +1,11 @@
 <div class="team-card">
-    <div class="team-card-line" id="team-card-line-{{ team.team }}">
+    <div class="team-card-line" id="team-card-line-{{ team.number }}">
         <div class="team-card-line-team" >
-            <div class="title" id="team-{{ team.team }}-line">
-                {{ team.team__name }}
-                <span style="color: gray; display: inline !important;"> #{{ team.team }}</span>
+            <div class="title" id="team-{{ team.number }}-line">
+                {{ team.name }}
+                <span style="color: gray; display: inline !important;"> #{{ team.number }}</span>
                 <br>
-                <span style="font-size: 0.7em; color: gray;">Mid: {{ team.team__midlap }}</span>
+                <span style="font-size: 0.7em; color: gray;">Mid: {{ team.average_lap }}</span>
             </div>
             <div class="pilot-names">
                 {% for pilot in team.pilots %}
@@ -15,14 +15,14 @@
             </div>
         </div>
 
-        <div class="team-card-line-karts" id="team-card-line-karts-{{ team.team }}">
+        <div class="team-card-line-karts" id="team-card-line-karts-{{ team.number }}">
             {% for stint in team.stints %}
                 {% kart number=stint.kart nolink %}
             {% endfor %}
         </div>
 
-        <div class="team-card-line-link collapsed" id="team-card-line-link-{{ team.team }}">
-            <a href="{% url 'team-detail' team.team %}"><button>Go to team page</button></a>
+        <div class="team-card-line-link collapsed" id="team-card-line-link-{{ team.number }}">
+            <a href="{% url 'team-detail' team.number %}"><button>Go to team page</button></a>
         </div>
     </div>
 
@@ -30,7 +30,7 @@
 
 
 
-    <table class="collapsed" id="stints-info-{{ team.team }}">
+    <table class="collapsed" id="stints-info-{{ team.number }}">
         <tr>
         <th style="width: 2.5em; vertical-align: middle"></th>
         <th class="pilot-name">Pilot</th>

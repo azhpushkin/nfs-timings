@@ -31,7 +31,7 @@ def get_stints(
     kart: Optional[int] = None,
     sort_by: Optional[SortOrder] = None,
 ) -> QuerySet[Stint]:
-    stints = Stint.objects.all()
+    stints = Stint.objects.filter(race_id=race.id)
 
     if team:
         stints = stints.filter(team)
