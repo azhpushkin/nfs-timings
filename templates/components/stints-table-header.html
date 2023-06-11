@@ -17,12 +17,12 @@
         {% endif %}
 
         {% if columns.sectors %}
-            {% if sorting == 's1' %}
-                <th class="selected-sorting"><a href="?sort=s2">by S1</a></th>
-            {% elif sorting == 's2' %}
-                <th class="selected-sorting"><a href="?sort=s1">by S2</a></th>
+            {% if sorting == 'sector_1' %}
+                <th class="selected-sorting"><a href="?sort=sector_2">by S1</a></th>
+            {% elif sorting == 'sector_2' %}
+                <th class="selected-sorting"><a href="?sort=sector_1">by S2</a></th>
             {% else %}
-                <th><a href="?sort=s1">Sectors</a></th>
+                <th><a href="?sort=sector_1">Sectors</a></th>
             {% endif %}
         {% endif %}
 

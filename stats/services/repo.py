@@ -40,12 +40,14 @@ def get_stints(
     if sort_by:
         field = SORT_MAPPING[sort_by]
         stints = stints.order_by(field)
+        print(stints.query.__str__())
 
     return stints
 
 
 def pick_best_kart_by(qs: QuerySet[Stint], sort_by: SortOrder) -> List[Stint]:
     field = SORT_MAPPING[sort_by]
+    qs = qs.filter(kart__isnull=False)
     qs = qs.annotate(
         index=RawSQL(f'ROW_NUMBER() OVER(partition by kart ORDER BY {field})', ())
     )
