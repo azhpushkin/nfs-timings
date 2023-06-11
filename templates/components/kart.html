@@ -1,5 +1,7 @@
+{% var style=style|default:"" %}
+
 {% if accent %}
-    {% var style="background-color: "|add:accent %}
+    {% var style="background-color: "|add:accent|add:";"|add:style %}
 {% endif %}
 
 {% if number == None %}

@@ -8,19 +8,31 @@
 {% block body %}
     <h3>
         {% kart number=stint.kart %} by {{ stint.pilot }}
-        -- (started at {{ stint.stint_started_at|format_racetime }})
+        <br>
+        &#128336; {{ stint.stint_started_at|format_racetime }}
     </h3>
 
     <b>Best lap: {{ stint.best_lap|floatformat:3 }}</b><br>
     Average: {{ stint.avg_80|floatformat:3 }}<br><br>
 
     Best S1: {{ stint.best_sector_1|floatformat:2 }}<br>
-    Best S2: {{ stint.best_sector_2|floatformat:2 }}<br><br>
-    Best segments lap: {{ stint.best_theoretical|floatformat:3 }}<br><br>
+    Best S2: {{ stint.best_sector_2|floatformat:2 }}<br>
+    (Best S1 + S2: {{ stint.best_theoretical|floatformat:3 }})<br>
 
-    <a href="{% url 'kart-detail' stint.kart %}">Go to kart details</a><br>
-    <a href="{% url 'team-detail' team.number %}">Go to team #{{ team.number }} - {{ team.name }} details</a>
-
+    <br>
+    <div style="display: flex; align-items: center; justify-content: space-around">
+        <a href="{% url 'kart-detail' stint.kart %}">
+            <button>
+                Go to {% kart number=stint.kart style="display: inline-block" nolink %} stats
+            </button>
+        </a>
+        <a href="{% url 'team-detail' team.number %}">
+            <button>
+                Go to {{ team.name }} (# {{ team.number }}) page
+            </button>
+        </a>
+    </div>
+    <hr>
 
     <table>
         <thead>
@@ -33,17 +45,28 @@
         </thead>
 
         {% for lap in laps %}
-            <tr
-                    {% if lap.lap_time == stint.best_lap %}
+            <tr class="stint-lap">
+
+                <td>{{ lap.lap_number }}</td>
+                <td {% if lap.lap_time == stint.best_lap %}
                         style="background-color: #f79fff"
                     {% elif lap.lap_time < close_to_best %}
                         style="background-color: #afff9f"
                     {% endif %}>
+                    {{ lap.lap_time }}
+                </td>
 
-                <td>{{ close_to_best }}</td>
-                <td>{{ lap.lap_time }}</td>
-                <td>{{ lap.sector_1 }}</td>
-                <td>{{ lap.sector_2 }}</td>
+                <td {% if lap.sector_1 == stint.best_sector_1 %}
+                        style="background-color: #f79fff"
+                    {% elif lap.sector_1 < close_to_best_sector_1 %}
+                        style="background-color: #afff9f"
+                    {% endif %}>{{ lap.sector_1 }}</td>
+
+                <td {% if lap.sector_2 == stint.best_sector_2 %}
+                        style="background-color: #f79fff"
+                    {% elif lap.sector_2 < close_to_best_sector_2 %}
+                        style="background-color: #afff9f"
+                    {% endif %}>{{ lap.sector_2 }}</td>
             </tr>
         {% endfor %}
     </table>
