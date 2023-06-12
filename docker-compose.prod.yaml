@@ -1,5 +1,0 @@
-services:
-  web:
-    command: gunicorn timings.wsgi -b 0.0.0.0:8000 -w 2 --access-logfile -
-    ports:
-      - "${WEB_PORT}:8000"
