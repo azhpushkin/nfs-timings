@@ -23,7 +23,7 @@ dbshell:
     {{docker-exec}} db psql -U $POSTGRES_USER
 
 black:
-    {{docker-exec}} web black --extend-exclude migrations --skip-string-normalization .
+    black --extend-exclude migrations --skip-string-normalization .
 
 exec cmd:
     {{docker-exec}} web {{cmd}}

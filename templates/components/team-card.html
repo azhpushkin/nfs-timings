@@ -1,3 +1,7 @@
+{% macro team_card(team) %}
+
+{% from 'components/kart.html' import kart %}
+
 <div class="team-card">
     <div class="team-card-line" id="team-card-line-{{ team.number }}">
         <div class="team-card-line-team" >
@@ -10,14 +14,14 @@
             <div class="pilot-names">
                 {% for pilot in team.pilots %}
                     {{ pilot|pilot_surname }}
-                    {% if not forloop.last %}<br>{% endif %}
+                    {% if not loop.last %}<br>{% endif %}
                 {% endfor %}
             </div>
         </div>
 
         <div class="team-card-line-karts" id="team-card-line-karts-{{ team.number }}">
             {% for stint in team.stints %}
-                {% kart number=stint.kart nolink %}
+                {{ kart(number=stint.kart, nolink=true) }}
             {% endfor %}
         </div>
 
@@ -45,7 +49,7 @@
     </tr>
         <tr>
         <td style="width: 2.5em; vertical-align: middle; padding-left: 5px">
-            {% kart number=stint.kart%}
+            {{ kart(number=stint.kart) }}
         </td>
 
             <td class="pilot-name">
@@ -61,3 +65,5 @@
     </table>
 
 </div>
+
+{% endmacro %}

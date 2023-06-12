@@ -1,3 +1,5 @@
+{% macro stints_table_header(columns='PBSAL', sorting='best') %}
+
 <thead>
     <tr>
         <th {% if sorting == 'kart' %}class='selected-sorting'{% endif %} style="width: 2em; vertical-align: middle">
@@ -37,3 +39,5 @@
         {% endif %}
     </tr>
 </thead>
+
+{% endmacro %}

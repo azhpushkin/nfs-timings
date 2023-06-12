@@ -148,7 +148,7 @@ class KartDetailsView(RacePickRequiredMixin, TemplateView):
             race, kart=int(kwargs['kart']), sort_by=_get_sorting(self.request)
         )
 
-        return {'kart': kwargs['kart'], 'stints': stints}
+        return {'kart_number': kwargs['kart'], 'stints': stints}
 
 
 class TeamDetailsView(RacePickRequiredMixin, TemplateView):

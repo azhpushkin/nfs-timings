@@ -1,23 +1,25 @@
-{# Input params: columns, sortable, sorting #}
+{% macro stints_table(stints, columns='PBSAL', sortable=false, sorting='best') %}
 
-{% var columns=columns|parse_stints_table_columns %}
+{% from 'components/stints-table-header.html' import stints_table_header %}
+{% from 'components/kart.html' import kart %}
+
+{% set columns = columns|parse_stints_table_columns %}
+{% set sorting = sorting or 'best' %}
 
 {% if sortable %}
 {# TODO: rework this #}
 <style>
-.stints .{{ sorting|default:"best" }} {
+.stints .{{ sorting }} {
     font-weight: bold;
 }
 </style>
 {% endif %}
 
-{{ request.path }}
-
 <table class="stints">
     {# TABLE HEADER START #}
     {% if sortable %}
 
-        {% stints-table-header columns=columns sorting=sorting %}
+        {{ stints_table_header(columns=columns, sorting=sorting) }}
 
     {% else %}
 
@@ -40,7 +42,7 @@
         <tr>
             <td style="width: 2em; vertical-align: middle">
                 {# {% cycle 'good' 'bad' 'question' as badge silent %} #}
-                {% kart number=stint.kart badge=badge %}
+                {{ kart(number=stint.kart) }}
             </td>
 
             {% if columns.pilot %}
@@ -83,3 +85,5 @@
     {% endfor %}
 
 </table>
+
+{% endmacro %}

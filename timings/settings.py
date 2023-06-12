@@ -69,7 +69,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-        }
+        },
     },
     {
         'BACKEND': 'django.template.backends.jinja2.Jinja2',

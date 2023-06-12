@@ -6,7 +6,7 @@ TEAMS
 
 {% block body %}
     {% for team in teams %}
-        {% team-card team=team %}
+        {{ team_card(team) }}
     {% endfor %}
 {% endblock %}
 

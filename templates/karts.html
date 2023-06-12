@@ -27,6 +27,6 @@
         </form>
     </div>
     <br>
-    {% stints-table stints=stints columns='PBSA' sortable sorting=request.GET.sort %}
+    {{ stints_table(stints=stints, columns='PBSA', sortable=true, sorting=request.GET.get('sort')) }}
 
 {% endblock %}
