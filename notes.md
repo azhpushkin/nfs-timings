@@ -23,3 +23,33 @@ not gonna happen very often. So might be fine to ignore for the start.
 Probaly worth to split everything into 3 parts:
 * worker that simply queues every 1 (maybe 5?) seconds
 * 
+
+
+
+TODO list :
+- [ ] ensure overrides work (in MINI 3 June 15->88)
+- [ ] check if it is possible to have avg deviation ?
+- [ ] average S1 and S2 in stint details
+  - [ ] option to see either BEST sectors or TOP 10%
+  - [ ] sector deviation?
+- [ ] ASS RT - missing stint data, check ow to works and looks
+- [ ] Find crashes in old races (Burim video, Dorokhin chat has some info)
+  - [ ] Race 10 June: Bakhmatsky had 16 broken
+- [ ] Find more nuances inside the races (e.g. multiple karts in same stint)
+  - [ ] Chishkala in mini 3 june 3 karts
+  - [ ] What if karts with 2 digits are typed one by one
+  - [ ] Same for pilot name
+- [ ] Add badges to the karts
+  - [ ] Repair badge, slowed down badge, boost up badge
+  - [ ] Check SVG, add buttons with SVG to kart details
+- [ ] Add color accents to the karts
+  - [ ] Configurable?? on kart details page
+- [ ] Per-user setting for filtering
+- [ ] STINTS TABLE on teams details
+- [ ] Performance testing
+  - [ ] We do not need to re-generate all materialized views tbh
+  - [ ] Performance of teams view (maybe dynamic loading? Or do everything in SQL?)
+- [ ] Add RaceInfo parsed from BoardRequest (will be used for teams ordering and pits mode)
+- [ ] add stint length to stint details view
+- [ ] dynamic exclude team from calculations (is_active)
+- [ ]

@@ -182,6 +182,8 @@ class StintDetailsView(RacePickRequiredMixin, TemplateView):
             'laps': laps,
             'team': team,
             'close_to_best': stint.best_lap + 0.15,
+            'close_to_best_sector_1': stint.best_sector_1 + 0.07,
+            'close_to_best_sector_2': stint.best_sector_2 + 0.07,
         }
 
 
