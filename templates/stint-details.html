@@ -45,28 +45,24 @@
         </thead>
 
         {% for lap in laps %}
+            {% set lap_class = 'close-to-best' if lap.lap_time < close_to_best %}
+            {% set lap_class = 'best' if lap.lap_time == stint.best_lap else lap_class %}
+
+            {% set s1_class = 'close-to-best' if lap.sector_1 < close_to_best_sector_1 %}
+            {% set s1_class = 'best' if lap.sector_1 == stint.best_sector_1 else s1_class %}
+
+            {% set s2_class = 'close-to-best' if lap.sector_2 < close_to_best_sector_2 %}
+            {% set s2_class = 'best' if lap.sector_2 == stint.best_sector_2 else s2_class %}
+
+
             <tr class="stint-lap">
-
                 <td>{{ lap.lap_number }}</td>
-                <td {% if lap.lap_time == stint.best_lap %}
-                        style="background-color: #f79fff"
-                    {% elif lap.lap_time < close_to_best %}
-                        style="background-color: #afff9f"
-                    {% endif %}>
-                    {{ lap.lap_time }}
-                </td>
 
-                <td {% if lap.sector_1 == stint.best_sector_1 %}
-                        style="background-color: #f79fff"
-                    {% elif lap.sector_1 < close_to_best_sector_1 %}
-                        style="background-color: #afff9f"
-                    {% endif %}>{{ lap.sector_1 }}</td>
+                <td class="{{ lap_class }}">{{ lap.lap_time }}</td>
 
-                <td {% if lap.sector_2 == stint.best_sector_2 %}
-                        style="background-color: #f79fff"
-                    {% elif lap.sector_2 < close_to_best_sector_2 %}
-                        style="background-color: #afff9f"
-                    {% endif %}>{{ lap.sector_2 }}</td>
+                <td class="{{ s1_class }}">{{ lap.sector_1 }}</td>
+
+                <td class="{{ s2_class }}">{{ lap.sector_2 }}</td>
             </tr>
         {% endfor %}
     </table>

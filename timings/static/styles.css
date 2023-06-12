@@ -63,3 +63,13 @@ nav a button.active-tab {
     max-width: 500px;
     margin: auto;
 }
+
+
+tr.stint-lap td.best {
+    background-color: #f79fff;
+}
+
+
+tr.stint-lap td.close-to-best {
+    background-color: #afff9f
+}

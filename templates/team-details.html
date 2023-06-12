@@ -8,6 +8,6 @@
 {% block body %}
     <h3>{{ team.name }} - # {{ team.number }}</h3>
     <div style="font-size: 0.8em">(Stints are shown from first to last)</div><br>
-    {% stints-table stints=stints columns='PBSAL' %}
+    {{ stints_table(stints=stints, columns='PBSAL')}}
 
 {% endblock %}
