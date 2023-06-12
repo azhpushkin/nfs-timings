@@ -22,24 +22,24 @@ def int_to_time(t: int) -> str:
     return f'{h:2}:{m:02}:{s:02}'
 
 
-@register.filter
-@stringfilter
+# @register.filter
+# @stringfilter
 def split_pilot(value):
     return mark_safe(value.replace(' ', '<br>'))
 
 
-@register.filter
-@stringfilter
+# @register.filter
+# @stringfilter
 def pilot_surname(value):
     return value.split(' ')[0]
 
 
-@register.filter
+# @register.filter
 def format_racetime(value):
     return int_to_time(value)[:-3]
 
 
-@register.filter
+# @register.filter
 def parse_stints_table_columns(value):
     mapping = {'P': 'pilot', 'B': 'best', 'S': 'sectors', 'A': 'average', 'L': 'link'}
     chars = [c.upper() for c in value]

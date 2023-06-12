@@ -38,7 +38,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'stats',
-    'slippers',
+    # 'slippers',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -62,10 +62,6 @@ ROOT_URLCONF = 'timings.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            BASE_DIR / 'templates',
-        ],
-        'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
@@ -73,11 +69,27 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
-            'builtins': [
-                'slippers.templatetags.slippers',
-                'stats.templatetags.nfsformat',
-            ],
+        }
+    },
+    {
+        'BACKEND': 'django.template.backends.jinja2.Jinja2',
+        'DIRS': [
+            BASE_DIR / 'templates',
+        ],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'environment': 'timings.jinja2.environment',
         },
+        #     'context_processors': [
+        #         'django.template.context_processors.debug',
+        #         'django.template.context_processors.request',
+        #         'django.contrib.auth.context_processors.auth',
+        #         'django.contrib.messages.context_processors.messages',
+        #     ],
+        #     'builtins': [
+        #         'slippers.templatetags.slippers',
+        #         'stats.templatetags.nfsformat',
+        #     ],
     },
 ]
 
@@ -134,7 +146,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 LOGIN_URL = '/login'
-LOGIN_REDIRECT_URL = "/"
+LOGIN_REDIRECT_URL = '/'
 
 LOGOUT_REDIRECT_URL = '/login'
 

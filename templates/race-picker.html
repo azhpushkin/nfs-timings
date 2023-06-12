@@ -19,13 +19,13 @@
             Вибери гонку
         </h4>
 
-        {% if error is not None %}
+        {% if error is not none %}
             <div style="background-color: #ffb6b6; border: 3px solid red; max-width: 400px; margin: 20px auto;">
                 Cannot select race {{ error }}
             </div>
         {% endif %}
         <form method="post">
-            {% csrf_token %}
+            {{ csrf_input }}
             {% for race in races %}
                 <button type="submit" name="race_id", value="{{ race.id }}">
                     {{ race.name }}
@@ -39,7 +39,7 @@
 
         <br><br>
 
-        <a href="{% url 'logout-confirm' %}">
+        <a href="{{ url('logout-confirm') }}">
             <button>
                 &#128072; <br> Розлогінитися
             </button>

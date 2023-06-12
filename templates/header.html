@@ -6,17 +6,17 @@
         NFS Telega
     </h3>
     <nav>
-        <a href="{% url 'karts' %}">
+        <a href="{{ url('karts') }}">
             <button {% if request.path == '/' %}class="active-tab"{% endif %}>
                 &#128640; <br> Karts
             </button>
         </a>
-        <a href="{% url 'teams' %}">
+        <a href="{{ url('teams') }}">
             <button {% if request.path == '/teams' %}class="active-tab"{% endif %}>
                 &#128203; <br> Teams
             </button>
         </a>
-        <a href="{% url 'settings' %}">
+        <a href="{{ url('settings') }}">
             <button {% if request.path == '/settings' %}class="active-tab"{% endif %}>
                 &#128295; <br> Settings
             </button>

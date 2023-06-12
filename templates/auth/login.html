@@ -14,8 +14,8 @@
 
     <form method="post" id="login-form">
 
-        {% csrf_token %}
-        {{ form.as_p }}
+        {{  csrf_input }}
+        {{ form.as_p() }}
         <button type="submit">Увійти</button>
     </form>
 

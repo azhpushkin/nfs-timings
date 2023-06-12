@@ -1,4 +1,4 @@
-{% load static %}
+{% from 'components/kart.html' import kart %}
 
 <!doctype html>
 <html lang="en">
@@ -13,10 +13,10 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
     <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
-    <link rel="stylesheet" href="{% static 'components/kart.css' %}">
-    <link rel="stylesheet" href="{% static 'components/team-card.css' %}">
-    <link rel="stylesheet" href="{% static 'components/stints-table.css' %}">
+    <link rel="stylesheet" href="{{ static ('styles.css') }}">
+    <link rel="stylesheet" href="{{ static ('components/kart.css') }}">
+    <link rel="stylesheet" href="{{ static ('components/team-card.css') }}">
+    <link rel="stylesheet" href="{{ static ('components/stints-table.css') }}">
 
     <title>{% block title %}{% endblock %}</title>
 

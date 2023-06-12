@@ -22,7 +22,7 @@
         </div>
 
         <div class="team-card-line-link collapsed" id="team-card-line-link-{{ team.number }}">
-            <a href="{% url 'team-detail' team.number %}"><button>Go to team page</button></a>
+            <a href="{{ url('team-detail', args=[team.number]) }}"><button>Go to team page</button></a>
         </div>
     </div>
 
@@ -53,9 +53,9 @@
                 <br>
                 <span class="stint-timeframe">&#128336; {{ stint.stint_started_at|format_racetime }}</span>
             </td>
-        <td>{{ stint.best_lap|floatformat:3 }}</td>
-        <td>{{ stint.avg_80|floatformat:3 }}</td>
-            <td><a href="{% url 'stint-detail' stint.stint_id %}">Show more</a></td>
+        <td>{{ stint.best_lap|round(3) }}</td>
+        <td>{{ stint.avg_80|round(3) }}</td>
+            <td><a href="{{ url('stint-detail', args=[stint.stint_id]) }}">Show more</a></td>
         </tr>
     {% endfor %}
     </table>

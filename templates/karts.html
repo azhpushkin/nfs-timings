@@ -8,7 +8,7 @@
 {% block body %}
     <div class="skip-first-stint">
         <form action="/skip-first-stint" method="post">
-            {% csrf_token %}
+            {{ csrf_input }}
             <span>Skip first stint from stats</span>
             &nbsp;&nbsp;&nbsp;
             <label><input onchange="this.form.submit();"

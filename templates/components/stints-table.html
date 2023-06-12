@@ -52,23 +52,23 @@
             {% endif %}
 
             {% if columns.best %}
-                <td class="best">{{ stint.best_lap|floatformat:2 }}</td>
+                <td class="best">{{ stint.best_lap|round(2) }}</td>
             {% endif %}
 
             {% if columns.sectors %}
                 <td>
-                    <span class="sector_1">{{ stint.best_sector_1|floatformat:2 }}</span>
+                    <span class="sector_1">{{ stint.best_sector_1|round(2) }}</span>
                     <br>
-                    <span class="sector_2">{{ stint.best_sector_2|floatformat:2 }}</span>
+                    <span class="sector_2">{{ stint.best_sector_2|round(2) }}</span>
                 </td>
             {% endif %}
 
             {% if columns.average %}
-                <td class="average">{{ stint.avg_80|floatformat:2 }}</td>
+                <td class="average">{{ stint.avg_80|round(2) }}</td>
             {% endif %}
 
             {% if columns.link %}
-                <td><a href="{% url 'stint-detail' stint.stint_id %}">Details</a></td>
+                <td><a href="{{ url('stint-detail', args=[stint.stint_id]) }}">Details</a></td>
             {% endif %}
 
 

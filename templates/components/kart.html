@@ -1,19 +1,28 @@
-{% var style=style|default:"" %}
+{% macro kart(number, nolink=false, style='', badge=none, accent=none) %}
+
+
+{% set ns = namespace(style=style, badge='') %}
 
 {% if accent %}
-    {% var style="background-color: "|add:accent|add:";"|add:style %}
+    {% set ns.style = "background-color: {}; ".format(accent, style) %}
 {% endif %}
 
-{% if number == None %}
+{% if badge %}
+    {% set ns.badge = 'badge="{}"'.format(badge) %}
+{% endif %}
+
+{% if number == none %}
     <span class="kart-number">
         ?
     </span>
 {% elif nolink %}
-    <span class="kart-number" {% attrs style badge %}>
+    <span class="kart-number" style="{{ style }}" {{ badge }} >
         {{ number }}
     </span>
 {% else %}
-    <a class="kart-number" href="{% url 'kart-detail' number %}" {% attrs style badge %}>
+    <a class="kart-number" href="{{ url('kart-detail', args=[number]) }}" style="{{ style }}" {{ badge }}>
         {{ number }}
     </a>
 {% endif %}
+
+{% endmacro %}
