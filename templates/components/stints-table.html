@@ -1,7 +1,7 @@
-{% macro stints_table(stints, columns='PBSAL', sortable=false, sorting='best') %}
-
 {% from 'components/stints-table-header.html' import stints_table_header with context %}
 {% from 'components/kart.html' import kart with context %}
+
+{% macro stints_table(stints, columns='PBSAL', sortable=false, sorting='best') %}
 
 {% set columns = columns|parse_stints_table_columns %}
 {% set sorting = sorting or 'best' %}

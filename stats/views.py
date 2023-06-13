@@ -136,7 +136,6 @@ class TeamsView(RacePickRequiredMixin, TemplateView):
             }
             for team, team_stints in stints_grouped
         ]
-        print(teams)
 
         return {'teams': sorted(teams, key=lambda team: team['average_lap'])}
 

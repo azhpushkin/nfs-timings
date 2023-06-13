@@ -112,3 +112,12 @@ button.badge-option {
     width: 1.2em;
     margin-bottom: -5px;
 }
+
+.karts-with-marks {
+    margin: 10px 0;
+}
+
+.karts-with-marks .kart-number {
+    margin-right: 20px;
+    margin-bottom: 10px;
+}
