@@ -17,7 +17,7 @@ table.stints th a {
 }
 
 table.stints th.selected-sorting {
-    background-color: yellow;
+    background-color: #ffff7b;
 }
 
 table.stints .stint-timeframe {

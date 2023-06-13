@@ -12,32 +12,22 @@
     position: relative;
 }
 
-.kart-number[badge]:after {
-    position: absolute;
-    width: 1em;
-    height: 1em;
-    line-height: 1em;
-    font-size: 0.8em;
+img.badge {
+    width: 0.7em;
+    height: 0.7em;
+
+    padding: 0.1em;
     border: 1px solid black;
     border-radius: 50%;
-    display: block;
+    background-color: #ffe641;
+    /*background-color: #00ff11;*/
+    /*background-color: #ff6565;*/
+
+    position: absolute;
     top: -0.5em;
-    font-family: sans-serif;
-    font-weight: bold;
     right: -0.5em;
 }
 
-.kart-number[badge="question"]:after {
-    content: "?";
-    background-color: #ffe641;
-}
+img.badge[class="repair"] {
 
-.kart-number[badge="good"]:after {
-    content: "+";
-    background-color: #00ff11;
-}
-
-.kart-number[badge="bad"]:after {
-    content: "\2715";
-    background-color: #ff6565;
 }
