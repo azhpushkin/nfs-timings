@@ -74,3 +74,12 @@ def update_kart_badge(race_pass: RacePass, kart: int, badge: Optional[str]):
         race_pass.badges.pop(str(kart), None)
 
     race_pass.save(update_fields=['badges'])
+
+
+def update_kart_note(race_pass: RacePass, kart: int, note: Optional[str]):
+    if note:
+        race_pass.notes[str(kart)] = note
+    else:
+        race_pass.notes.pop(str(kart), None)
+
+    race_pass.save(update_fields=['notes'])

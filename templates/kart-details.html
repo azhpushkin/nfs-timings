@@ -7,18 +7,32 @@
 {% endblock %}
 
 {% set BADGE_NAMES = {'good': 'Відкручена', 'slowed': 'Закручена', 'damaged': 'Поломка', 'unknown': 'Нестабільна', none: 'Очистити'} %}
-
+{% set kart_note = user_notes.get(kart_number) %}
 
 {% block body %}
     <h3>
     Всі відрізки на {{ kart(number=kart_number, nolink=true, inline=true) }}
     </h3>
 
+    {% if kart_note %}
+        <div class="kart-note"><b>Примітка: </b>{{ kart_note }}</div>
+    {% endif %}
+
     {{ stints_table(stints, columns='PBSAL', sortable=true, sorting=request.GET.get('sort')) }}
 
     <hr>
 
     <div class="kart-config">
+        <h4>Змінити фон</h4>
+        <form class="picker" method="POST">
+            {{ csrf_input }}
+            {% for accent in [none, '#69ff6e', '#e87474', '#faec6e'] %}
+                <button class="accent-option" type="submit" value="{{ accent }}" name="accent">
+                    {{ kart(number=kart_number, inline=true, accent=accent or 'white', nolink=true) }}
+                </button>
+            {% endfor %}
+        </form>
+
         <h4>Відмітити карт значком</h4>
         <form class="picker" method="POST">
             {{ csrf_input }}
@@ -33,14 +47,12 @@
             {% endfor %}
 
         </form>
-        <h4>Змінити фон</h4>
+
+        <h4>Додати нотатку</h4>
         <form class="picker" method="POST">
             {{ csrf_input }}
-            {% for accent in [none, '#69ff6e', '#e87474', '#faec6e'] %}
-                <button class="accent-option" type="submit" value="{{ accent }}" name="accent">
-                    {{ kart(number=kart_number, inline=true, accent=accent or 'white', nolink=true) }}
-                </button>
-            {% endfor %}
+            <textarea name="note" placeholder="Цей карт гавно тому що...">{{ kart_note }}</textarea>
+            <input type="submit" value="Зберегти">
         </form>
     </div>
 

@@ -28,6 +28,7 @@ class UnClosableTempFile(tempfile.SpooledTemporaryFile):
 
 class RacePassInline(admin.TabularInline):
     model = RacePass
+    show_change_link = True
     fields = ('id', 'race', 'user')
     extra = 1
 
@@ -101,3 +102,8 @@ class RaceAdmin(admin.ModelAdmin):
             RacePass.objects.bulk_create(
                 [RacePass(race=obj, user=superuser) for superuser in superusers]
             )
+
+
+@admin.register(RacePass)
+class RacePassAdmin(admin.ModelAdmin):
+    pass

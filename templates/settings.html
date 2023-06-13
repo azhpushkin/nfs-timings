@@ -11,10 +11,19 @@
     <div>
         <div class="karts-with-marks">
             <h4>Карти з відмітками</h4>
+
             {% set karts_with_marks = user_badges|list + user_accents|list %}
+            <table>
             {% for kart_number in karts_with_marks|unique|sort %}
-                {{ kart(number=kart_number, inline=true) }}
+                <tr>
+                <td>
+                    {{ kart(number=kart_number, inline=true) }}</td>
+                   <td> {{ user_notes.get(kart_number, '- ') }}</td>
+
+                </tr>
+
             {% endfor %}
+            </table>
         </div>
         <form method="POST" action="{{ url('reset-race-pick') }}">
             {{ csrf_input }}

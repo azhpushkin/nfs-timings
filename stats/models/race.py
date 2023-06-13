@@ -35,8 +35,9 @@ class RacePass(models.Model):
     race = models.ForeignKey(Race, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    badges = models.JSONField(default=dict)
-    accents = models.JSONField(default=dict)
+    badges = models.JSONField(default=dict, blank=True)
+    accents = models.JSONField(default=dict, blank=True)
+    notes = models.JSONField(default=dict, blank=True)
 
     class Meta:
         db_table = 'race_passes'

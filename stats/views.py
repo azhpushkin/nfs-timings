@@ -14,6 +14,7 @@ from stats.services.repo import (
     get_race_pass,
     update_kart_accent,
     update_kart_badge,
+    update_kart_note,
 )
 from stats.stints import refresh_stints_view
 
@@ -163,6 +164,12 @@ class KartDetailsView(RacePickRequiredMixin, TemplateView):
         if badge := request.POST.get('badge'):
             badge = None if badge == 'None' else badge
             update_kart_badge(race_pass, kart, badge)
+
+        note = request.POST.get('note', '').strip()
+        if note:
+            update_kart_note(race_pass, kart, note)
+
+        print(request.POST)
 
         return redirect('kart-detail', kwargs['kart'])
 
