@@ -1,4 +1,5 @@
 {% from 'components/kart.html' import kart with context %}
+{% from 'components/stints-table.html' import stints_table with context %}
 
 {% macro team_card(team) %}
 
@@ -32,37 +33,9 @@
 
 
 
-
-
-    <table class="collapsed" id="stints-info-{{ team.number }}">
-        <tr>
-        <th style="width: 2.5em; vertical-align: middle"></th>
-        <th class="pilot-name">Pilot</th>
-        <th>Best</th>
-        <th>Avg</th>
-        <th>Details</th>
-        </tr>
-    {% for stint in team.stints %}
-        {# TODO: show stints component #}
-        {# TODO: show when stint happened, how long ago (or if ongoing) #}
-
-    </tr>
-        <tr>
-        <td style="width: 2.5em; vertical-align: middle; padding-left: 5px">
-            {{ kart(number=stint.kart) }}
-        </td>
-
-            <td class="pilot-name">
-                {{ stint.pilot|pilot_surname }}
-                <br>
-                <span class="stint-timeframe">&#128336; {{ stint.stint_started_at|format_racetime }}</span>
-            </td>
-        <td>{{ stint.best_lap|round(3) }}</td>
-        <td>{{ stint.avg_80|round(3) }}</td>
-            <td><a href="{{ url('stint-detail', args=[stint.stint_id]) }}">Show more</a></td>
-        </tr>
-    {% endfor %}
-    </table>
+    <div class="collapsed" id="stints-info-{{ team.number }}">
+        {{ stints_table(team.stints, columns='PBAL', sortable=false) }}
+    </div>
 
 </div>
 

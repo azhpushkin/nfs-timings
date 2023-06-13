@@ -51,7 +51,7 @@
         <h4>Додати нотатку</h4>
         <form class="picker" method="POST">
             {{ csrf_input }}
-            <textarea name="note" placeholder="Цей карт гавно тому що...">{{ kart_note }}</textarea>
+            <textarea name="note" placeholder="Цей карт гавно тому що...">{{ kart_note or '' }}</textarea>
             <input type="submit" value="Зберегти">
         </form>
     </div>
