@@ -7,28 +7,29 @@
 
 {% block body %}
     <h3>
-        {{ kart(number=stint.kart) }} by {{ stint.pilot }}
+        {{ stint.pilot }} на {{ kart(number=stint.kart, inline=true) }} машині
         <br>
         &#128336; {{ stint.stint_started_at|format_racetime }}
+        ({{ stint.stint }}-й відрізок команди)
     </h3>
 
-    <b>Best lap: {{ stint.best_lap|round(3) }}</b><br>
-    Average: {{ stint.avg_80|round(3) }}<br><br>
+    <b>Краще коло: {{ stint.best_lap|round(3) }}</b><br>
+    Середній темп: {{ stint.avg_80|round(3) }}<br><br>
 
-    Best S1: {{ stint.best_sector_1|round(2) }}<br>
-    Best S2: {{ stint.best_sector_2|round(2) }}<br>
-    (Best S1 + S2: {{ stint.best_theoretical|round(3) }})<br>
+    Кращий сектор 1: <b>{{ stint.best_sector_1|round(2) }}</b><br>
+    Кращий сектор 2: <b>{{ stint.best_sector_2|round(2) }}</b><br>
+    Коло з кращих секторів: {{ stint.best_theoretical|round(3) }}<br>
 
     <br>
     <div style="display: flex; align-items: center; justify-content: space-around">
         <a href="{{ url('kart-detail', args=[stint.kart]) }}">
             <button>
-                Go to {{ kart(number=stint.kart, inline=true, nolink=true) }} stats
+                Всі відрізки {{ kart(number=stint.kart, inline=true, nolink=true) }} карту
             </button>
         </a>
         <a href="{{ url('team-detail', args=[team.number]) }}">
             <button>
-                Go to {{ team.name }} (# {{ team.number }}) page
+                Всі відрізки {{ team.name }} (# {{ team.number }})
             </button>
         </a>
     </div>

@@ -8,17 +8,17 @@
     <nav>
         <a href="{{ url('karts') }}">
             <button {% if request.path == '/' %}class="active-tab"{% endif %}>
-                &#128640; <br> Karts
+                &#128640; <br> Карти
             </button>
         </a>
         <a href="{{ url('teams') }}">
             <button {% if request.path == '/teams' %}class="active-tab"{% endif %}>
-                &#128203; <br> Teams
+                &#128203; <br> Команди
             </button>
         </a>
         <a href="{{ url('settings') }}">
             <button {% if request.path == '/settings' %}class="active-tab"{% endif %}>
-                &#128295; <br> Settings
+                &#128295; <br> Різне
             </button>
         </a>
     </nav>
