@@ -81,7 +81,8 @@ tr.stint-lap td.close-to-best {
 
 .kart-config .picker {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
+    flex-wrap: wrap;
 }
 
 .kart-config .picker button {
@@ -89,7 +90,8 @@ tr.stint-lap td.close-to-best {
     background-color: #eeeeee;
     border-radius: 5px;
     display: block;
-    width: 17%;
+    padding: 10px;
+    margin-top: 10px;
 
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
@@ -102,8 +104,8 @@ button.badge-option {
     padding: 0.3em 0.1em 0.1em;
 }
 
-button.accent-option {
-
+.kart-config .picker button.accent-option {
+    padding: 10px 30px;
 }
 
 .badge-option img.badge {
