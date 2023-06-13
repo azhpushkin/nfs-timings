@@ -39,6 +39,8 @@ class RacePass(models.Model):
     accents = models.JSONField(default=dict, blank=True)
     notes = models.JSONField(default=dict, blank=True)
 
+    show_first_stint = models.BooleanField(default=True, blank=True)
+
     class Meta:
         db_table = 'race_passes'
         unique_together = ('race', 'user')

@@ -25,14 +25,15 @@ dbshell:
 black:
     black --extend-exclude migrations --skip-string-normalization .
 
-exec cmd:
-    {{docker-exec}} web {{cmd}}
-
 compile:
     pip-compile requirements.in --resolver=backtracking > requirements.txt
 
 sim file:
     cd simulation && python serve.py {{file}}
+
+m:
+    {{docker-exec}} web python manage.py makemigrations
+    {{docker-exec}} web python manage.py migrate
 
 sample_upload name:
     {{docker-exec}} web python manage.py upload_sample --name {{name}} --url http://host.docker.internal:7000/getmaininfo.json?use_counter=1

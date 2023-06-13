@@ -88,20 +88,18 @@ class IndexView(RacePickRequiredMixin, TemplateView):
     template_name = "karts.html"
 
     def get(self, request, *args, **kwargs):
-
-        print(self, request.session.get('current-race'), args, kwargs)
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         race: Race = _get_race(self.request)
+        race_pass = get_race_pass(race, self.request.user)
 
         stints = get_stints(race, sort_by=_get_sorting(self.request))
+        if not race_pass.show_first_stint:
+            stints = stints.exclude(stint=1)
         stints = pick_best_kart_by(stints, SortOrder.BEST)
 
-        return {
-            'stints': stints
-            # 'skip_first_stint': race.skip_first_stint,
-        }
+        return {'stints': stints}
 
 
 class TeamsView(RacePickRequiredMixin, TemplateView):
@@ -214,12 +212,12 @@ class SettingsView(RacePickRequiredMixin, TemplateView):
     template_name = 'settings.html'
 
 
-def change_skip_first_stint_view(request):
-    skip_first_stint = int(request.POST.get('skip_first_stint'))
-    race = _get_race(self.request)
-    if race:
-        race.skip_first_stint = skip_first_stint
-        race.save(update_fields=['skip_first_stint'])
+def change_show_first_stint_view(request):
+    skip_first_stint = int(request.POST.get('show_first_stint', 1))
+    race = _get_race(request)
 
-    refresh_stints_view()
+    race_pass = get_race_pass(race, request.user)
+    race_pass.show_first_stint = bool(skip_first_stint)
+    race_pass.save(update_fields=['show_first_stint'])
+
     return redirect('karts')

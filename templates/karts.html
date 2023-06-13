@@ -6,26 +6,30 @@
 
 
 {% block body %}
-    <div class="skip-first-stint">
-        <form action="/skip-first-stint" method="post">
-            {{ csrf_input }}
-            <span>Skip first stint from stats</span>
-            &nbsp;&nbsp;&nbsp;
-            <label><input onchange="this.form.submit();"
-                          type="radio"
-                          name="skip_first_stint"
-                          value="0"
-                          {% if not skip_first_stint %}checked="checked"{% endif %}>
-                No</label>
+    <details open>
+        <summary>Фільтрація відрізків</summary>
 
-            <label><input onchange="this.form.submit();"
-                          type="radio"
-                          name="skip_first_stint"
-                          value="1"
-                          {% if skip_first_stint %}checked="checked"{% endif %}>
-                Yes</label>
-        </form>
-    </div>
+        <div class="show-first-stint">
+            <form action="{{ url('show-first-stint') }}" method="POST">
+                {{ csrf_input }}
+                <span>Показувати перший відрізок</span>
+                &nbsp;&nbsp;&nbsp;
+                <label><input onchange="this.form.submit();"
+                              type="radio"
+                              name="show_first_stint"
+                              value="1"
+                              {% if show_first_stint %}checked="checked"{% endif %}>
+                    Так</label>
+
+                <label><input onchange="this.form.submit();"
+                              type="radio"
+                              name="show_first_stint"
+                              value="0"
+                              {% if not show_first_stint %}checked="checked"{% endif %}>
+                    Ні</label>
+            </form>
+        </div>
+    </details>
     <br>
     {{ stints_table(stints=stints, columns='PBSA', sortable=true, sorting=request.GET.get('sort')) }}
 
