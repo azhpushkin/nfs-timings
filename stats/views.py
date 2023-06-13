@@ -1,18 +1,21 @@
 import itertools
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.postgres.aggregates import JSONBAgg
-from django.db.models import Min
-from django.db.models.expressions import RawSQL
 from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic import TemplateView
 
 from stats.models import Lap, Team, Stint, Race
 from stats.models.race import RacePass
-from stats.services.repo import SortOrder, get_stints, pick_best_kart_by
+from stats.services.repo import (
+    SortOrder,
+    get_stints,
+    pick_best_kart_by,
+    get_race_pass,
+    update_kart_accent,
+    update_kart_badge,
+)
 from stats.stints import refresh_stints_view
-
 
 SESSION_CURRENT_RACE_KEY = 'current-race'
 
@@ -149,6 +152,20 @@ class KartDetailsView(RacePickRequiredMixin, TemplateView):
         )
 
         return {'kart_number': kwargs['kart'], 'stints': stints}
+
+    def post(self, request, *args, **kwargs):
+        race_pass = get_race_pass(race=_get_race(request), user=request.user)
+        kart = kwargs['kart']
+
+        if accent := request.POST.get('accent'):
+            accent = None if accent == 'None' else accent
+            update_kart_accent(race_pass, kart, accent)
+
+        if badge := request.POST.get('badge'):
+            badge = None if badge == 'None' else badge
+            update_kart_badge(race_pass, kart, badge)
+
+        return redirect('kart-detail', kwargs['kart'])
 
 
 class TeamDetailsView(RacePickRequiredMixin, TemplateView):

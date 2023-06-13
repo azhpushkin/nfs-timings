@@ -11,7 +11,4 @@ urlpatterns = [
     path('kart/<kart>', views.KartDetailsView.as_view(), name='kart-detail'),
     path('stint/<stint>', views.StintDetailsView.as_view(), name='stint-detail'),
     path('settings', views.SettingsView.as_view(), name='settings'),
-    path(
-        'skip-first-stint', views.change_skip_first_stint_view, name='skip-first-stint'
-    ),
 ]

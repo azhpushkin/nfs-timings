@@ -18,9 +18,10 @@
 
     <div class="kart-config">
         <h4>Відмітити карт значком</h4>
-        <div class="picker">
+        <form class="picker" method="POST">
+            {{ csrf_input }}
             {% for badge in ['good', 'slowed', 'damaged', 'unknown', none] %}
-                <button class="badge-option">
+                <button class="badge-option" type="submit" value="{{ badge }}" name="badge">
                     {% if badge %}
                     <img src="/static/badges/{{ badge }}.svg" class="badge {{ badge }}">
                     {% endif %}
@@ -29,15 +30,16 @@
                 </button>
             {% endfor %}
 
-        </div>
+        </form>
         <h4>Змінити фон</h4>
-        <div class="picker">
+        <form class="picker" method="POST">
+            {{ csrf_input }}
             {% for accent in ['#69ff6e', '#e87474', '#faec6e', none] %}
-                <button class="accent-option">
+                <button class="accent-option" type="submit" value="{{ accent }}" name="accent">
                     {{ kart(number=kart_number, inline=true, accent=accent, nolink=true) }}
                 </button>
             {% endfor %}
-        </div>
+        </form>
     </div>
 
 {% endblock %}

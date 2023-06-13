@@ -5,7 +5,8 @@ from typing import Optional, List
 from django.db.models import QuerySet
 from django.db.models.expressions import RawSQL
 
-from stats.models import Race, Stint
+from stats.models import Race, Stint, User
+from stats.models.race import RacePass
 
 
 class SortOrder(Enum):
@@ -40,7 +41,6 @@ def get_stints(
     if sort_by:
         field = SORT_MAPPING[sort_by]
         stints = stints.order_by(field)
-        print(stints.query.__str__())
 
     return stints
 
@@ -52,3 +52,25 @@ def pick_best_kart_by(qs: QuerySet[Stint], sort_by: SortOrder) -> List[Stint]:
         index=RawSQL(f'ROW_NUMBER() OVER(partition by kart ORDER BY {field})', ())
     )
     return [stint for stint in qs if stint.index == 1]
+
+
+def get_race_pass(race: Race, user: User) -> RacePass:
+    return RacePass.objects.get(race=race, user=user)
+
+
+def update_kart_accent(race_pass: RacePass, kart: int, accent: Optional[str]):
+    if accent:
+        race_pass.accents[str(kart)] = accent
+    else:
+        race_pass.accents.pop(str(kart), None)
+
+    race_pass.save(update_fields=['accents'])
+
+
+def update_kart_badge(race_pass: RacePass, kart: int, badge: Optional[str]):
+    if badge:
+        race_pass.badges[str(kart)] = badge
+    else:
+        race_pass.badges.pop(str(kart), None)
+
+    race_pass.save(update_fields=['badges'])

@@ -35,6 +35,9 @@ class RacePass(models.Model):
     race = models.ForeignKey(Race, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    badges = models.JSONField(default=dict)
+    accents = models.JSONField(default=dict)
+
     class Meta:
         db_table = 'race_passes'
         unique_together = ('race', 'user')
