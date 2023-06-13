@@ -19,15 +19,25 @@ img.badge {
     padding: 0.1em;
     border: 1px solid black;
     border-radius: 50%;
-    background-color: #ffe641;
-    /*background-color: #00ff11;*/
-    /*background-color: #ff6565;*/
+    background-color: white;
 
     position: absolute;
     top: -0.5em;
     right: -0.5em;
 }
 
-img.badge[class="repair"] {
+img.badge.good {
+    background-color: #2ed246;
+}
 
+img.badge.slowed {
+    background-color: #ff6565;
+}
+
+img.badge.unknown {
+    background-color: #85b4ff;
+}
+
+img.badge.damaged {
+    background-color: #ffe641;
 }

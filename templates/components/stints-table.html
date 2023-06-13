@@ -37,12 +37,13 @@
     {% endif %}
 
     {# TABLE HEADER END #}
+    {% set badges = cycler('good', 'unknown', 'damaged', 'slowed') %}
 
     {% for stint in stints %}
         <tr>
             <td style="width: 2em; vertical-align: middle">
                 {# {% cycle 'good' 'bad' 'question' as badge silent %} #}
-                {{ kart(number=stint.kart) }}
+                {{ kart(number=stint.kart, badge=badges.next()) }}
             </td>
 
             {% if columns.pilot %}

@@ -8,7 +8,7 @@
 {% endif %}
 
 {% if badge %}
-    {% set ns.badge = '<img class="badge" src="/static/wr/1.svg">'|safe %}
+    {% set ns.badge = '<img class="badge {0}" src="/static/badges/{0}.svg">'.format(badge)|safe %}
 {% endif %}
 
 {% if number == none %}
