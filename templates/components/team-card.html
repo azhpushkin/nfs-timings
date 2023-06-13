@@ -1,6 +1,6 @@
 {% macro team_card(team) %}
 
-{% from 'components/kart.html' import kart %}
+{% from 'components/kart.html' import kart with context %}
 
 <div class="team-card">
     <div class="team-card-line" id="team-card-line-{{ team.number }}">

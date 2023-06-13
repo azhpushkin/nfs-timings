@@ -80,6 +80,9 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'environment': 'timings.jinja2.environment',
+            'context_processors': {
+                'stats.templatetags.nfsformat.add_data_from_race_pass'
+            },
         },
     },
 ]

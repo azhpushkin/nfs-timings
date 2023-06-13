@@ -151,7 +151,7 @@ class KartDetailsView(RacePickRequiredMixin, TemplateView):
             race, kart=int(kwargs['kart']), sort_by=_get_sorting(self.request)
         )
 
-        return {'kart_number': kwargs['kart'], 'stints': stints}
+        return {'kart_number': int(kwargs['kart']), 'stints': stints}
 
     def post(self, request, *args, **kwargs):
         race_pass = get_race_pass(race=_get_race(request), user=request.user)

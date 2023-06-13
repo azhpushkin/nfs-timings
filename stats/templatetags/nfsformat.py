@@ -2,6 +2,8 @@ from django import template
 
 from django.utils.safestring import mark_safe
 
+from stats.models import Race
+from stats.models.race import RacePass
 
 register = template.Library()
 
@@ -37,3 +39,25 @@ def parse_stints_table_columns(value):
     mapping = {'P': 'pilot', 'B': 'best', 'S': 'sectors', 'A': 'average', 'L': 'link'}
     chars = [c.upper() for c in value]
     return {key: (char in chars) for char, key in mapping.items()}
+
+
+def add_data_from_race_pass(request):
+    race_id = request.session.get('current-race')
+    race = Race.objects.filter(id=race_id).first() if race_id is not None else None
+
+    if not (request.user.is_authenticated and race):
+        return {}
+
+    try:
+        race_pass = RacePass.objects.get(race=race, user=request.user)
+    except RacePass.DoesNotExist:
+        return {}
+    else:
+        return {
+            'user_badges': {
+                int(kart): badge for kart, badge in race_pass.badges.items()
+            },
+            'user_accents': {
+                int(kart): accent for kart, accent in race_pass.accents.items()
+            },
+        }

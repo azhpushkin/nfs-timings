@@ -1,4 +1,8 @@
 {% macro kart(number, nolink=false, inline=false, badge=none, accent=none) %}
+
+{% set badge = badge if badge else user_badges.get(number) %}
+{% set accent = accent if accent else user_accents.get(number) %}
+
 {% set inline_style = 'display: inline-block;' if inline else '' %}
 {% set accent_style = 'background-color: {};'.format(accent) if accent else '' %}
 {% set style = 'style="{}"'.format(inline_style + accent_style) if (inline_style or accent_style) %}
@@ -10,7 +14,6 @@
 {% set href = 'href={}'.format(url('kart-detail', args=[number])) if not nolink %}
 
 {% set tag = 'span' if nolink else 'a' %}
-
 <{{tag}} class="kart-number" {{ style|safe }} {{ href }}>
     {{ number|default('?', true) }}
     {{ badge_img }}

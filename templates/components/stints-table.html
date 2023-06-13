@@ -1,7 +1,7 @@
 {% macro stints_table(stints, columns='PBSAL', sortable=false, sorting='best') %}
 
-{% from 'components/stints-table-header.html' import stints_table_header %}
-{% from 'components/kart.html' import kart %}
+{% from 'components/stints-table-header.html' import stints_table_header with context %}
+{% from 'components/kart.html' import kart with context %}
 
 {% set columns = columns|parse_stints_table_columns %}
 {% set sorting = sorting or 'best' %}
@@ -14,7 +14,6 @@
 }
 </style>
 {% endif %}
-
 <table class="stints">
     {# TABLE HEADER START #}
     {% if sortable %}
@@ -43,7 +42,7 @@
         <tr>
             <td style="width: 2em; vertical-align: middle">
                 {# {% cycle 'good' 'bad' 'question' as badge silent %} #}
-                {{ kart(number=stint.kart, badge=badges.next()) }}
+                {{ kart(number=stint.kart) }}
             </td>
 
             {% if columns.pilot %}

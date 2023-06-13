@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% from 'components/kart.html' import kart %}
+{% from 'components/kart.html' import kart with context %}
 
 {% block title %}
     KARTS
@@ -36,7 +36,7 @@
             {{ csrf_input }}
             {% for accent in ['#69ff6e', '#e87474', '#faec6e', none] %}
                 <button class="accent-option" type="submit" value="{{ accent }}" name="accent">
-                    {{ kart(number=kart_number, inline=true, accent=accent, nolink=true) }}
+                    {{ kart(number=kart_number, inline=true, accent=accent or 'white', nolink=true) }}
                 </button>
             {% endfor %}
         </form>
