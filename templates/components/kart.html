@@ -1,30 +1,20 @@
-{% macro kart(number, nolink=false, style='', badge=none, accent=none) %}
+{% macro kart(number, nolink=false, inline=false, badge=none, accent=none) %}
+{% set inline_style = 'display: inline-block;' if inline else '' %}
+{% set accent_style = 'background-color: {};'.format(accent) if accent else '' %}
+{% set style = 'style="{}"'.format(inline_style + accent_style) if (inline_style or accent_style) %}
 
+{% set badge_img = '<img class="badge {0}" src="/static/badges/{0}.svg">'.format(badge)|safe if badge %}
 
-{% set ns = namespace(style=style, badge='') %}
+{# If no number (zero or none) - never show as a link #}
+{% set nolink = true if not number else nolink %}
+{% set href = 'href={}'.format(url('kart-detail', args=[number])) if not nolink %}
 
-{% if accent %}
-    {% set ns.style = "background-color: {}; ".format(accent, style) %}
-{% endif %}
+{% set tag = 'span' if nolink else 'a' %}
 
-{% if badge %}
-    {% set ns.badge = '<img class="badge {0}" src="/static/badges/{0}.svg">'.format(badge)|safe %}
-{% endif %}
+<{{tag}} class="kart-number" {{ style|safe }} {{ href }}>
+    {{ number|default('?', true) }}
+    {{ badge_img }}
+</{{tag}}>
 
-{% if number == none %}
-    <span class="kart-number">
-        ?
-    </span>
-{% elif nolink %}
-    <span class="kart-number" style="{{ ns.style }}">
-        {{ number }}
-
-    </span>
-{% else %}
-    <a class="kart-number" href="{{ url('kart-detail', args=[number]) }}" style="{{ ns.style }}">
-    {{ number }}
-    {{ ns.badge }}
-    </a>
-{% endif %}
 
 {% endmacro %}

@@ -23,7 +23,7 @@
     <div style="display: flex; align-items: center; justify-content: space-around">
         <a href="{{ url('kart-detail', args=[stint.kart]) }}">
             <button>
-                Go to {{ kart(number=stint.kart, style="display: inline-block", nolink=true) }} stats
+                Go to {{ kart(number=stint.kart, inline=true, nolink=true) }} stats
             </button>
         </a>
         <a href="{{ url('team-detail', args=[team.number]) }}">
