@@ -9,9 +9,35 @@
 
 {% block body %}
     <h3>
-    Всі відрізки на {{ kart(number=kart_number, nolink=true) }}
+    Всі відрізки на {{ kart(number=kart_number, nolink=true, inline=true) }}
     </h3>
 
     {{ stints_table(stints, columns='PBSAL', sortable=true, sorting=request.GET.get('sort')) }}
+
+    <hr>
+
+    <div class="kart-config">
+        <h4>Відмітити карт значком</h4>
+        <div class="picker">
+            {% for badge in ['good', 'slowed', 'damaged', 'unknown', none] %}
+                <button class="badge-option">
+                    {% if badge %}
+                    <img src="/static/badges/{{ badge }}.svg" class="badge {{ badge }}">
+                    {% endif %}
+                    <br>
+                    <span>{{ badge or 'clear' }}</span>
+                </button>
+            {% endfor %}
+
+        </div>
+        <h4>Змінити фон</h4>
+        <div class="picker">
+            {% for accent in ['#69ff6e', '#e87474', '#faec6e', none] %}
+                <button class="accent-option">
+                    {{ kart(number=kart_number, inline=true, accent=accent, nolink=true) }}
+                </button>
+            {% endfor %}
+        </div>
+    </div>
 
 {% endblock %}

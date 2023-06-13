@@ -73,3 +73,40 @@ tr.stint-lap td.best {
 tr.stint-lap td.close-to-best {
     background-color: #afff9f
 }
+
+.kart-config {
+    margin: 20px 0;
+    /*text-align: center;*/
+}
+
+.kart-config .picker {
+    display: flex;
+    justify-content: space-between;
+}
+
+.kart-config .picker button {
+    text-align: center;
+    border: 1px solid black;
+    border-radius: 5px;
+    display: block;
+    width: 19%;
+
+    background-color: white;
+}
+
+.kart-config .picker button:hover {
+    background-color: gray;
+}
+
+button.badge-option {
+    padding: 0.3em 0.1em 0.1em;
+}
+
+button.accent-option {
+
+}
+
+.badge-option img.badge {
+    width: 1.2em;
+    margin-bottom: -5px;
+}

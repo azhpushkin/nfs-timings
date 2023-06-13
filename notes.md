@@ -40,8 +40,9 @@ TODO list :
   - [ ] What if karts with 2 digits are typed one by one
   - [ ] Same for pilot name
 - [ ] Add badges to the karts
-  - [ ] Repair badge, slowed down badge, boost up badge
-  - [ ] Check SVG, add buttons with SVG to kart details
+  - [x] Repair badge, slowed down badge, boost up badge
+  - [x] Check SVG, add buttons with SVG to kart details
+  - [ ] Dialog to add badges
 - [ ] Add color accents to the karts
   - [ ] Configurable?? on kart details page
 - [ ] Per-user setting for filtering
