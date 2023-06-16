@@ -97,11 +97,7 @@
       h("td", {rowspan: 2, class: "kart-control", onclick: [switchKartColor, number]}, text(String.fromCodePoint("0x1F518")))
   ]
 
-  const availableKarts = [
-      1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
-
-
-  ];
+  console.log(localStorage);
   const kartButton = (number) => h(
       "button",
       {class: "available-kart", onclick: [addKartsToQueue, number]},
@@ -117,8 +113,32 @@
             .concat([ 21, 22, 33, 44, 69].map(kartButton))
   );
 
+  const resetAll =  state => {
+      const areYouSure = confirm("Точно скинути все з піта?")
+            console.log("RESET!", areYouSure)
+      if (areYouSure)
+          return {karts: []};
+      else return state;
+  }
+
+  const saveToLocal = state => {
+      console.log("SAVED!!")
+      localStorage.setItem("karts", JSON.stringify(state.karts))
+  }
+  const saveToLocalSubscriber = (dispatch, options) => {
+      console.log("saveToLocalSubscriber called", options)
+      saveToLocal(options.state);
+      return () => {}
+  }
+
+  const loadFromStorage = () => {
+      const karts = JSON.parse(localStorage.getItem("karts"))
+      console.log("Loading from storage", karts);
+      return karts || [];
+  }
+
   app({
-    init: { karts: [] },
+    init: { karts: loadFromStorage()},
     view: ({ karts }) =>
       h("main", {}, [
           h("h3", {onclick: [addKartsToQueue, 2]}, text("Карти що зараз на піті")),
@@ -129,9 +149,13 @@
           ]),
           h("br", {}),
           h("h3", {}, text("Додати карт в чергу")),
-          kartButtons()
+          kartButtons(),
+          h("button", {class: 'reset-all', onclick: resetAll}, text('Скинути все!'))
       ]),
     node: document.getElementById("app"),
+    subscriptions: state => [
+        [saveToLocalSubscriber, {state}]
+    ]
   })
 
 
