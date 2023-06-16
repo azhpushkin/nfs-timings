@@ -105,6 +105,10 @@ class LapDetector:
                 # lap is still ongoing, skip
                 continue
 
+            if entry.isOnPit:
+                # Still on pit, skip to avoid strange data
+                continue
+
             # process new lap
             self.previous_laps[entry.number] = LapIndex(
                 team=entry.number, lap_number=entry.lapCount, stint=entry.pitstops + 1
