@@ -1,6 +1,7 @@
 import itertools
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic import TemplateView
@@ -214,6 +215,23 @@ class SettingsView(RacePickRequiredMixin, TemplateView):
 
 class PitView(RacePickRequiredMixin, TemplateView):
     template_name = 'pit.html'
+
+
+def get_pit_karts_stats(request):
+    print(request.GET)
+    data = [
+        {
+            'number': 5,
+            'last_stint': {'pilot': 'Нужний', 'best': 42.0, 'average': 42.32},
+            'best_stint': {'pilot': 'Міфтахутдінов', 'best': 41.87, 'average': 42.12},
+        },
+        {
+            'number': 12,
+            'last_stint': {'pilot': 'Ждан-Пушкін', 'best': 42.1, 'average': 42.42},
+            'best_stint': {'pilot': 'Ференс', 'best': 41.91, 'average': 42.03},
+        },
+    ]
+    return JsonResponse(data, safe=False)
 
 
 def change_show_first_stint_view(request):

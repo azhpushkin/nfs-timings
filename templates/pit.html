@@ -5,9 +5,71 @@
     PIT
 {% endblock %}
 
+{% block extra_head %}
+{% endblock %}
+
 
 {% block body %}
+<main id="app"></main>
+{% endblock %}
 
+
+{% block extra_js %}
+<script type="module">
+  import { h, text, app } from "https://unpkg.com/hyperapp"
+
+  const href = (url, params) => window.location.origin + '/' + url + '?' + new URLSearchParams(params)
+
+
+  const processKartResponse = (state, karts_info) => ({
+      ...state,
+      karts: state.karts.concat(karts_info)
+  })
+
+  const addKartsToQueue = (state, kart_numbers) => [
+      state,
+      dispatch => {
+        console.log(kart_numbers);
+        fetch(href('get-pit-karts-stats', {karts: kart_numbers.join(',')}))
+            .then(response => response.json())
+            .then(karts_info => dispatch(processKartResponse, karts_info))
+      }
+  ]
+
+  const kartsOnPit = (karts) => (
+      karts.map((kart) => h("tr", {}, kartOnPitLine(kart)))
+  )
+
+  const onPitLineHead = () => [
+      h("th", {}, text('#')),
+      h("th", {}, text('pilot')),
+      h("th", {}, text('best')),
+      h("th", {}, text('avg')),
+  ]
+
+  const kartOnPitLine = ({number, last_stint, best_stint}) => [
+      h("td", {}, h("a", {href: href('kart/'+number), class: 'kart-number'}, text(number))),
+      h("td", {}, text(last_stint.pilot)),
+      h("td", {}, text(last_stint.best)),
+      h("td", {}, text(last_stint.average)),
+  ]
+
+  app({
+    init: { karts: [] },
+    view: ({ karts }) =>
+      h("main", {}, [
+          h("h3", {onclick: [addKartsToQueue, [2, 3]]}, text("Karts currently on pit")),
+          h("table", {class: "karts-on-pit"}, [
+              h("thead", {}, onPitLineHead()),
+              h("tbody", {}, kartsOnPit(karts)),
+
+          ])
+      ]),
+    node: document.getElementById("app"),
+  })
+
+
+</script>
 
 
 {% endblock %}

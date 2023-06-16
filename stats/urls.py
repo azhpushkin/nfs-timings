@@ -17,4 +17,5 @@ urlpatterns = [
         views.change_show_first_stint_view,
         name='show-first-stint',
     ),
+    path('get-pit-karts-stats', views.get_pit_karts_stats, name='get-pit-karts-stats'),
 ]
