@@ -31,18 +31,23 @@ table.stints .stint-timeframe {
 }
 
 
-th:first-child, td:first-child {
+.kart-number-cell {
     padding-left: 0;
 }
 
-th:last-child, td:last-child {
-    padding-left: 0;
+.stints th:last-child, .stints td:last-child {
+    padding-right: 0;
 }
 
 .stint-link {
     width: 1.5em;
 }
 
-th.pilot-name, td.pilot-name {
+.stints th.pilot-name, .stints td.pilot-name {
     padding-right: 0;
+}
+
+.pilot-name-nowrap {
+    overflow: hidden;
+    white-space: nowrap;
 }

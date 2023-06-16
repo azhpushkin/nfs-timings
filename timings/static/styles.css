@@ -143,3 +143,32 @@ button.badge-option {
     display: block;
     height: 100%;
 }
+
+.karts-on-pit tr.last-stint {
+    border-bottom: 1px solid gray;
+}
+
+table.karts-on-pit td:not(.pilot-name-nowrap), table.karts-on-pit th:not(.pilot-name-nowrap) {
+    vertical-align: middle;
+    text-align: center;
+}
+
+table.karts-on-pit .kart-control {
+    width: 2em;
+}
+
+table.karts-on-pit tr.red {
+    background-color: #ff9494;
+}
+
+table.karts-on-pit tr.yellow {
+    background-color: #ffeb94;
+}
+
+table.karts-on-pit tr.gray {
+    background-color: #a5a5a5;
+}
+
+table.karts-on-pit tr.white {
+    background-color: white;
+}

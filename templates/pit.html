@@ -18,40 +18,65 @@
 <script type="module">
   import { h, text, app } from "https://unpkg.com/hyperapp"
 
-  const href = (url, params) => window.location.origin + '/' + url + '?' + new URLSearchParams(params)
+  const href = (url, params) => window.location.origin + "/" + url + "?" + new URLSearchParams(params)
 
 
   const processKartResponse = (state, karts_info) => ({
       ...state,
-      karts: state.karts.concat(karts_info)
+      karts: state.karts.concat(karts_info.map(kart => ({...kart, color: "white"})))
   })
 
   const addKartsToQueue = (state, kart_numbers) => [
       state,
       dispatch => {
         console.log(kart_numbers);
-        fetch(href('get-pit-karts-stats', {karts: kart_numbers.join(',')}))
+        fetch(href("get-pit-karts-stats", {karts: kart_numbers.join(",")}))
             .then(response => response.json())
             .then(karts_info => dispatch(processKartResponse, karts_info))
       }
   ]
+  const nextColor = (color) => {
+      switch (color) {
+          case "white": return "yellow"
+          case "yellow": return "red"
+          case "red": return "gray"
+          case "gray": return "white"
+      }
+  }
+
+
+  const switchKartColor = (state, target_number) => {
+      const index = state.karts.findIndex(({number}) => target_number === number)
+      console.log(state)
+      const new_kart = {...state.karts[index], color: nextColor(state.karts[index].color)};
+      return {...state, karts: [...state.karts.slice(0, index), new_kart, ...state.karts.slice(index+1)]}
+
+  }
 
   const kartsOnPit = (karts) => (
-      karts.map((kart) => h("tr", {}, kartOnPitLine(kart)))
+      karts.map(({number, last_stint, best_stint, color}) => [
+
+          // Do not return kart number for second line due to rowspan
+          h("tr", {class: "best-stint " + color}, kartLine(number, best_stint)),
+          h("tr", {class: "last-stint " + color}, kartLine(number, last_stint).slice(1, 4)),
+
+      ]).flat()
   )
 
   const onPitLineHead = () => [
-      h("th", {}, text('#')),
-      h("th", {}, text('pilot')),
-      h("th", {}, text('best')),
-      h("th", {}, text('avg')),
+      h("th", {class: "kart-number-cell"}, text("#")),
+      h("th", {class: "pilot-name-nowrap"}, text("Pilot")),
+      h("th", {}, text("Best")),
+      h("th", {}, text("Avg")),
+      h("th", {class: "kart-control"}, text(""))
   ]
 
-  const kartOnPitLine = ({number, last_stint, best_stint}) => [
-      h("td", {}, h("a", {href: href('kart/'+number), class: 'kart-number'}, text(number))),
-      h("td", {}, text(last_stint.pilot)),
-      h("td", {}, text(last_stint.best)),
-      h("td", {}, text(last_stint.average)),
+  const kartLine = (number, stint_info) => [
+      h("td", {rowspan: 2, class: "kart-number-cell"}, h("a", {href: href("kart/"+number), class: "kart-number"}, text(number))),
+      h("td", {class: "pilot-name-nowrap"}, text(stint_info.pilot)),
+      h("td", {}, text(stint_info.best.toFixed(2))),
+      h("td", {}, text(stint_info.average.toFixed(2))),
+      h("td", {rowspan: 2, class: "kart-control", onclick: [switchKartColor, number]}, text(String.fromCodePoint("0x1F518")))
   ]
 
   app({
