@@ -13,7 +13,12 @@
         </a>
         <a href="{{ url('teams') }}">
             <button {% if request.path == '/teams' %}class="active-tab"{% endif %}>
-                &#128203; <br> Команди
+                &#128101; <br> Команди
+            </button>
+        </a>
+        <a href="{{ url('pit') }}">
+            <button {% if request.path == '/pit' %}class="active-tab"{% endif %}>
+                &#128721; <br> ПІТ
             </button>
         </a>
         <a href="{{ url('settings') }}">

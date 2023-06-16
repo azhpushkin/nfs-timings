@@ -212,6 +212,10 @@ class SettingsView(RacePickRequiredMixin, TemplateView):
     template_name = 'settings.html'
 
 
+class PitView(RacePickRequiredMixin, TemplateView):
+    template_name = 'pit.html'
+
+
 def change_show_first_stint_view(request):
     skip_first_stint = int(request.POST.get('show_first_stint', 1))
     race = _get_race(request)

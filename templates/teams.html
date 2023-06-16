@@ -13,6 +13,7 @@ TEAMS
 
 
 {% block extra_js %}
+<script>
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.team-card-line').forEach(card_line_div => {
             const team_id = card_line_div.id.substring(15);  // team-card-line-
@@ -24,4 +25,5 @@ TEAMS
             });
         });
     })
+</script>
 {% endblock %}
