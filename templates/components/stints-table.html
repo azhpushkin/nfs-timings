@@ -24,12 +24,12 @@
 
         <thead>
             <tr>
-                <th style="width: 2em; vertical-align: middle">#</th>
-                {% if columns.pilot %}<th>Pilot</th>{% endif %}
+                <th class="kart-number-cell">#</th>
+                {% if columns.pilot %}<th class="pilot-name">Pilot</th>{% endif %}
                 {% if columns.best %}<th>Best</th>{% endif %}
-                {% if columns.sectors %}<th>Sectors</th>{% endif %}
+                {% if columns.sectors %}<th>Sec</th>{% endif %}
                 {% if columns.average %}<th>Avg</th>{% endif %}
-                {% if columns.link %}<th>Link</th>{% endif %}
+                {% if columns.link %}<th class="stint-link"></th>{% endif %}
             </tr>
         </thead>
 
@@ -40,7 +40,7 @@
 
     {% for stint in stints %}
         <tr>
-            <td style="width: 2em; vertical-align: middle">
+            <td class="kart-number-cell">
                 {# {% cycle 'good' 'bad' 'question' as badge silent %} #}
                 {{ kart(number=stint.kart) }}
             </td>
@@ -70,7 +70,7 @@
             {% endif %}
 
             {% if columns.link %}
-                <td><a href="{{ url('stint-detail', args=[stint.stint_id]) }}">&#10145;&#128279;</a></td>
+                <td class="stint-link"><a href="{{ url('stint-detail', args=[stint.stint_id]) }}">&#128279;</a></td>
             {% endif %}
 
 

@@ -2,8 +2,9 @@ table.stints {
     table-layout: fixed;
 }
 
-table.stints td {
+table.stints td:not(.pilot-name), table.stints th:not(.pilot-name) {
     vertical-align: middle;
+    text-align: center;
 }
 
 
@@ -22,4 +23,26 @@ table.stints th.selected-sorting {
 
 table.stints .stint-timeframe {
     font-size: 0.8em;
+}
+
+.kart-number-cell {
+    width: 2em;
+    vertical-align: middle;
+}
+
+
+th:first-child, td:first-child {
+    padding-left: 0;
+}
+
+th:last-child, td:last-child {
+    padding-left: 0;
+}
+
+.stint-link {
+    width: 1.5em;
+}
+
+th.pilot-name, td.pilot-name {
+    padding-right: 0;
 }

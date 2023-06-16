@@ -2,12 +2,12 @@
 
 <thead>
     <tr>
-        <th {% if sorting == 'kart' %}class='selected-sorting'{% endif %} style="width: 2em; vertical-align: middle">
+        <th {% if sorting == 'kart' %}class='selected-sorting'{% endif %}  class="kart-number-cell">
             <a href="?sort=kart">#</a>
         </th>
 
         {% if columns.pilot %}
-            <th>
+            <th class="pilot-name">
                 Pilot
             </th>
         {% endif %}
@@ -24,7 +24,7 @@
             {% elif sorting == 'sector_2' %}
                 <th class="selected-sorting"><a href="?sort=sector_1">by S2</a></th>
             {% else %}
-                <th><a href="?sort=sector_1">Sectors</a></th>
+                <th><a href="?sort=sector_1">Sec</a></th>
             {% endif %}
         {% endif %}
 
@@ -35,7 +35,7 @@
         {% endif %}
 
         {% if columns.link %}
-            <th>Link</th>
+            <th class="stint-link"></th>
         {% endif %}
     </tr>
 </thead>
