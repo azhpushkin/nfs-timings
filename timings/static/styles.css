@@ -172,3 +172,13 @@ table.karts-on-pit tr.gray {
 table.karts-on-pit tr.white {
     background-color: white;
 }
+
+.available-karts-picker {
+
+}
+.available-kart {
+    width: 5em;
+    margin: 0.5em;
+    font-weight: bold;
+    font-family: 'Racing Sans One', cursive;
+}

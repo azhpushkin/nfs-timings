@@ -1,4 +1,5 @@
 import itertools
+from typing import List
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
@@ -218,19 +219,34 @@ class PitView(RacePickRequiredMixin, TemplateView):
 
 
 def get_pit_karts_stats(request):
-    print(request.GET)
-    data = [
-        {
-            'number': 5,
-            'last_stint': {'pilot': 'Нужний', 'best': 42.0, 'average': 42.32},
-            'best_stint': {'pilot': 'Міфтахутдінов', 'best': 41.87, 'average': 42.12},
-        },
-        {
-            'number': 12,
-            'last_stint': {'pilot': 'Ждан-Пушкін', 'best': 42.1, 'average': 42.42},
-            'best_stint': {'pilot': 'Ференс', 'best': 41.91, 'average': 42.03},
-        },
-    ]
+    race_pass = get_race_pass(race=_get_race(request), user=request.user)
+
+    kart_number = int(request.GET.get('kart', '0'))
+
+    best_2_stints: List[Stint] = list(
+        get_stints(race_pass.race, kart=int(kart_number), sort_by=SortOrder.AVERAGE)[:2]
+    )
+
+    if best_2_stints:
+        best_stint = {
+            'pilot': best_2_stints[0].pilot,
+            'best': best_2_stints[0].best_lap,
+            'average': best_2_stints[0].avg_80,
+        }
+    else:
+        best_stint = {}
+
+    if len(best_2_stints) == 2:
+        last_stint = {
+            'pilot': best_2_stints[1].pilot,
+            'best': best_2_stints[1].best_lap,
+            'average': best_2_stints[1].avg_80,
+        }
+    else:
+        last_stint = {}
+
+    data = {'number': kart_number, 'best_stint': best_stint, 'last_stint': last_stint}
+
     return JsonResponse(data, safe=False)
 
 

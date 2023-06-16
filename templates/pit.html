@@ -21,18 +21,18 @@
   const href = (url, params) => window.location.origin + "/" + url + "?" + new URLSearchParams(params)
 
 
-  const processKartResponse = (state, karts_info) => ({
+  const processKartResponse = (state, kart_info) => ({
       ...state,
-      karts: state.karts.concat(karts_info.map(kart => ({...kart, color: "white"})))
+      karts: state.karts.concat({...kart_info, color: "white"})
   })
 
-  const addKartsToQueue = (state, kart_numbers) => [
+  const addKartsToQueue = (state, kart_number) => [
       state,
       dispatch => {
-        console.log(kart_numbers);
-        fetch(href("get-pit-karts-stats", {karts: kart_numbers.join(",")}))
+        console.log("Requesting", kart_number);
+        fetch(href("get-pit-karts-stats", {kart: kart_number}))
             .then(response => response.json())
-            .then(karts_info => dispatch(processKartResponse, karts_info))
+            .then(kart_info => dispatch(processKartResponse, kart_info))
       }
   ]
   const nextColor = (color) => {
@@ -53,15 +53,26 @@
 
   }
 
-  const kartsOnPit = (karts) => (
-      karts.map(({number, last_stint, best_stint, color}) => [
+  const kartsOnPit = (karts) => {
+      console.log(karts);
+      return karts.map(({number, last_stint, best_stint, color}) => [
 
           // Do not return kart number for second line due to rowspan
-          h("tr", {class: "best-stint " + color}, kartLine(number, best_stint)),
-          h("tr", {class: "last-stint " + color}, kartLine(number, last_stint).slice(1, 4)),
+          h(
+              "tr",
+              {class: "best-stint " + color},
+              Object.keys(best_stint).length !== 0 ? kartLine(number, best_stint) : emptyLine(number)
+          ),
+          h(
+              "tr",
+              {class: "last-stint " + color},
+              (
+                Object.keys(last_stint).length !== 0 ? kartLine(number, last_stint) : emptyLine(number)
+            ).slice(1, 4)
+          ),
 
       ]).flat()
-  )
+  }
 
   const onPitLineHead = () => [
       h("th", {class: "kart-number-cell"}, text("#")),
@@ -69,6 +80,13 @@
       h("th", {}, text("Best")),
       h("th", {}, text("Avg")),
       h("th", {class: "kart-control"}, text(""))
+  ]
+  const emptyLine = (number) => [
+      h("td", {rowspan: 2, class: "kart-number-cell"}, h("a", {href: href("kart/"+number), class: "kart-number"}, text(number))),
+      h("td", {class: "pilot-name-nowrap"}, text('пусто')),
+      h("td", {}, text("-")),
+      h("td", {}, text("-")),
+      h("td", {rowspan: 2, class: "kart-control", onclick: [switchKartColor, number]}, text(String.fromCodePoint("0x1F518")))
   ]
 
   const kartLine = (number, stint_info) => [
@@ -79,16 +97,39 @@
       h("td", {rowspan: 2, class: "kart-control", onclick: [switchKartColor, number]}, text(String.fromCodePoint("0x1F518")))
   ]
 
+  const availableKarts = [
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+
+
+  ];
+  const kartButton = (number) => h(
+      "button",
+      {class: "available-kart", onclick: [addKartsToQueue, number]},
+      text(number)
+  );
+  const kartButtons = () => h(
+      "div",
+      {class: "available-karts-picker"},
+        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(kartButton)
+            .concat(h("hr", {}))
+            .concat([11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(kartButton))
+            .concat(h("hr", {}))
+            .concat([ 21, 22, 33, 44, 69].map(kartButton))
+  );
+
   app({
     init: { karts: [] },
     view: ({ karts }) =>
       h("main", {}, [
-          h("h3", {onclick: [addKartsToQueue, [2, 3]]}, text("Karts currently on pit")),
+          h("h3", {onclick: [addKartsToQueue, 2]}, text("Карти що зараз на піті")),
           h("table", {class: "karts-on-pit"}, [
               h("thead", {}, onPitLineHead()),
               h("tbody", {}, kartsOnPit(karts)),
 
-          ])
+          ]),
+          h("br", {}),
+          h("h3", {}, text("Додати карт в чергу")),
+          kartButtons()
       ]),
     node: document.getElementById("app"),
   })
