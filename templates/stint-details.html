@@ -7,11 +7,18 @@
 
 {% block body %}
     <h3>
-        {{ stint.pilot }} на {{ kart(number=stint.kart, inline=true) }} машині
-        <br>
+        {{ kart(number=stint.kart, inline=true) }} карт, {{ stint.pilot }}
+        <br><br>
         &#128336; {{ stint.stint_started_at|format_racetime }}
-        ({{ stint.stint }}-й відрізок команди)
+        <br>
+        Це {{ stint.stint }}й відрізок {{ team.name }}
     </h3>
+    <h4>
+
+
+    </h4>
+
+    <br>
 
     <b>Краще коло: {{ stint.best_lap|round(3) }}</b><br>
     Середній темп: {{ stint.avg_80|round(3) }}<br><br>
@@ -21,7 +28,7 @@
     Коло з кращих секторів: {{ stint.best_theoretical|round(3) }}<br>
 
     <br>
-    <div style="display: flex; align-items: center; justify-content: space-around">
+    <div class="stint-details-links">
         <a href="{{ url('kart-detail', args=[stint.kart]) }}">
             <button>
                 Всі відрізки {{ kart(number=stint.kart, inline=true, nolink=true) }} карту

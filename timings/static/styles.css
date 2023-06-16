@@ -127,3 +127,19 @@ button.badge-option {
     padding: 5px;
     margin: 20px 0 40px;
 }
+
+.stint-details-links {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-around;
+}
+
+.stint-details-links a {
+    display: block;
+
+}
+
+.stint-details-links button {
+    display: block;
+    height: 100%;
+}
