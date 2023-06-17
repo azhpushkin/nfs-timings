@@ -76,7 +76,8 @@ def team_entry_to_lap(
         sector_1=entry.lastLapS1.to_float(),
         sector_2=entry.lastLapS2.to_float(),
     )
-    if kart_override := race.kart_overrides.get(str(lap.kart)):
+
+    if kart_override := race.kart_overrides.get(str(lap.kart_raw)):
         lap.kart = int(kart_override)
     else:
         lap.kart = lap.kart_raw
