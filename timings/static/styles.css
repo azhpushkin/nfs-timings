@@ -157,25 +157,6 @@ table.karts-on-pit .kart-control {
     width: 2em;
 }
 
-table.karts-on-pit tr.red {
-    background-color: #ff9494;
-}
-
-table.karts-on-pit tr.yellow {
-    background-color: #ffeb94;
-}
-
-table.karts-on-pit tr.gray {
-    background-color: #a5a5a5;
-}
-
-table.karts-on-pit tr.white {
-    background-color: white;
-}
-
-.available-karts-picker {
-
-}
 .available-kart {
     width: 5em;
     margin: 0.5em;

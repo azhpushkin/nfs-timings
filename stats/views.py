@@ -222,6 +222,8 @@ def get_pit_karts_stats(request):
     race_pass = get_race_pass(race=_get_race(request), user=request.user)
 
     kart_number = int(request.GET.get('kart', '0'))
+    if kart_number == 0:
+        return JsonResponse({}, status=404)
 
     best_2_stints: List[Stint] = list(
         get_stints(race_pass.race, kart=int(kart_number), sort_by=SortOrder.AVERAGE)[:2]

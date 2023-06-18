@@ -6,160 +6,151 @@
 {% endblock %}
 
 {% block extra_head %}
+    <!-- Alpine Plugins -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Alpine Core -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 {% endblock %}
 
 
 {% block body %}
-<main id="app"></main>
+    <h3>
+        Карти що зараз на піті
+
+    </h3>
+
+    <table class="karts-on-pit" x-data="pitQueue" @queue-add.window="addToQueue" @queue-reset.window="resetQueue">
+        <thead>
+        <th class="kart-number-cell">#</th>
+        <th class="pilot-name-nowrap">Pilot</th>
+        <th>Best</th>
+        <th>Avg</th>
+        <th class="kart-control"></th>
+        </thead>
+
+        <template x-for="kart in queue">
+            <tbody>
+            <tr class="best-stint" :style="{'background-color': kartsInfo[kart].color}">
+                <td rowspan="2" class="kart-number-cell">
+                        <span class="kart-number"
+                              :href="'http://localhost:8000/kart/' + kart"
+                              x-text="kart">
+                        </span>
+                </td>
+                <td class="pilot-name-nowrap" x-text="kartsInfo[kart].best_stint.pilot || 'пусто'"></td>
+                <td x-text="lapTimeOrEmpty(kartsInfo[kart].best_stint.best)"></td>
+                <td x-text="lapTimeOrEmpty(kartsInfo[kart].best_stint.average)"></td>
+                <td rowspan="2" class="kart-control" @click="switchColor(kart)">🔘</td>
+            </tr>
+            <tr class="last-stint" :style="{'background-color': kartsInfo[kart].color}">
+                <td class="pilot-name-nowrap" x-text="kartsInfo[kart].last_stint.pilot || 'пусто'"></td>
+                <td x-text="lapTimeOrEmpty(kartsInfo[kart].last_stint.best)"></td>
+                <td x-text="lapTimeOrEmpty(kartsInfo[kart].last_stint.average)"></td>
+            </tr>
+            </tbody>
+        </template>
+
+    </table>
+
+    <div class="available-karts-picker" x-data>
+        {% for kart in range(1, 11) %}
+            <button class="available-kart" @click="requestAddToQueue({{ kart }})">{{ kart }}</button>
+        {% endfor %}
+        <hr>
+        {% for kart in range(11, 21) %}
+            <button class="available-kart" @click="requestAddToQueue({{ kart }})">{{ kart }}</button>
+        {% endfor %}
+        <hr>
+        {% for kart in [21, 22, 33, 44, 69, 88] %}
+            <button class="available-kart" @click="requestAddToQueue({{ kart }})">{{ kart }}</button>
+        {% endfor %}
+        <hr>
+        <div x-data="{customKartNumber: 1}">
+            <input
+                    type="number" min="1" max="100"
+                    x-model="customKartNumber" style="display: inline; margin-left: 0.5em; width: 5em;">
+            <button @click="requestAddToQueue(customKartNumber)" style="margin-left: 0.5em;">Кастомний карт</button>
+        </div>
+        <hr>
+
+    </div>
+
+    <div>
+        <br>
+        <button
+                style="width: 100%"
+                onclick="confirm('Точно скинути все з піта?') ? resetQueue() : null">
+            Скинути все
+        </button>
+    </div>
+
 {% endblock %}
 
 
 {% block extra_js %}
-<script type="module">
-  import { h, text, app } from "https://unpkg.com/hyperapp"
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('pitQueue', () => ({
+                queue: Alpine.$persist([]),
+                kartsInfo: Alpine.$persist({}),
 
-  const href = (url, params) => window.location.origin + "/" + url + "?" + new URLSearchParams(params)
+                addToQueue(event) {
+                    console.log("Received new event, add to queue", event)
+                    this.queue.push(event.detail.number)
+                    this.kartsInfo[event.detail.number] = {...event.detail, color: nextColor()}
+                },
 
+                resetQueue() {
+                    console.log('Reset queue')
+                    // No need to drop this, it will be overriden when needed
+                    // this.kartsInfo = {};
+                    this.queue = [];
+                },
 
-  const processKartResponse = (state, kart_info) => ({
-      ...state,
-      karts: state.karts.concat({...kart_info, color: "white"})
-  })
+                switchColor(kart_number) {
+                    console.log('Switching color for', kart_number)
+                    this.kartsInfo[kart_number].color = nextColor(this.kartsInfo[kart_number].color)
+                }
+            }))
+        })
 
-  const addKartsToQueue = (state, kart_number) => [
-      state,
-      dispatch => {
-        console.log("Requesting", kart_number);
-        fetch(href("get-pit-karts-stats", {kart: kart_number}))
-            .then(response => response.json())
-            .then(kart_info => dispatch(processKartResponse, kart_info))
-      }
-  ]
-  const nextColor = (color) => {
-      switch (color) {
-          case "white": return "yellow"
-          case "yellow": return "red"
-          case "red": return "gray"
-          case "gray": return "white"
-      }
-  }
+        function requestAddToQueue(kart_number) {
+            fetch("{{ url('get-pit-karts-stats') }}?kart=" + kart_number)
+                .then(response => {
+                    if (response.ok)
+                        return response.json()
+                    else
+                        throw new Error('Cannot retrieve kart info', {cause: err})
+                })
+                .then(kart_info => dispatchEvent(new CustomEvent('queue-add', {detail: kart_info})))
+                .catch(error => alert("Помилка при додаванні карту " + kart_number))
+        }
 
+        function resetQueue() {
+            dispatchEvent(new CustomEvent('queue-reset'))
+        }
 
-  const switchKartColor = (state, target_number) => {
-      const index = state.karts.findIndex(({number}) => target_number === number)
-      console.log(state)
-      const new_kart = {...state.karts[index], color: nextColor(state.karts[index].color)};
-      return {...state, karts: [...state.karts.slice(0, index), new_kart, ...state.karts.slice(index+1)]}
+        function nextColor(color) {
+            switch (color) {
+                case "white":
+                    return "#ffeb94"  // yellow
+                case "#ffeb94":
+                    return "#ff9494"  // red
+                case "#ff9494":
+                    return "#a5a5a5"  // gray
+                case "#a5a5a5":
+                    return "white"
+                default:
+                    return "white"
+            }
+        }
 
-  }
+        function lapTimeOrEmpty(value) {
+            return typeof value == 'number' ? value.toFixed(2) : '-';
+        }
 
-  const kartsOnPit = (karts) => {
-      console.log(karts);
-      return karts.map(({number, last_stint, best_stint, color}) => [
-
-          // Do not return kart number for second line due to rowspan
-          h(
-              "tr",
-              {class: "best-stint " + color},
-              Object.keys(best_stint).length !== 0 ? kartLine(number, best_stint) : emptyLine(number)
-          ),
-          h(
-              "tr",
-              {class: "last-stint " + color},
-              (
-                Object.keys(last_stint).length !== 0 ? kartLine(number, last_stint) : emptyLine(number)
-            ).slice(1, 4)
-          ),
-
-      ]).flat()
-  }
-
-  const onPitLineHead = () => [
-      h("th", {class: "kart-number-cell"}, text("#")),
-      h("th", {class: "pilot-name-nowrap"}, text("Pilot")),
-      h("th", {}, text("Best")),
-      h("th", {}, text("Avg")),
-      h("th", {class: "kart-control"}, text(""))
-  ]
-  const emptyLine = (number) => [
-      h("td", {rowspan: 2, class: "kart-number-cell"}, h("a", {href: href("kart/"+number), class: "kart-number"}, text(number))),
-      h("td", {class: "pilot-name-nowrap"}, text('пусто')),
-      h("td", {}, text("-")),
-      h("td", {}, text("-")),
-      h("td", {rowspan: 2, class: "kart-control", onclick: [switchKartColor, number]}, text(String.fromCodePoint("0x1F518")))
-  ]
-
-  const kartLine = (number, stint_info) => [
-      h("td", {rowspan: 2, class: "kart-number-cell"}, h("a", {href: href("kart/"+number), class: "kart-number"}, text(number))),
-      h("td", {class: "pilot-name-nowrap"}, text(stint_info.pilot)),
-      h("td", {}, text(stint_info.best.toFixed(2))),
-      h("td", {}, text(stint_info.average.toFixed(2))),
-      h("td", {rowspan: 2, class: "kart-control", onclick: [switchKartColor, number]}, text(String.fromCodePoint("0x1F518")))
-  ]
-
-  console.log(localStorage);
-  const kartButton = (number) => h(
-      "button",
-      {class: "available-kart", onclick: [addKartsToQueue, number]},
-      text(number)
-  );
-  const kartButtons = () => h(
-      "div",
-      {class: "available-karts-picker"},
-        [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(kartButton)
-            .concat(h("hr", {}))
-            .concat([11, 12, 13, 14, 15, 16, 17, 18, 19, 20].map(kartButton))
-            .concat(h("hr", {}))
-            .concat([ 21, 22, 33, 44, 69].map(kartButton))
-  );
-
-  const resetAll =  state => {
-      const areYouSure = confirm("Точно скинути все з піта?")
-            console.log("RESET!", areYouSure)
-      if (areYouSure)
-          return {karts: []};
-      else return state;
-  }
-
-  const saveToLocal = state => {
-      console.log("SAVED!!")
-      localStorage.setItem("karts", JSON.stringify(state.karts))
-  }
-  const saveToLocalSubscriber = (dispatch, options) => {
-      console.log("saveToLocalSubscriber called", options)
-      saveToLocal(options.state);
-      return () => {}
-  }
-
-  const loadFromStorage = () => {
-      const karts = JSON.parse(localStorage.getItem("karts"))
-      console.log("Loading from storage", karts);
-      return karts || [];
-  }
-
-  app({
-    init: { karts: loadFromStorage()},
-    view: ({ karts }) =>
-      h("main", {}, [
-          h("h3", {onclick: [addKartsToQueue, 2]}, text("Карти що зараз на піті")),
-          h("table", {class: "karts-on-pit"}, [
-              h("thead", {}, onPitLineHead()),
-              h("tbody", {}, kartsOnPit(karts)),
-
-          ]),
-          h("br", {}),
-          h("h3", {}, text("Додати карт в чергу")),
-          kartButtons(),
-          h("button", {class: 'reset-all', onclick: resetAll}, text('Скинути все!'))
-      ]),
-    node: document.getElementById("app"),
-    subscriptions: state => [
-        [saveToLocalSubscriber, {state}]
-    ]
-  })
-
-
-</script>
+    </script>
 
 
 {% endblock %}
