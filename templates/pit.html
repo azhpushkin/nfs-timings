@@ -53,37 +53,47 @@
 
     </table>
 
-    <div class="available-karts-picker" x-data>
-        {% for kart in range(1, 11) %}
-            <button class="available-kart" @click="requestAddToQueue({{ kart }})">{{ kart }}</button>
-        {% endfor %}
-        <hr>
-        {% for kart in range(11, 21) %}
-            <button class="available-kart" @click="requestAddToQueue({{ kart }})">{{ kart }}</button>
-        {% endfor %}
-        <hr>
-        {% for kart in [21, 22, 33, 44, 69, 88] %}
-            <button class="available-kart" @click="requestAddToQueue({{ kart }})">{{ kart }}</button>
-        {% endfor %}
-        <hr>
-        <div x-data="{customKartNumber: 1}">
-            <input
-                    type="number" min="1" max="100"
-                    x-model="customKartNumber" style="display: inline; margin-left: 0.5em; width: 5em;">
-            <button @click="requestAddToQueue(customKartNumber)" style="margin-left: 0.5em;">Кастомний карт</button>
-        </div>
-        <hr>
-
-    </div>
-
     <div>
+        <button
+            style="width: 100%"
+            onclick="document.getElementById('add-to-queue-dialog').showModal()">
+            Додати карт в чергу
+        </button>
         <br>
         <button
-                style="width: 100%"
-                onclick="confirm('Точно скинути все з піта?') ? resetQueue() : null">
+            style="width: 100%"
+            onclick="confirm('Точно скинути все з піта?') ? resetQueue() : null">
             Скинути все
         </button>
     </div>
+
+
+    <dialog id="add-to-queue-dialog" >
+        <header>Додати карт в чергу</header>
+        <menu x-data>
+            {% for kart in range(1, 11) %}
+                <button class="available-kart" @click="requestAddToQueue({{ kart }})">{{ kart }}</button>
+            {% endfor %}
+            <hr>
+            {% for kart in range(11, 21) %}
+                <button class="available-kart" @click="requestAddToQueue({{ kart }})">{{ kart }}</button>
+            {% endfor %}
+            <hr>
+            {% for kart in [21, 22, 33, 44, 69, 88] %}
+                <button class="available-kart" @click="requestAddToQueue({{ kart }})">{{ kart }}</button>
+            {% endfor %}
+            <hr>
+            <div x-data="{customKartNumber: 1}">
+                <input
+                        type="number" min="1" max="100"
+                        x-model="customKartNumber" style="display: inline; margin-left: 0.5em; width: 5em;">
+                <br>
+                <button @click="requestAddToQueue(customKartNumber)" style="margin-left: 0.5em;">Кастомний карт</button>
+            </div>
+            <hr>
+
+        </menu>
+    </dialog>
 
 {% endblock %}
 
@@ -113,9 +123,12 @@
                     this.kartsInfo[kart_number].color = nextColor(this.kartsInfo[kart_number].color)
                 }
             }))
+
+
         })
 
         function requestAddToQueue(kart_number) {
+            document.getElementById('add-to-queue-dialog').close()
             fetch("{{ url('get-pit-karts-stats') }}?kart=" + kart_number)
                 .then(response => {
                     if (response.ok)
