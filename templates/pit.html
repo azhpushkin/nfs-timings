@@ -11,6 +11,9 @@
 
     <!-- Alpine Core -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+      <script id="DragDropTouch" src="https://bernardo-castilho.github.io/DragDropTouch/DragDropTouch.js"></script>
+
 {% endblock %}
 
 
@@ -20,7 +23,12 @@
 
     </h3>
 
-    <table class="karts-on-pit" x-data="pitQueue" @queue-add.window="addToQueue" @queue-reset.window="resetQueue">
+    <table
+            class="karts-on-pit"
+            x-data="pitQueue"
+            @dragover.prevent="$event.dataTransfer.dropEffect = 'move'"
+            @queue-add.window="addToQueue"
+            @queue-reset.window="resetQueue">
         <thead>
         <th class="kart-number-cell">#</th>
         <th class="pilot-name-nowrap">Pilot</th>
@@ -29,25 +37,49 @@
         <th class="kart-control"></th>
         </thead>
 
-        <template x-for="kart in queue">
-            <tbody>
-            <tr class="best-stint" :style="{'background-color': kartsInfo[kart].color}">
-                <td rowspan="2" class="kart-number-cell">
-                        <span class="kart-number"
-                              :href="'http://localhost:8000/kart/' + kart"
-                              x-text="kart">
-                        </span>
-                </td>
-                <td class="pilot-name-nowrap" x-text="kartsInfo[kart].best_stint.pilot || 'пусто'"></td>
-                <td x-text="lapTimeOrEmpty(kartsInfo[kart].best_stint.best)"></td>
-                <td x-text="lapTimeOrEmpty(kartsInfo[kart].best_stint.average)"></td>
-                <td rowspan="2" class="kart-control" @click="switchColor(kart)">🔘</td>
-            </tr>
-            <tr class="last-stint" :style="{'background-color': kartsInfo[kart].color}">
-                <td class="pilot-name-nowrap" x-text="kartsInfo[kart].last_stint.pilot || 'пусто'"></td>
-                <td x-text="lapTimeOrEmpty(kartsInfo[kart].last_stint.best)"></td>
-                <td x-text="lapTimeOrEmpty(kartsInfo[kart].last_stint.average)"></td>
-            </tr>
+        <template x-for="(kart, index) in queue">
+            <tbody
+                draggable="true"
+                @dragstart="dragging = index"
+                @drop.prevent="dropDraggedRow"
+                x-show="dragging !== index"
+{#                @dragleave.prevent="console.log('leave', index); if(dropping === index) dropping = null"#}
+                @dragend="console.log('END'); dragging = null">
+
+                <tr x-show.transition="dragging !== null"
+                    :style="{'background-color': dropping === index-1 ? 'red': 'gray'}">
+                    <td colspan="5"></td>
+                </tr>
+
+                <tr class="best-stint"
+                    :style="{'background-color': kartsInfo[kart].color}"
+                    :key="kart.number + 'best'"
+                    @dragenter.prevent="console.log('enter', index-1); dropping = index-1">
+                    <td rowspan="2" class="kart-number-cell">
+                            <span class="kart-number"
+                                  :href="'http://localhost:8000/kart/' + kart"
+                                  x-text="kart">
+                            </span>
+                    </td>
+                    <td class="pilot-name-nowrap" x-text="kartsInfo[kart].best_stint.pilot || 'пусто'"></td>
+                    <td x-text="lapTimeOrEmpty(kartsInfo[kart].best_stint.best)"></td>
+                    <td x-text="lapTimeOrEmpty(kartsInfo[kart].best_stint.average)"></td>
+                    <td rowspan="2" class="kart-control" @click="switchColor(kart)">🔘</td>
+                </tr>
+
+                <tr class="last-stint"
+                    :style="{'background-color': kartsInfo[kart].color}"
+                    :key="kart.number + 'last'"
+                    @dragenter.prevent="console.log('enter', index); dropping = index">
+                    <td class="pilot-name-nowrap" x-text="kartsInfo[kart].last_stint.pilot || 'пусто'"></td>
+                    <td x-text="lapTimeOrEmpty(kartsInfo[kart].last_stint.best)"></td>
+                    <td x-text="lapTimeOrEmpty(kartsInfo[kart].last_stint.average)"></td>
+                </tr>
+
+                <tr x-show.transition="dragging !== null"
+                    :style="{'background-color': dropping === index ? 'red': 'gray'}">
+                    <td colspan="5"></td>
+                </tr>
             </tbody>
         </template>
 
@@ -104,6 +136,8 @@
             Alpine.data('pitQueue', () => ({
                 queue: Alpine.$persist([]),
                 kartsInfo: Alpine.$persist({}),
+                dragging: null,
+                dropping: null,
 
                 addToQueue(event) {
                     console.log("Received new event, add to queue", event)
@@ -121,6 +155,10 @@
                 switchColor(kart_number) {
                     console.log('Switching color for', kart_number)
                     this.kartsInfo[kart_number].color = nextColor(this.kartsInfo[kart_number].color)
+                },
+
+                dropDraggedRow(a, b, c) {
+                    console.log(a, b, c)
                 }
             }))
 
@@ -162,6 +200,28 @@
         function lapTimeOrEmpty(value) {
             return typeof value == 'number' ? value.toFixed(2) : '-';
         }
+
+        var dragDropList = function (items, dragging, dropping) {
+          if (dragging !== null && dropping !== null) {
+            if (dragging < dropping) {
+              items = [
+                ...items.slice(0, dragging),
+                ...items.slice(dragging + 1, dropping + 1),
+                items[dragging],
+                ...items.slice(dropping + 1)
+              ];
+            } else {
+              items = [
+                ...items.slice(0, dropping),
+                items[dragging],
+                ...items.slice(dropping, dragging),
+                ...items.slice(dragging + 1)
+              ];
+            }
+            dropping = null;
+          }
+          return items;
+        };
 
     </script>
 

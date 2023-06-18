@@ -19,6 +19,7 @@ from stats.services.repo import (
     update_kart_note,
 )
 from stats.stints import refresh_stints_view
+from stats.templatetags.nfsformat import pilot_surname
 
 SESSION_CURRENT_RACE_KEY = 'current-race'
 
@@ -231,7 +232,7 @@ def get_pit_karts_stats(request):
 
     if best_2_stints:
         best_stint = {
-            'pilot': best_2_stints[0].pilot,
+            'pilot': pilot_surname(best_2_stints[0].pilot),
             'best': best_2_stints[0].best_lap,
             'average': best_2_stints[0].avg_80,
         }
@@ -240,7 +241,7 @@ def get_pit_karts_stats(request):
 
     if len(best_2_stints) == 2:
         last_stint = {
-            'pilot': best_2_stints[1].pilot,
+            'pilot': pilot_surname(best_2_stints[1].pilot),
             'best': best_2_stints[1].best_lap,
             'average': best_2_stints[1].avg_80,
         }
