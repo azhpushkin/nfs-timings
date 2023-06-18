@@ -3,7 +3,9 @@ from datetime import datetime
 from django.core.management.base import BaseCommand
 
 from processing.worker import Worker
-from stats.models.race import Race
+from stats.models import User
+from stats.models.race import Race, RacePass
+from stats.stints import recreate_stints_view
 
 
 class Command(BaseCommand):
@@ -29,7 +31,14 @@ class Command(BaseCommand):
             is_active=True,
             kart_overrides=overrides,
         )
+        RacePass.objects.create_bulk([
+            RacePass(user=user, race=race)
+            for user in User.objects.filter(is_superuser=True)
+        ])
 
         current_worker = Worker(race)
-        while True:
-            current_worker.perform_request()
+        try:
+            while True:
+                current_worker.perform_request()
+        except KeyboardInterrupt:
+            recreate_stints_view()
