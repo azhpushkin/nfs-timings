@@ -20,8 +20,8 @@ class LapIndex:
         return LapIndex(team=lap.team, lap_number=lap.lap_number, stint=lap.stint)
 
 
-def time_to_float(t: time):
-    return t.hour * 3600 + t.minute * 60 + t.second
+def time_to_total_seconds(t: time) -> int:
+    return int(t.hour * 3600 + t.minute * 60 + t.second)
 
 
 # TODO: think about swapping TeamEntry to other entity (maybe Lap, but disallow save)
@@ -29,7 +29,6 @@ def team_entry_to_lap(
     *,
     race: Race,
     board_request: BoardRequest,
-    board_response: NFSResponseDict,
     entry: TeamEntry,
 ) -> Optional[Lap]:
     if not (entry.lastLapS1 and entry.lastLapS2):
@@ -68,9 +67,8 @@ def team_entry_to_lap(
         team=entry.number,
         pilot_name=entry.pilotName,
         kart_raw=entry.kart,
-        race_time=time_to_float(board_response.onTablo.totalRaceTime),
         stint=entry.pitstops + 1,
-        ontrack=time_to_float(entry.totalOnTrack),
+        ontrack=time_to_total_seconds(entry.totalOnTrack),
         lap_time=entry.lastLap.to_float(),
         lap_number=entry.lapCount,
         sector_1=entry.lastLapS1.to_float(),

@@ -70,6 +70,7 @@ class TeamEntry(BaseModel):
     isOnPit: bool  # TODO: skip laps when isOnPit is true
     totalOnTrack: time
     bestLapOnSegment: Optional[LapTime]
+    midLap: Optional[LapTime]
 
     # segments: bool  # TODO: define
 

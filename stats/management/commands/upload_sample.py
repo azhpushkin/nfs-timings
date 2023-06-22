@@ -20,8 +20,8 @@ class Command(BaseCommand):
 
     def handle(self, *args, url: str, name: str, overrides: str, **options):
         overrides = overrides.split(',')
-        overrides = [o.split('->') for o in overrides]
-        overrides = {o[0]: o[1] for o in overrides}
+        overrides = [o.split('->') for o in overrides if o]
+        overrides = {o[0]: o[1] for o in overrides if o}
 
         Race.objects.update(is_active=False)
         race = Race.objects.create(
@@ -31,7 +31,7 @@ class Command(BaseCommand):
             is_active=True,
             kart_overrides=overrides,
         )
-        RacePass.objects.create_bulk([
+        RacePass.objects.bulk_create([
             RacePass(user=user, race=race)
             for user in User.objects.filter(is_superuser=True)
         ])

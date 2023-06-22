@@ -35,5 +35,5 @@ m:
     {{docker-exec}} web python manage.py makemigrations
     {{docker-exec}} web python manage.py migrate
 
-sample_upload name:
-    {{docker-exec}} web python manage.py upload_sample --name {{name}} --url http://host.docker.internal:7000/getmaininfo.json?use_counter=1
+sample_upload name +extra_args:
+    {{docker-exec}} web python manage.py upload_sample --name {{name}} --url http://host.docker.internal:7000/getmaininfo.json?use_counter=1 {{extra_args}}

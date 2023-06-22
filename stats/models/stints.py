@@ -1,5 +1,9 @@
+import dataclasses
+from typing import Optional, Dict
+
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
+from django.utils.functional import cached_property
 
 from stats.models import Race, BoardRequest
 
@@ -81,3 +85,36 @@ class Stint(models.Model):
     class Meta:
         db_table = 'stints'
         managed = False
+
+
+class RaceState(models.Model):
+    board_request = models.OneToOneField(
+        BoardRequest, on_delete=models.PROTECT, related_name='race_state'
+    )
+    race = models.ForeignKey(Race, on_delete=models.PROTECT, related_name='race_states')
+
+    created_at = models.DateTimeField()
+
+    race_time = models.PositiveIntegerField()
+    team_states = models.JSONField()
+
+    @cached_property
+    def team_states_parsed(self) -> Dict[int, 'TeamState']:
+        return {int(team): TeamState.from_dict(state) for team, state in self.team_states}
+
+
+@dataclasses.dataclass(kw_only=True)
+class TeamState:
+    team: int
+    mid_lap: Optional[float] = None
+    stint_time: Optional[int] = None
+    position: Optional[int] = None
+
+    @classmethod
+    def from_dict(cls, data) -> 'TeamState':
+        fields = cls.__dataclass_fields__.keys()
+        data = {k: v for k, v in data.items() if k in fields}
+        return TeamState(**data)
+
+    def to_dict(self) -> dict:
+        return dataclasses.asdict(self)

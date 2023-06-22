@@ -2,9 +2,10 @@ import logging
 from typing import List, Dict
 
 from processing.api import request_api, Resolutions
-from processing.detection import LapDetector, LapIndex, team_entry_to_lap
+from processing.detection import LapDetector, LapIndex, team_entry_to_lap, time_to_total_seconds
 from processing.response_type import NFSResponseDict, TeamEntry
 from stats.models import Race, Lap, BoardRequest, Team
+from stats.models.stints import RaceState, TeamState
 
 logger = logging.getLogger(__name__)
 
@@ -82,14 +83,27 @@ class Worker:
             board_request.save(update_fields=['resolution'])
             return
 
+        race_state = RaceState.objects.create(
+            board_request=board_request,
+            created_at=board_request.created_at,
+            race=self.race,
+            race_time=time_to_total_seconds(response_parsed.onTablo.totalRaceTime),
+            team_states={
+                str(entry.number): team_entry_to_team_state(i, entry).to_dict()
+                for i, entry in enumerate(response_parsed.onTablo.teams)
+            }
+        )
+
         for new_entry in self.lap_detector.process_race_info(response_parsed.onTablo):
             try:
+                # TODO: Simplify function, only receive TeamEntry
+                # apply overrides additionally
                 lap = team_entry_to_lap(
                     race=self.race,
                     board_request=board_request,
-                    board_response=response_parsed,
                     entry=new_entry,
                 )
+                lap.race_time = race_state.race_time
                 lap.save()
                 logger.info(
                     'Lap created', extra={'request': board_request.id, 'lap': lap.id}
@@ -105,3 +119,12 @@ class Worker:
                     },
                 )
                 continue
+
+
+def team_entry_to_team_state(position: int, entry: TeamEntry) -> TeamState:
+    return TeamState(
+        team=entry.number,
+        stint_time=time_to_total_seconds(entry.totalOnTrack),
+        mid_lap=entry.midLap.to_float() if entry.midLap else None,
+        position=position
+    )
