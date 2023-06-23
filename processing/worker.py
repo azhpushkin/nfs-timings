@@ -1,15 +1,10 @@
 import logging
-from typing import List, Dict
+from typing import Dict, List
 
-from processing.api import request_api, Resolutions
-from processing.detection import (
-    LapDetector,
-    LapIndex,
-    team_entry_to_lap,
-    time_to_total_seconds,
-)
+from processing.api import Resolutions, request_api
+from processing.detection import LapDetector, LapIndex, team_entry_to_lap, time_to_total_seconds
 from processing.response_type import NFSResponseDict, TeamEntry
-from stats.models import Race, Lap, BoardRequest, Team
+from stats.models import BoardRequest, Lap, Race, Team
 from stats.models.stints import RaceState, TeamState
 
 logger = logging.getLogger(__name__)

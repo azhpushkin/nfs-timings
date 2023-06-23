@@ -5,12 +5,10 @@ import django
 
 django.setup()  # noqa
 
-from processing.worker import Worker
-
-
-from stats.models import Race
 import time
 
+from processing.worker import Worker
+from stats.models import Race
 
 logger = logging.getLogger(__name__)
 

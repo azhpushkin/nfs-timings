@@ -24,6 +24,7 @@ dbshell:
 
 black:
     black .
+    isort .
 
 lint: black
     ruff check .

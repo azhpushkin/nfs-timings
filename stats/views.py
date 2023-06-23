@@ -7,13 +7,13 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic import TemplateView
 
-from stats.models import Lap, Team, Stint, Race
+from stats.models import Lap, Race, Stint, Team
 from stats.models.race import RacePass
 from stats.services.repo import (
     SortOrder,
+    get_race_pass,
     get_stints,
     pick_best_kart_by,
-    get_race_pass,
     update_kart_accent,
     update_kart_badge,
     update_kart_note,

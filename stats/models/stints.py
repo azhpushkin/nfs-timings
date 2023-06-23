@@ -1,11 +1,11 @@
 import dataclasses
-from typing import Optional, Dict
+from typing import Dict, Optional
 
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.utils.functional import cached_property
 
-from stats.models import Race, BoardRequest
+from stats.models import BoardRequest, Race
 
 
 class Team(models.Model):

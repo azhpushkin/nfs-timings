@@ -1,5 +1,6 @@
-import pandas as pd
 import sys
+
+import pandas as pd
 
 
 def transform_csv_into_parquet(filename: str):
@@ -19,12 +20,13 @@ def check_recording(filename: str):
 
 
 def load_parquet():
-    from stats.processing import process_json
-    from stats.models import *
+    import json
+
     import pandas as pd
     from django.utils import timezone
 
-    import json
+    from stats.models import *
+    from stats.processing import process_json
 
     df = pd.read_parquet('recordings/mini_06_may_2023.parquet')
 

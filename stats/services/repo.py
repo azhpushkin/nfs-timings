@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Optional, List
+from typing import List, Optional
 
 from django.db.models import QuerySet
 from django.db.models.expressions import RawSQL

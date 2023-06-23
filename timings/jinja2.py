@@ -1,14 +1,13 @@
 from django.template.backends.utils import csrf_input
 from django.templatetags.static import static
 from django.urls import reverse
-
 from jinja2 import Environment
 
 from stats.templatetags.nfsformat import (
     format_racetime,
+    parse_stints_table_columns,
     pilot_surname,
     split_pilot,
-    parse_stints_table_columns,
 )
 
 

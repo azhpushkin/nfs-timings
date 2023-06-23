@@ -1,10 +1,10 @@
 import dataclasses
 import logging
 from datetime import time
-from typing import Dict, Generator, Optional, List
+from typing import Dict, Generator, List, Optional
 
 from processing.response_type import RaceInfo, TeamEntry
-from stats.models import Lap, Race, BoardRequest
+from stats.models import BoardRequest, Lap, Race
 
 logger = logging.getLogger(__name__)
 

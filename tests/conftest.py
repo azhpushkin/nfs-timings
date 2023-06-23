@@ -1,10 +1,9 @@
 import json
+import pathlib
 from typing import List
 
 import pandas as pd
 import pytest
-import pathlib
-
 from pydantic import ValidationError
 
 from processing.response_type import NFSResponseDict
