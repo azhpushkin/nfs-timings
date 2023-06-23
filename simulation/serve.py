@@ -1,4 +1,3 @@
-import logging
 from http import server
 import re
 import json

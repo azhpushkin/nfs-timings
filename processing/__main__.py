@@ -5,11 +5,10 @@ import django
 
 django.setup()  # noqa
 
-from processing.api import request_api
 from processing.worker import Worker
 
 
-from stats.models import Race, Lap
+from stats.models import Race
 import time
 
 

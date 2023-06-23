@@ -1,3 +1,3 @@
-from .user import User
-from .race import Race, BoardRequest
-from .stints import Lap, Team, Stint, RaceState, TeamState
+from .user import User  # noqa
+from .race import Race, BoardRequest  # noqa
+from .stints import Lap, Team, Stint, RaceState, TeamState  # noqa

@@ -6,7 +6,11 @@ exclude = [
     "recordings",
     "migrations",
 ]
-line-length = 88
+line-length = 120
+
+[tool.ruff.pycodestyle]
+max-doc-length = 120
+
 
 [tool.black]
 extend-exclude = "migrations"

@@ -15,7 +15,7 @@ def recreate_stints_view():
         )
         logger.info('Old view removed')
         cursor.execute(
-            f"""
+            """
             create materialized view stints as (
                 with stints as (
                     select
@@ -60,5 +60,5 @@ def refresh_stints_view():
         with connection.cursor() as cursor:
             cursor.execute("""refresh materialized view stints""")
             logger.info('Materialized view update successfully')
-    except DatabaseError as e:
+    except DatabaseError:
         logger.exception('Error refreshing stints')

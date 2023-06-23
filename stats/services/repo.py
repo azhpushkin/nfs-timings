@@ -1,5 +1,4 @@
 from enum import Enum
-from dataclasses import dataclass
 from typing import Optional, List
 
 from django.db.models import QuerySet

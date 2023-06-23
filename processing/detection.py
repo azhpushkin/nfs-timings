@@ -3,7 +3,7 @@ import logging
 from datetime import time
 from typing import Dict, Generator, Optional, List
 
-from processing.response_type import NFSResponseDict, RaceInfo, TeamEntry
+from processing.response_type import RaceInfo, TeamEntry
 from stats.models import Lap, Race, BoardRequest
 
 logger = logging.getLogger(__name__)

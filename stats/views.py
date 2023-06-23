@@ -18,7 +18,6 @@ from stats.services.repo import (
     update_kart_badge,
     update_kart_note,
 )
-from stats.stints import refresh_stints_view
 
 SESSION_CURRENT_RACE_KEY = 'current-race'
 
