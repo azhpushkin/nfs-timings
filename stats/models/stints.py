@@ -101,7 +101,7 @@ class RaceState(models.Model):
     @cached_property
     def team_states_parsed(self) -> Dict[int, 'TeamState']:
         return {
-            int(team): TeamState.from_dict(state) for team, state in self.team_states
+            int(team): TeamState.from_dict(state) for team, state in self.team_states.items()
         }
 
 
@@ -120,3 +120,11 @@ class TeamState:
 
     def to_dict(self) -> dict:
         return dataclasses.asdict(self)
+
+    @property
+    def stint_time_display(self) -> Optional[str]:
+        if self.stint_time is None:
+            return None
+        minutes = self.stint_time // 60
+        seconds = self.stint_time % 60
+        return '{:02}:{:02}'.format(minutes, seconds)

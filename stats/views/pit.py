@@ -3,7 +3,7 @@ from typing import List
 from django.views.generic import TemplateView
 
 from stats.consts import SESSION_PIT_QUEUE_KEY
-from stats.models import Stint
+from stats.models import Stint, RaceState
 from stats.services.repo import SortOrder, get_stints
 from stats.views.race_picker import RacePickRequiredMixin
 
@@ -58,11 +58,16 @@ class PitView(RacePickRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         print('QUEUE IS', _get_queue(self.request))
+        latest_state = RaceState.objects.filter(race=self.request.race).order_by('-race_time').first()
+
+        teams_ontrack = list(latest_state.team_states_parsed.values())
+        teams_ontrack = sorted(teams_ontrack, key=lambda x: -(x.stint_time or 0))
         return {
             'queue': [
                 _get_kart_data(self.request, kart_number)
                 for kart_number in _get_queue(self.request)
-            ]
+            ],
+            'teams_ontrack': teams_ontrack
         }
 
 
