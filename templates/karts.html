@@ -6,14 +6,13 @@
 
 
 {% block body %}
-    <details open>
+    <details>
         <summary>Фільтрація відрізків</summary>
 
         <div class="show-first-stint">
             <form action="{{ url('show-first-stint') }}" method="POST">
                 {{ csrf_input }}
                 <span>Показувати перший відрізок</span>
-                <br>
                 &nbsp;&nbsp;&nbsp;
                 <label><input onchange="this.form.submit();"
                               type="radio"
