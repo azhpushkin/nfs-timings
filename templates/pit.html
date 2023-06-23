@@ -20,7 +20,11 @@
 
     </h3>
 
-    <table class="karts-on-pit" x-data="pitQueue" @queue-add.window="addToQueue" @queue-reset.window="resetQueue">
+    <table class="karts-on-pit"
+           x-data="pitQueue"
+           x-init="loadBadgesAndAccents()"
+           @queue-add.window="addToQueue"
+           @queue-reset.window="resetQueue">
         <thead>
         <th class="kart-number-cell">#</th>
         <th class="pilot-name-nowrap">Pilot</th>
@@ -33,10 +37,12 @@
             <tbody>
             <tr class="best-stint" :style="{'background-color': kartsInfo[kart].color}">
                 <td rowspan="2" class="kart-number-cell">
-                        <span class="kart-number"
+                        <a class="kart-number"
                               :href="'http://localhost:8000/kart/' + kart"
-                              x-text="kart">
-                        </span>
+                              :style="getAccent(kart, accents)"
+                              x-html="getBadge(kart, badges)">
+                            <span></span>
+                        </a>
                 </td>
                 <td class="pilot-name-nowrap" x-text="kartsInfo[kart].best_stint.pilot || 'пусто'"></td>
                 <td x-text="lapTimeOrEmpty(kartsInfo[kart].best_stint.best)"></td>
@@ -104,6 +110,8 @@
             Alpine.data('pitQueue', () => ({
                 queue: Alpine.$persist([]),
                 kartsInfo: Alpine.$persist({}),
+                badges: {},
+                accents: {},
 
                 addToQueue(event) {
                     console.log("Received new event, add to queue", event)
@@ -121,10 +129,24 @@
                 switchColor(kart_number) {
                     console.log('Switching color for', kart_number)
                     this.kartsInfo[kart_number].color = nextColor(this.kartsInfo[kart_number].color)
+                },
+
+                loadBadgesAndAccents() {
+                    let component = this; // TODO: this is ugly
+                    fetch("{{ url('get-karts-user-settings') }}")
+                    .then(response => {
+                        if (response.ok)
+                            return response.json()
+                        else
+                            throw new Error('Cannot retrieve user settings', {cause: err})
+                    })
+                    .then(data => {
+                        console.log('Received user settings', data);
+                        component.badges = data.badges;
+                        component.accents = data.accents;
+                    })
                 }
             }))
-
-
         })
 
         function requestAddToQueue(kart_number) {
@@ -157,6 +179,20 @@
                 default:
                     return "white"
             }
+        }
+
+        function getBadge(kart, badges) {
+            const badge = badges[kart];
+            if (badge === undefined)
+                return kart
+            else
+                return kart + `<img class="badge ${badge}" src="/static/badges/${badge}.svg">`
+        }
+
+        function getAccent(kart, accents) {
+            const accent = accents[kart];
+            if (accent !== undefined)
+                return "background-color: " + accent
         }
 
         function lapTimeOrEmpty(value) {
