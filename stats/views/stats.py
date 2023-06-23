@@ -3,6 +3,7 @@ import itertools
 from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView
 
+from stats.consts import SESSION_HIDE_FIRST_STINT_KEY
 from stats.models import Lap, Stint, Team
 from stats.services.repo import (
     SortOrder,
@@ -31,7 +32,7 @@ class IndexView(RacePickRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         stints = get_stints(self.request.race, sort_by=_get_sorting(self.request))
-        if self.request.session.get('hide_first_stint'):
+        if self.request.session.get(SESSION_HIDE_FIRST_STINT_KEY):
             stints = stints.exclude(stint=1)
         stints = pick_best_kart_by(stints, SortOrder.BEST)
 

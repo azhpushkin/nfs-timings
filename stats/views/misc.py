@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.views import View
 from django.views.generic import TemplateView
 
+from stats.consts import SESSION_HIDE_FIRST_STINT_KEY
 from stats.views.race_picker import RacePickRequiredMixin
 
 
@@ -18,7 +19,7 @@ class GetKartsUserSettings(RacePickRequiredMixin, View):
 
 def change_show_first_stint_view(request):
     show_first_stint = bool(int(request.POST.get('show_first_stint', 1)))
-    request.session['hide_first_stint'] = not show_first_stint
+    request.session[SESSION_HIDE_FIRST_STINT_KEY] = not show_first_stint
 
     return redirect('karts')
 

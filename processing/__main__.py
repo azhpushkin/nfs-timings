@@ -9,6 +9,7 @@ django.setup()  # noqa
 
 from processing.worker import Worker  # noqa
 from stats.models import Race  # noqa
+from stats.stints import refresh_stints_view  # noqa
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +35,7 @@ if __name__ == '__main__':
             logger.info(
                 'Race request processed', extra={'race': current_worker.race.id}
             )
+            refresh_stints_view()
         else:
             logger.info('Race deactivated', extra={'race': current_worker.race.id})
             current_worker = None
