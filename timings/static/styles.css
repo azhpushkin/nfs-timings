@@ -96,6 +96,10 @@ tr.stint-lap td.close-to-best {
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
 }
 
+.kart-config .picker button[disabled] {
+    box-shadow: #0096BF 0px 3px 6px, #0096BF 0px 3px 6px;
+}
+
 .kart-config .picker button:hover {
     background-color: gray;
 }

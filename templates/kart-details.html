@@ -8,6 +8,8 @@
 
 {% set BADGE_NAMES = {'good': 'Відкручена', 'slowed': 'Закручена', 'damaged': 'Поломка', 'unknown': 'Нестабільна', none: 'Очистити'} %}
 {% set kart_note = user_notes.get(kart_number) %}
+{% set current_badge = user_badges.get(kart_number) %}
+{% set current_accent = user_accents.get(kart_number) %}
 
 {% block body %}
     <h3>
@@ -27,7 +29,11 @@
         <form class="picker" method="POST">
             {{ csrf_input }}
             {% for accent in [none, '#69ff6e', '#e87474', '#faec6e'] %}
-                <button class="accent-option" type="submit" value="{{ accent }}" name="accent">
+                <button class="accent-option"
+                        type="submit"
+                        value="{{ accent }}"
+                        {% if accent == current_accent %}disabled{% endif %}
+                        name="accent">
                     {{ kart(number=kart_number, inline=true, accent=accent or 'white', nolink=true) }}
                 </button>
             {% endfor %}
@@ -37,7 +43,11 @@
         <form class="picker" method="POST">
             {{ csrf_input }}
             {% for badge in [none, 'good', 'slowed', 'damaged', 'unknown'] %}
-                <button class="badge-option" type="submit" value="{{ badge }}" name="badge">
+                <button class="badge-option"
+                        type="submit"
+                        value="{{ badge }}"
+                        {% if badge == current_badge %}disabled{% endif %}
+                        name="badge">
                     {% if badge %}
                     <img src="/static/badges/{{ badge }}.svg" class="badge {{ badge }}">
                     {% endif %}
