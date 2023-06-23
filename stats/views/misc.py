@@ -3,7 +3,6 @@ from django.shortcuts import redirect
 from django.views import View
 from django.views.generic import TemplateView
 
-from stats.consts import SESSION_PIT_MODE_KEY
 from stats.views.race_picker import RacePickRequiredMixin
 
 

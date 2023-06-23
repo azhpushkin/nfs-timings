@@ -8,7 +8,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from stats.consts import SESSION_PIT_MODE_KEY, SESSION_PIT_QUEUE_KEY
+from stats.consts import SESSION_PIT_MODE_KEY, SESSION_PIT_QUEUE_KEY, PitModes
 from stats.models import RaceState, Stint
 from stats.services.repo import SortOrder, get_stints
 from stats.views.race_picker import RacePickRequiredMixin
@@ -27,6 +27,11 @@ def _add_to_queue(request, new_kart: int):
     current_queue.append(new_kart)
 
     request.session[SESSION_PIT_QUEUE_KEY] = current_queue
+
+
+def _get_pit_mode(request) -> str:
+    mode = request.session.get(SESSION_PIT_MODE_KEY)
+    return PitModes.get(mode)
 
 
 def _get_kart_data(request, kart_number: int) -> dict:
@@ -105,7 +110,8 @@ class ResetPitQueue(RacePickRequiredMixin, View):
 class ChangePitSettings(View):
     def post(self, request, *args, **kwargs):
         pit_mode = request.POST.get('pit-mode', None)
-        if pit_mode in ['best_2', 'best_last', 'best_nonstart_last']:
+        if pit_mode in PitModes.allowed():
+
             request.session[SESSION_PIT_MODE_KEY] = pit_mode
 
         return redirect('settings')
