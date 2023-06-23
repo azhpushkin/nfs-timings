@@ -1,7 +1,13 @@
 from django.urls import path
 
 from .views.misc import GetKartsUserSettings, SettingsView, change_show_first_stint_view
-from .views.pit import AddKartToQueue, ChangePitSettings, PitView, ResetPitQueue
+from .views.pit import (
+    AddKartToQueue,
+    ChangePitSettings,
+    PitView,
+    RemoveKartFromQueue,
+    ResetPitQueue,
+)
 from .views.race_picker import RacePickerView, ResetRacePickView
 from .views.stats import IndexView, KartDetailsView, StintDetailsView, TeamDetailsView, TeamsView
 
@@ -27,6 +33,11 @@ urlpatterns = [
     # Pit-related views
     path('pit', PitView.as_view(), name='pit'),
     path('add-kart-to-queue', AddKartToQueue.as_view(), name='add-kart-to-queue'),
+    path(
+        'remove-kart-from-queue',
+        RemoveKartFromQueue.as_view(),
+        name='remove-kart-from-queue',
+    ),
     path('reset-pit-queue', ResetPitQueue.as_view(), name='reset-pit-queue'),
     path(
         'change-pit-settings', ChangePitSettings.as_view(), name='change-pit-settings'

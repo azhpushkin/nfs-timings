@@ -94,3 +94,12 @@ table.karts-on-pit .kart-control {
     border-top: 1px solid gray;
 
 }
+
+#kart-add-error {
+    border: 1px solid red;
+    border-radius: 5px;
+    background-color: #ffaaaa;
+    text-align: center;
+    padding: 5px;
+    margin: 10px;
+}

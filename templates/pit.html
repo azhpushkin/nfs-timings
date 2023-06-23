@@ -41,6 +41,8 @@
 
     </table>
 
+    <div id="kart-add-error" style="display: none"></div>
+
     <div>
         <button
             style="width: 100%"
@@ -135,11 +137,17 @@
             modal.close();
     })
 
-    function showKartControl(kart_number) {
-        var tbody = kart_number.parentElement.parentElement;
-        tbody.children[0].style.display = 'none';
-        tbody.children[1].style.display = 'none';
-        tbody.children[2].style.display = '';
+    function showKartControl(element) {
+        var tbody = element.parentElement.parentElement;
+        const kart_number = tbody.children[0].children[0].children[0].innerHTML.trim();
+        if (confirm('Видалити з черги карт ' + kart_number + '?')) {
+            fetch("{{ url('remove-kart-from-queue') }}?kart_number=" + kart_number, {method: "POST"})
+                .then((response) => {
+                    if (response.ok) {
+                        tbody.remove()
+                      }
+                })
+        }
     }
 
 

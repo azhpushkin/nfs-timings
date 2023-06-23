@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from django.http import HttpResponse
 from django.shortcuts import redirect
@@ -22,9 +22,20 @@ def _reset_queue(request):
     request.session.pop(SESSION_PIT_QUEUE_KEY, None)
 
 
-def _add_to_queue(request, new_kart: int):
+def _add_to_queue(request, new_kart: int) -> Tuple[bool, str]:
     current_queue = _get_queue(request)
+    if new_kart in current_queue:
+        return False, f'Карт {new_kart} вже є в черзі'
+
     current_queue.append(new_kart)
+    request.session[SESSION_PIT_QUEUE_KEY] = current_queue
+    return True, ''
+
+
+def _remove_from_queue(request, kart: int):
+    current_queue = _get_queue(request)
+    if kart in current_queue:
+        current_queue.remove(kart)
 
     request.session[SESSION_PIT_QUEUE_KEY] = current_queue
 
@@ -93,7 +104,6 @@ class PitView(RacePickRequiredMixin, TemplateView):
     template_name = 'pit.html'
 
     def get_context_data(self, **kwargs):
-        print('QUEUE IS', _get_queue(self.request))
         latest_state = (
             RaceState.objects.filter(race=self.request.race)
             .order_by('-race_time')
@@ -118,7 +128,6 @@ class PitView(RacePickRequiredMixin, TemplateView):
                 }
             )
             ontrack_data.append(team_data)
-            print(team_data)
 
         return {
             'queue': [
@@ -130,12 +139,23 @@ class PitView(RacePickRequiredMixin, TemplateView):
 
 
 class AddKartToQueue(RacePickRequiredMixin, TemplateView):
-    template_name = 'includes/pit-queue-row.html'
+    template_name = 'includes/pit-queue-row-with-error.html'
 
     def get_context_data(self, **kwargs):
         kart_number = int(self.request.GET.get('kart_number', '0'))
-        _add_to_queue(self.request, kart_number)
-        return {'kart_data': _get_kart_data(self.request, kart_number)}
+        is_ok, error_msg = _add_to_queue(self.request, kart_number)
+        if is_ok:
+            return {'kart_data': _get_kart_data(self.request, kart_number)}
+        else:
+            return {'error_msg': error_msg}
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class RemoveKartFromQueue(RacePickRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        kart_number = int(self.request.GET.get('kart_number', '0'))
+        _remove_from_queue(self.request, kart_number)
+        return HttpResponse(status=200)
 
 
 @method_decorator(csrf_exempt, name='dispatch')
