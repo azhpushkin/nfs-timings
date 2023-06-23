@@ -12,6 +12,16 @@
 
 
 {% block body %}
+    <div>
+        Показуються відрізки:
+    <br>
+        <b>
+        {% if current_pit_mode == 'best_2' %} Найкращий + другий найкращий
+        {% elif current_pit_mode == 'best_last' %} Найкращий + Останній
+        {% elif current_pit_mode == 'best_nonstart_last' %} Найкращий (за виключенням стартового відрізку) + Останній
+        {% else %} Невідомо, помилка {% endif %}
+        </b>
+    </div>
     <h3>
         Карти що зараз на піті
 

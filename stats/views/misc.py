@@ -30,5 +30,4 @@ class SettingsView(RacePickRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         return {
             'expire_at': self.request.session.get_expiry_date(),
-            'current_pit_mode': self.request.session.get(SESSION_PIT_MODE_KEY),
         }

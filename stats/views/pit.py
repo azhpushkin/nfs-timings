@@ -37,6 +37,7 @@ def _get_kart_data(request, kart_number: int) -> dict:
     if best_2_stints:
         best_stint = {
             'pilot': best_2_stints[0].pilot,
+            'started_at': best_2_stints[0].stint_started_at,
             'best': best_2_stints[0].best_lap,
             'average': best_2_stints[0].avg_80,
         }
@@ -46,6 +47,7 @@ def _get_kart_data(request, kart_number: int) -> dict:
     if len(best_2_stints) == 2:
         last_stint = {
             'pilot': best_2_stints[1].pilot,
+            'started_at': best_2_stints[1].stint_started_at,
             'best': best_2_stints[1].best_lap,
             'average': best_2_stints[1].avg_80,
         }

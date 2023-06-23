@@ -6,7 +6,8 @@
             {{ kart(number=kart_data.number, inline=true) }}
         </td>
         <td class="pilot-name-nowrap">
-            {{ kart_data.best_stint.pilot }}
+            {{ kart_data.best_stint.pilot|pilot_surname }}
+            <span>&#128336; {{ kart_data.best_stint.started_at|format_racetime }}</span>
         </td>
          <td>
              {{ kart_data.best_stint.best|round(3) }}
@@ -18,7 +19,8 @@
     </tr>
     <tr class="last-stint">
         <td class="pilot-name-nowrap">
-             {{ kart_data.last_stint.pilot }}
+             {{ kart_data.last_stint.pilot|pilot_surname }}
+            <span>&#128336; {{ kart_data.last_stint.started_at|format_racetime }}</span>
         </td>
         <td>
              {{ kart_data.last_stint.best|round(3) }}

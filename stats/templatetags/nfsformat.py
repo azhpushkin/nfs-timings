@@ -1,6 +1,7 @@
 from django import template
 from django.utils.safestring import mark_safe
 
+from stats.consts import SESSION_HIDE_FIRST_STINT_KEY, SESSION_PIT_MODE_KEY
 from stats.models import Race
 from stats.models.race import RacePass
 
@@ -60,5 +61,8 @@ def add_data_from_race_pass(request):
                 int(kart): accent for kart, accent in race_pass.accents.items()
             },
             'user_notes': {int(kart): note for kart, note in race_pass.notes.items()},
-            'show_first_stint': not request.session.get('hide_first_stint', False),
+            'show_first_stint': not request.session.get(
+                SESSION_HIDE_FIRST_STINT_KEY, False
+            ),
+            'current_pit_mode': request.session.get(SESSION_PIT_MODE_KEY, False),
         }
