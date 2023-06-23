@@ -22,6 +22,8 @@ urlpatterns = [
     ),
     path('get-pit-karts-stats', GetPitKartsStats.as_view(), name='get-pit-karts-stats'),
     path(
-        'get-karts-user-settings', GetKartsUserSettings.as_view(), name='get-karts-user-settings'
+        'get-karts-user-settings',
+        GetKartsUserSettings.as_view(),
+        name='get-karts-user-settings',
     ),
 ]

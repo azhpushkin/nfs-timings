@@ -62,4 +62,36 @@ class GetPitKartsStats(RacePickRequiredMixin, View):
 
 
 class PitView(RacePickRequiredMixin, TemplateView):
-    template_name = 'pit.html'
+    template_name = 'pit2.html'
+
+    def get_context_data(self, **kwargs):
+        return {
+            'queue': [
+                {
+                    'number': 5,
+                    'best_stint': {
+                        'pilot': 'asd',
+                        'best': 43.23,
+                        'average': 43.23,
+                    },
+                    'last_stint': {
+                        'pilot': 'asd',
+                        'best': 43.23,
+                        'average': 43.23,
+                    },
+                },
+                {
+                    'number': 12,
+                    'best_stint': {
+                        'pilot': 'asd',
+                        'best': 43.23,
+                        'average': 43.23,
+                    },
+                    'last_stint': {
+                        'pilot': 'asd',
+                        'best': 43.23,
+                        'average': 43.23,
+                    },
+                }
+            ]
+        }

@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+
+{% block title %}
+    PIT
+{% endblock %}
+
+{% block extra_head %}
+    <!-- Alpine Plugins -->
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+{% endblock %}
+
+
+{% block body %}
+    <h3>
+        Карти що зараз на піті
+
+    </h3>
+
+    <table class="karts-on-pit">
+        <thead>
+            <th class="kart-number-cell">#</th>
+            <th class="pilot-name-nowrap">Pilot</th>
+            <th>Best</th>
+            <th>Avg</th>
+            <th class="kart-control"></th>
+        </thead>
+        {% for kart_data in queue %}
+            <tbody>
+            <tr class="best-stint">
+                <td rowspan="2" class="kart-number-cell">
+                    {{ kart(number=kart_data.number, inline=true) }}
+                </td>
+                <td class="pilot-name-nowrap">
+                    {{ kart_data.best_stint.pilot }}
+                </td>
+                 <td>
+                     {{ kart_data.best_stint.best|round(3) }}
+                </td>
+                <td>
+                    {{ kart_data.best_stint.average|round(3) }}
+                </td>
+                <td rowspan="2" class="kart-control">🔘</td>
+            </tr>
+            <tr class="last-stint">
+                <td class="pilot-name-nowrap">
+                     {{ kart_data.last_stint.pilot }}
+                </td>
+                <td>
+                     {{ kart_data.last_stint.best|round(3) }}
+                </td>
+                <td>
+                    {{ kart_data.last_stint.average|round(3) }}
+                </td>
+            </tr>
+            </tbody>
+        {% endfor %}
+
+    </table>
+
+    <div>
+        <button
+            style="width: 100%"
+            onclick="document.getElementById('add-to-queue-dialog').showModal()">
+            Додати карт в чергу
+        </button>
+        <br>
+        <button
+            style="width: 100%"
+            onclick="confirm('Точно скинути все з піта?') ? resetQueue() : null">
+            Скинути все
+        </button>
+    </div>
+
+
+    <dialog id="add-to-queue-dialog" >
+        <header>Додати карт в чергу</header>
+        <menu x-data>
+            {% for kart in range(1, 11) %}
+                <button class="available-kart" @click="requestAddToQueue({{ kart }})">{{ kart }}</button>
+            {% endfor %}
+            <hr>
+            {% for kart in range(11, 21) %}
+                <button class="available-kart" @click="requestAddToQueue({{ kart }})">{{ kart }}</button>
+            {% endfor %}
+            <hr>
+            {% for kart in [21, 22, 33, 44, 69, 88] %}
+                <button class="available-kart" @click="requestAddToQueue({{ kart }})">{{ kart }}</button>
+            {% endfor %}
+            <hr>
+            <div x-data="{customKartNumber: 1}">
+                <input
+                        type="number" min="1" max="100"
+                        x-model="customKartNumber" style="display: inline; margin-left: 0.5em; width: 5em;">
+                <br>
+                <button @click="requestAddToQueue(customKartNumber)" style="margin-left: 0.5em;">Кастомний карт</button>
+            </div>
+            <hr>
+
+        </menu>
+    </dialog>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+{% endblock %}

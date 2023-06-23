@@ -1,0 +1,50 @@
+
+.karts-on-pit tr.last-stint {
+    border-bottom: 5px double gray;
+}
+
+table.karts-on-pit td:not(.pilot-name-nowrap), table.karts-on-pit th:not(.pilot-name-nowrap) {
+    vertical-align: middle;
+    text-align: center;
+}
+
+table.karts-on-pit tr:first-child td:nth-child(2),
+table.karts-on-pit tr:first-child td:nth-child(3),
+table.karts-on-pit tr:first-child td:nth-child(4) {
+    border-bottom: 1px dashed #bbbbbb;
+}
+
+table.karts-on-pit .kart-control {
+    width: 2em;
+}
+
+#add-to-queue-dialog {
+    padding: 0;
+}
+
+#add-to-queue-dialog header {
+    margin: 0 0 20px;
+}
+
+#add-to-queue-dialog menu {
+    padding: 10px 10px;
+}
+
+#add-to-queue-dialog .available-kart {
+    font-family: 'Racing Sans One', cursive;
+
+    padding-left: 5px;
+    padding-right: 5px;
+    width: 2.5em;
+    height: 2.5em;
+    display: inline-block;
+    font-size: 1.1em;
+    line-height: 1em;
+
+    border: 3px solid black;
+    border-radius: 5px;
+    text-decoration: none;
+    color: black;
+    text-align: center;
+    position: relative;
+}
