@@ -1,2 +1,4 @@
 pip-tools==6.13.0
 black==22.6.0
+ruff==0.0.275
+isort==5.12.0

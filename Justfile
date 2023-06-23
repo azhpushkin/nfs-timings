@@ -23,7 +23,10 @@ dbshell:
     {{docker-exec}} db psql -U $POSTGRES_USER
 
 black:
-    black --extend-exclude migrations --skip-string-normalization .
+    black .
+
+lint: black
+    ruff check .
 
 compile:
     pip-compile requirements.in --resolver=backtracking > requirements.txt

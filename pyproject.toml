@@ -1,0 +1,14 @@
+[tool.ruff]
+exclude = [
+    "venv",
+    ".git",
+    ".mypy_cache",
+    "recordings",
+    "migrations",
+]
+line-length = 88
+
+[tool.black]
+extend-exclude = "migrations"
+skip-string-normalization = 1
+line-length = 88
