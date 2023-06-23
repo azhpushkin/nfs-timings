@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views.misc import GetKartsUserSettings, SettingsView, change_show_first_stint_view
-from .views.pit import GetPitKartsStats, PitView, AddKartToQueue
+from .views.pit import AddKartToQueue, GetPitKartsStats, PitView
 from .views.race_picker import RacePickerView, ResetRacePickView
 from .views.stats import IndexView, KartDetailsView, StintDetailsView, TeamDetailsView, TeamsView
 
