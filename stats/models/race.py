@@ -1,7 +1,6 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import UniqueConstraint
-
-from stats.models import User
 
 
 class Race(models.Model):
@@ -13,7 +12,7 @@ class Race(models.Model):
     is_active = models.BooleanField(default=True)
 
     allowed_users = models.ManyToManyField(
-        User, through='RacePass', related_name='allowed_races'
+        get_user_model(), through='RacePass', related_name='allowed_races'
     )
     kart_overrides = models.JSONField(default=dict)
 
@@ -33,7 +32,7 @@ class Race(models.Model):
 
 class RacePass(models.Model):
     race = models.ForeignKey(Race, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE)
 
     badges = models.JSONField(default=dict, blank=True)
     accents = models.JSONField(default=dict, blank=True)

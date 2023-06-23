@@ -20,4 +20,4 @@ line-length = 88
 
 [tool.isort]
 profile = "hug"
-extend_skip = "migrations"
+extend_skip = "migrations, models/__init__.py"

@@ -14,23 +14,30 @@
 
             {% set karts_with_marks = user_badges|list + user_accents|list %}
             <table>
-            {% for kart_number in karts_with_marks|unique|sort %}
-                <tr>
-                <td>
-                    {{ kart(number=kart_number, inline=true) }}</td>
-                   <td> {{ user_notes.get(kart_number, '- ') }}</td>
+                {% for kart_number in karts_with_marks|unique|sort %}
+                    <tr>
+                        <td>
+                            {{ kart(number=kart_number, inline=true) }}</td>
+                        <td> {{ user_notes.get(kart_number, '- ') }}</td>
 
-                </tr>
+                    </tr>
 
-            {% endfor %}
+                {% endfor %}
             </table>
         </div>
+        {% if request.user.is_superuser %}
+            <div>
+                <a href="/admin"><button style="background-color: yellow; border: 1px solid black; width: 100%;">Go to admin</button></a>
+            </div>
+        {% endif %}
+
         <form method="POST" action="{{ url('reset-race-pick') }}">
             {{ csrf_input }}
             <button type="submit">
                 &#128072; <br> Закрити гонку (або вийти)
             </button>
         </form>
+
     </div>
 
 {% endblock %}
