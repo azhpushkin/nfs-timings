@@ -1,13 +1,14 @@
 from typing import List
 
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from stats.consts import SESSION_PIT_QUEUE_KEY
+from stats.consts import SESSION_PIT_MODE_KEY, SESSION_PIT_QUEUE_KEY
 from stats.models import RaceState, Stint
 from stats.services.repo import SortOrder, get_stints
 from stats.views.race_picker import RacePickRequiredMixin
@@ -96,3 +97,13 @@ class ResetPitQueue(RacePickRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         _reset_queue(self.request)
         return HttpResponse(headers={'HX-Redirect': reverse('pit')})
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ChangePitSettings(View):
+    def post(self, request, *args, **kwargs):
+        pit_mode = request.POST.get('pit-mode', None)
+        if pit_mode in ['best_2', 'best_last', 'best_nonstart_last']:
+            request.session[SESSION_PIT_MODE_KEY] = pit_mode
+
+        return redirect('settings')

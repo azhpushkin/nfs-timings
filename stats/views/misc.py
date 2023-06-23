@@ -3,6 +3,7 @@ from django.shortcuts import redirect
 from django.views import View
 from django.views.generic import TemplateView
 
+from stats.consts import SESSION_PIT_MODE_KEY
 from stats.views.race_picker import RacePickRequiredMixin
 
 
@@ -27,4 +28,7 @@ class SettingsView(RacePickRequiredMixin, TemplateView):
     template_name = 'settings.html'
 
     def get_context_data(self, **kwargs):
-        return {'expire_at': self.request.session.get_expiry_date()}
+        return {
+            'expire_at': self.request.session.get_expiry_date(),
+            'current_pit_mode': self.request.session.get(SESSION_PIT_MODE_KEY),
+        }
