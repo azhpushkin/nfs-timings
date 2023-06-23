@@ -74,7 +74,10 @@
 
 
     <dialog id="add-to-queue-dialog" >
-        <header>Додати карт в чергу</header>
+        <header>
+            <span>Додати карт в чергу</span>
+            <span id="close-add-to-queue-dialog">🗙</span>
+        </header>
         <menu>
             {% for kart in range(1, 23)|list + [33, 44, 69, 88] %}
                 <button class="available-kart"
@@ -109,6 +112,23 @@
 
 {% block extra_js %}
     <script>
+    const modal = document.getElementById("add-to-queue-dialog");
+    const close_btn = document.getElementById("close-add-to-queue-dialog");
+
+    close_btn.onclick = function() {
+      modal.close();
+    }
+
+    window.addEventListener('click', function(event) {
+        if (event.target == modal) {
+            modal.close();
+          }
+    })
+
+    window.addEventListener('htmx:beforeRequest', function(event) {
+        modal.close();
+    })
+
 
     </script>
 

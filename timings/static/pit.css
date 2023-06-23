@@ -48,3 +48,10 @@ table.karts-on-pit .kart-control {
     text-align: center;
     position: relative;
 }
+
+#add-to-queue-dialog #close-add-to-queue-dialog {
+    float: right;
+    margin-right: 10px;
+    font-size: 1.2em;
+    line-height: 1em;
+}
