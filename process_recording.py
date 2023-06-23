@@ -19,32 +19,6 @@ def check_recording(filename: str):
     print('Recording is healthy')
 
 
-def load_parquet():
-    import json
-
-    import pandas as pd
-    from django.utils import timezone
-
-    from stats.models import *
-    from stats.processing import process_json
-
-    df = pd.read_parquet('recordings/mini_06_may_2023.parquet')
-
-    for _, r in df.iterrows():
-        data = r.to_dict()
-        board_request = BoardRequest.objects.create(
-            url='http://example.com',
-            race_id=2,
-            created_at=timezone.now(),
-            status=data['status'],
-            response=data['response'],
-            response_json=json.loads(data['response_json']),
-            is_processed=False,
-        )
-        if data['status'] == 200:
-            process_json(board_request)
-
-
 ACTIONS = {
     'transform': transform_csv_into_parquet,
     'check': check_recording,
