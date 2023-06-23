@@ -21,7 +21,7 @@ from stats.services.repo import (
 
 SESSION_CURRENT_RACE_KEY = 'current-race'
 
-
+# TODO: better validation for this, return 401/403/404 or idk
 def _get_race(request) -> Race:
     return Race.objects.get(id=request.session[SESSION_CURRENT_RACE_KEY])
 
