@@ -1,7 +1,7 @@
 {% from 'components/kart.html' import kart with context %}
 
 <tbody>
-    <tr class="best-stint">
+    <tr>
         <td rowspan="2" class="kart-number-cell">
             {{ kart(number=kart_data.number, inline=true) }}
         </td>
@@ -15,7 +15,7 @@
         <td>
             {{ kart_data.stint_1.average|round(2) if kart_data.stint_1 else '-' }}
         </td>
-        <td rowspan="2" class="kart-control">🔘</td>
+        <td rowspan="2" class="kart-control" onclick="showKartControl(this)">&#10060;</td>
     </tr>
     <tr class="last-stint">
         <td class="pilot-name-nowrap">
@@ -28,5 +28,8 @@
         <td>
             {{ kart_data.stint_2.average|round(2) if kart_data.stint_2 else '-' }}
         </td>
+    </tr>
+    <tr style="display: none; font-size: 0.8em; text-align: left">
+        <td colspan="5">Restore kart {{ kart_data.number }}</td>
     </tr>
 </tbody>
