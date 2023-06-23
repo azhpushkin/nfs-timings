@@ -157,6 +157,12 @@ table.karts-on-pit td:not(.pilot-name-nowrap), table.karts-on-pit th:not(.pilot-
     text-align: center;
 }
 
+table.karts-on-pit tr:first-child td:nth-child(2),
+table.karts-on-pit tr:first-child td:nth-child(3),
+table.karts-on-pit tr:first-child td:nth-child(4) {
+    border-bottom: 1px dashed #bbbbbb;
+}
+
 table.karts-on-pit .kart-control {
     width: 2em;
 }
