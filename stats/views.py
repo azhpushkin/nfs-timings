@@ -179,7 +179,7 @@ class TeamDetailsView(RacePickRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         race = _get_race(self.request)
         team = get_object_or_404(Team, race=race, number=int(kwargs['team']))
-        stints_by_team = Stint.objects.filter(team=int(kwargs['team'])).order_by(
+        stints_by_team = Stint.objects.filter(race_id=race.id, team=int(kwargs['team'])).order_by(
             'stint'
         )
 
@@ -191,18 +191,23 @@ class StintDetailsView(RacePickRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         race = _get_race(self.request)
-        stint = Stint.objects.get(stint_id=kwargs['stint'])
+        stint = Stint.objects.get(race_id=race.id, stint_id=kwargs['stint'])
 
         team = Team.objects.filter(race=race, number=stint.team).first()
-        laps = Lap.objects.filter(team=stint.team, stint=stint.stint).order_by(
+        laps = Lap.objects.filter(race=race, team=stint.team, stint=stint.stint).order_by(
             'lap_number'
         )
+        laps_to_use_for_avg = int(len(laps) * 0.8)
+        s1 = sorted([l.sector_1 for l in laps if l.sector_1])[:laps_to_use_for_avg]
+        s2 = sorted([l.sector_2 for l in laps if l.sector_2])[:laps_to_use_for_avg]
 
         # TODO: configurable close_to_best?
         return {
             'stint': stint,
             'laps': laps,
             'team': team,
+            'avg_sector_1': sum(s1) / len(s1),
+            'avg_sector_2': sum(s2) / len(s2),
             'close_to_best': stint.best_lap + 0.15,
             'close_to_best_sector_1': stint.best_sector_1 + 0.07,
             'close_to_best_sector_2': stint.best_sector_2 + 0.07,

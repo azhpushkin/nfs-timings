@@ -52,6 +52,16 @@
             </tr>
         </thead>
 
+        <tr style="background-color: #fffba2;">
+            <td><b>AVG</b></td>
+            <td><b>{{ stint.avg_80|round(3) }}</b></td>
+            <td><b>{{ avg_sector_1|round(2) }}</b></td>
+            <td><b>{{ avg_sector_2|round(2) }}</b></td>
+        </tr>
+
+        {# Just to add some spacing #}
+        <tr><td></td><td></td><td></td><td></td></tr>
+
         {% for lap in laps %}
             {% set lap_class = 'close-to-best' if lap.lap_time < close_to_best %}
             {% set lap_class = 'best' if lap.lap_time == stint.best_lap else lap_class %}
