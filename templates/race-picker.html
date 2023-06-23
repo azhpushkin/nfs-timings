@@ -29,7 +29,7 @@
             {% for race in races %}
                 <button type="submit" name="race_id", value="{{ race.id }}">
                     {{ race.name }}
-                    {% if not race.is_active %}
+                    {% if race.is_active %}
                         - &#9989; активна
                     {% endif %}
                 </button>

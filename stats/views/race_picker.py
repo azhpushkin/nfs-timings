@@ -47,7 +47,7 @@ class RacePickerView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         return {
             'user': self.request.user,
-            'races': Race.objects.filter(allowed_users=self.request.user),
+            'races': Race.objects.filter(allowed_users=self.request.user).order_by('-created_at'),
             'error': kwargs.get('error'),
         }
 
