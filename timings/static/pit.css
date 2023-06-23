@@ -56,6 +56,10 @@ table.karts-on-pit .kart-control {
     line-height: 1em;
 }
 
+#ontrack-teams {
+    overflow-y:auto
+}
+
 #ontrack-teams td {
     vertical-align: middle;
     text-align: center;
@@ -74,7 +78,7 @@ table.karts-on-pit .kart-control {
 }
 
 #ontrack-teams tr td:nth-child(2) {
-    width: 4em;
+    width: 5em;
     padding-left: 2px;
     padding-right: 2px;
     white-space: nowrap;
@@ -84,4 +88,9 @@ table.karts-on-pit .kart-control {
 #ontrack-teams tr td:nth-child(3) {
     border-right: 1px solid gray;
     padding-right: 10px;
+}
+
+#ontrack-teams tr:first-child td {
+    border-top: 1px solid gray;
+
 }

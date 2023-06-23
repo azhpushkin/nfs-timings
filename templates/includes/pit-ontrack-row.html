@@ -1,10 +1,16 @@
 {% from 'components/kart.html' import kart with context %}
 
 <tbody>
-    <tr class="best-stint">
-        <td rowspan="2" class="kart-number-cell">
-            {{ kart(number=kart_data.number, inline=true) }}
+
+    <tr>
+        <td class="team-number" rowspan="2">{{ kart_data.team_number }}</td>
+        <td rowspan="2">
+            {{ kart_data.stint_time }}
+            <br>
+            <span style="font-size: 0.8em;">{{ kart_data.current_pilot|pilot_surname }}</span>
         </td>
+        <td class="kart-number-cell" rowspan="2">{{ kart(number=kart_data.number, inline=true) }}</td>
+
         <td class="pilot-name-nowrap">
             {{ kart_data.stint_1.pilot|pilot_surname if kart_data.stint_1 else 'пусто' }}
             <span>&#128336; {{ kart_data.stint_1.started_at|format_racetime if kart_data.stint_1 }}</span>
@@ -15,7 +21,6 @@
         <td>
             {{ kart_data.stint_1.average|round(2) if kart_data.stint_1 else '-' }}
         </td>
-        <td rowspan="2" class="kart-control">🔘</td>
     </tr>
     <tr class="last-stint">
         <td class="pilot-name-nowrap">

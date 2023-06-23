@@ -70,21 +70,8 @@
                     <td>Avg</td>
                 </tr>
             </thead>
-                {% for team in teams_ontrack %}
-                    <tbody>
-                    <tr>
-                        <td class="team-number">{{ team.team }}</td>
-                        <td>
-                            {{ team.stint_time_display }}
-                            <br>
-                            <span style="font-size: 0.8em;">{{ team.pilot|pilot_surname }}</span>
-                        </td>
-                        <td>{{ kart(number=12, inline=true) }}</td>
-                        <td>Pilot</td>
-                        <td>{{ 42.12 }}</td>
-                        <td>{{ 23.23 }}</td>
-                    </tr>
-                    </tbody>
+                {% for kart_data in teams_ontrack %}
+                    {% include 'includes/pit-ontrack-row.html' %}
                 {% endfor %}
 
         </table>

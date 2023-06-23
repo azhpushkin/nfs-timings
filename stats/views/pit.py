@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 from stats.consts import SESSION_PIT_MODE_KEY, SESSION_PIT_QUEUE_KEY, PitModes
-from stats.models import RaceState, Stint
+from stats.models import RaceState, Stint, TeamState
 from stats.services.repo import SortOrder, get_stints
 from stats.views.race_picker import RacePickRequiredMixin
 
@@ -103,13 +103,29 @@ class PitView(RacePickRequiredMixin, TemplateView):
         teams_ontrack = [
             t for t in latest_state.team_states_parsed.values() if t.team < 21
         ]
-        teams_ontrack = sorted(teams_ontrack, key=lambda x: -(x.stint_time or 0))
+        teams_ontrack: List[TeamState] = sorted(
+            teams_ontrack, key=lambda x: -(x.stint_time or 0)
+        )
+
+        ontrack_data = []
+        for team in teams_ontrack:
+            team_data = _get_kart_data(self.request, team.kart)
+            team_data.update(
+                {
+                    'team_number': team.team,
+                    'current_pilot': team.pilot,
+                    'stint_time': team.stint_time_display,
+                }
+            )
+            ontrack_data.append(team_data)
+            print(team_data)
+
         return {
             'queue': [
                 _get_kart_data(self.request, kart_number)
                 for kart_number in _get_queue(self.request)
             ],
-            'teams_ontrack': teams_ontrack,
+            'teams_ontrack': ontrack_data,
         }
 
 
