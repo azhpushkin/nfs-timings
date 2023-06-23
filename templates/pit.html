@@ -40,7 +40,8 @@
         <br>
         <button
             style="width: 100%"
-            onclick="confirm('Точно скинути все з піта?') ? resetQueue() : null">
+            hx-post="{{ url('reset-pit-queue') }}"
+            hx-confirm="Точно скинути все з піта?">
             Скинути все
         </button>
     </div>
@@ -105,7 +106,8 @@
     })
 
     window.addEventListener('htmx:beforeRequest', function(event) {
-        modal.close();
+        if (modal.open)
+            modal.close();
     })
 
 
