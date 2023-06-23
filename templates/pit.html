@@ -49,7 +49,29 @@
 
     <div>
         <h4> Команди і машини зараз на трасі</h4>
-        {{ teams_ontrack }}
+        <table id="ontrack-teams">
+            <thead>
+                <tr>
+                    <td class="team-number" style="color: black; text-shadow: none"></td>
+                    <td>&#128336;</td>
+                    <td>Kart</td>
+                    <td>Best</td>
+                    <td>Avg</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for team in teams_ontrack %}
+                    <tr>
+                        <td class="team-number">{{ team.team }}</td>
+                        <td>{{ team.stint_time_display }}</td>
+                        <td>{{ kart(number=12, inline=true) }}</td>
+                        <td>{{ 42.12 }}</td>
+                        <td>{{ 23.23 }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+
+        </table>
     </div>
 
 
