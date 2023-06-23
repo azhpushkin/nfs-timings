@@ -54,22 +54,28 @@
                 <tr>
                     <td class="team-number" style="color: black; text-shadow: none"></td>
                     <td>&#128336;</td>
-                    <td>Kart</td>
+                    <td class="kart-number-cell">&#128663;</td>
+                    <td>Pilot</td>
                     <td>Best</td>
                     <td>Avg</td>
                 </tr>
             </thead>
-            <tbody>
                 {% for team in teams_ontrack %}
+                    <tbody>
                     <tr>
                         <td class="team-number">{{ team.team }}</td>
-                        <td>{{ team.stint_time_display }}</td>
+                        <td>
+                            {{ team.stint_time_display }}
+                            <br>
+                            <span style="font-size: 0.8em;">{{ team.pilot|pilot_surname }}</span>
+                        </td>
                         <td>{{ kart(number=12, inline=true) }}</td>
+                        <td>Pilot</td>
                         <td>{{ 42.12 }}</td>
                         <td>{{ 23.23 }}</td>
                     </tr>
+                    </tbody>
                 {% endfor %}
-            </tbody>
 
         </table>
     </div>

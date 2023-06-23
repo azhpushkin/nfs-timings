@@ -56,24 +56,32 @@ table.karts-on-pit .kart-control {
     line-height: 1em;
 }
 
+#ontrack-teams td {
+    vertical-align: middle;
+    text-align: center;
+}
+
 #ontrack-teams td.team-number {
     font-size: 1.1em;
     height: 1.2em;
     width: 1.5em;
-
 }
 
 #ontrack-teams tbody td.team-number {
     color: red;
-    text-align: center;
     border: 1px solid gray;
     text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
 #ontrack-teams tr td:nth-child(2) {
-    width: 3em;
+    width: 4em;
     padding-left: 2px;
     padding-right: 2px;
     white-space: nowrap;
-    text-align: center;
+    overflow: hidden;
+}
+
+#ontrack-teams tr td:nth-child(3) {
+    border-right: 1px solid gray;
+    padding-right: 10px;
 }

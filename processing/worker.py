@@ -135,6 +135,8 @@ class Worker:
 def team_entry_to_team_state(position: int, entry: TeamEntry) -> TeamState:
     return TeamState(
         team=entry.number,
+        kart=entry.kart,
+        pilot=entry.pilotName,
         stint_time=time_to_total_seconds(entry.totalOnTrack),
         mid_lap=entry.midLap.to_float() if entry.midLap else None,
         position=position,

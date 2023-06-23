@@ -109,6 +109,8 @@ class RaceState(models.Model):
 @dataclasses.dataclass(kw_only=True)
 class TeamState:
     team: int
+    kart: int
+    pilot: str
     mid_lap: Optional[float] = None
     stint_time: Optional[int] = None
     position: Optional[int] = None
