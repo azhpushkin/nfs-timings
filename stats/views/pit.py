@@ -69,7 +69,9 @@ class PitView(RacePickRequiredMixin, TemplateView):
             .first()
         )
 
-        teams_ontrack = [t for t in latest_state.team_states_parsed.values() if t.team < 21]
+        teams_ontrack = [
+            t for t in latest_state.team_states_parsed.values() if t.team < 21
+        ]
         teams_ontrack = sorted(teams_ontrack, key=lambda x: -(x.stint_time or 0))
         return {
             'queue': [
