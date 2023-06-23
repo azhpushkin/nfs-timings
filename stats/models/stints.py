@@ -101,7 +101,8 @@ class RaceState(models.Model):
     @cached_property
     def team_states_parsed(self) -> Dict[int, 'TeamState']:
         return {
-            int(team): TeamState.from_dict(state) for team, state in self.team_states.items()
+            int(team): TeamState.from_dict(state)
+            for team, state in self.team_states.items()
         }
 
 
