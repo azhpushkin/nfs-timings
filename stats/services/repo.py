@@ -33,9 +33,9 @@ def get_stints(
 ) -> QuerySet[Stint]:
     stints = Stint.objects.filter(race_id=race.id)
 
-    if team:
+    if team is not None:
         stints = stints.filter(team)
-    if kart:
+    if kart is not None:
         stints = stints.filter(kart=kart)
     if sort_by:
         field = SORT_MAPPING[sort_by]
