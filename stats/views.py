@@ -251,6 +251,14 @@ def get_pit_karts_stats(request):
     return JsonResponse(data, safe=False)
 
 
+def get_karts_user_settings(request):
+    race_pass = get_race_pass(race=_get_race(request), user=request.user)
+    return JsonResponse({
+        'badges': race_pass.badges,
+        'accents': race_pass.accents,
+    })
+
+
 def change_show_first_stint_view(request):
     skip_first_stint = int(request.POST.get('show_first_stint', 1))
     race = _get_race(request)
