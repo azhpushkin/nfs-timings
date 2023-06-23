@@ -25,15 +25,25 @@
                 {% endfor %}
             </table>
         </div>
+
+
+        <br>
         {% if request.user.is_superuser %}
             <div>
-                <a href="/admin"><button style="background-color: yellow; border: 1px solid black; width: 100%;">Go to admin</button></a>
+                <a href="/admin"><button style="background-color: #ffff85; border: 1px solid black; width: 100%;">Go to admin</button></a>
             </div>
         {% endif %}
 
+        <br>
+
+        <div>
+            Session will expire at: {{ expire_at.strftime("%B %d, %Y  at %H:%M:%S") }}
+            <br>
+            (Pit data is stored in session)
+        </div>
         <form method="POST" action="{{ url('reset-race-pick') }}">
             {{ csrf_input }}
-            <button type="submit">
+            <button type="submit" style="width: 100%;">
                 &#128072; <br> Закрити гонку (або вийти)
             </button>
         </form>

@@ -217,6 +217,11 @@ class StintDetailsView(RacePickRequiredMixin, TemplateView):
 class SettingsView(RacePickRequiredMixin, TemplateView):
     template_name = 'settings.html'
 
+    def get_context_data(self, **kwargs):
+        return {
+            'expire_at': self.request.session.get_expiry_date()
+        }
+
 
 class PitView(RacePickRequiredMixin, TemplateView):
     template_name = 'pit.html'
