@@ -6,27 +6,27 @@
             {{ kart(number=kart_data.number, inline=true) }}
         </td>
         <td class="pilot-name-nowrap">
-            {{ kart_data.best_stint.pilot|pilot_surname }}
-            <span>&#128336; {{ kart_data.best_stint.started_at|format_racetime }}</span>
+            {{ kart_data.stint_1.pilot|pilot_surname if kart_data.stint_1 else 'пусто' }}
+            <span>&#128336; {{ kart_data.stint_1.started_at|format_racetime if kart_data.stint_1 }}</span>
         </td>
          <td>
-             {{ kart_data.best_stint.best|round(3) }}
+             {{ kart_data.stint_1.best|round(3) if kart_data.stint_1 else '-' }}
         </td>
         <td>
-            {{ kart_data.best_stint.average|round(3) }}
+            {{ kart_data.stint_1.average|round(3) if kart_data.stint_1 else '-' }}
         </td>
         <td rowspan="2" class="kart-control">🔘</td>
     </tr>
     <tr class="last-stint">
         <td class="pilot-name-nowrap">
-             {{ kart_data.last_stint.pilot|pilot_surname }}
-            <span>&#128336; {{ kart_data.last_stint.started_at|format_racetime }}</span>
+             {{ kart_data.stint_2.pilot|pilot_surname if kart_data.stint_2 else 'пусто' }}
+            <span>&#128336; {{ kart_data.stint_2.started_at|format_racetime if kart_data.stint_2 }}</span>
         </td>
         <td>
-             {{ kart_data.last_stint.best|round(3) }}
+             {{ kart_data.stint_2.best|round(3) if kart_data.stint_2 else '-' }}
         </td>
         <td>
-            {{ kart_data.last_stint.average|round(3) }}
+            {{ kart_data.stint_2.average|round(3) if kart_data.stint_2 else '-' }}
         </td>
     </tr>
 </tbody>

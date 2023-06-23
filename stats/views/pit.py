@@ -34,35 +34,58 @@ def _get_pit_mode(request) -> str:
     return PitModes.get(mode)
 
 
+def _stint_to_dict(s: Stint) -> dict:
+    return {
+        'pilot': s.pilot,
+        'started_at': s.stint_started_at,
+        'best': s.best_lap,
+        'average': s.avg_80,
+    }
+
+
 def _get_kart_data(request, kart_number: int) -> dict:
-    best_2_stints: List[Stint] = list(
-        get_stints(request.race, kart=kart_number, sort_by=SortOrder.AVERAGE)[:2]
-    )
+    pit_mode = _get_pit_mode(request)
 
-    if best_2_stints:
-        best_stint = {
-            'pilot': best_2_stints[0].pilot,
-            'started_at': best_2_stints[0].stint_started_at,
-            'best': best_2_stints[0].best_lap,
-            'average': best_2_stints[0].avg_80,
-        }
-    else:
-        best_stint = {}
+    if pit_mode == PitModes.BEST_2:
+        stints = get_stints(request.race, kart=kart_number, sort_by=SortOrder.AVERAGE)
+        stints = list(stints[:2])
+        stint_1 = stints[0] if stints else None
+        stint_2 = stints[1] if len(stints) == 2 else None
 
-    if len(best_2_stints) == 2:
-        last_stint = {
-            'pilot': best_2_stints[1].pilot,
-            'started_at': best_2_stints[1].stint_started_at,
-            'best': best_2_stints[1].best_lap,
-            'average': best_2_stints[1].avg_80,
-        }
+    elif pit_mode == PitModes.BEST_LAST:
+        stint_1 = get_stints(
+            request.race, kart=kart_number, sort_by=SortOrder.AVERAGE
+        ).first()
+        stint_2 = (
+            get_stints(request.race, kart=kart_number)
+            .order_by('-stint_started_at')
+            .first()
+        )
+
+    elif pit_mode == PitModes.BEST_NONSTART_LAST:
+        best_stints = list(
+            get_stints(request.race, kart=kart_number, sort_by=SortOrder.AVERAGE)[:2]
+        )
+        if len(best_stints) < 2:
+            stint_1 = best_stints[0] if best_stints else None
+        elif best_stints[0].stint == 1:
+            # Skip first stint if it is fastest
+            stint_1 = best_stints[1]
+        else:
+            stint_1 = best_stints[0]
+
+        stint_2 = (
+            get_stints(request.race, kart=kart_number)
+            .order_by('-stint_started_at')
+            .first()
+        )
     else:
-        last_stint = {}
+        raise ValueError(f'Unknown pit mode {pit_mode}')
 
     return {
         'number': kart_number,
-        'best_stint': best_stint,
-        'last_stint': last_stint,
+        'stint_1': _stint_to_dict(stint_1) if stint_1 else None,
+        'stint_2': _stint_to_dict(stint_2) if stint_2 else None,
     }
 
 
