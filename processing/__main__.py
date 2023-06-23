@@ -1,14 +1,14 @@
 import logging
+import time
 from typing import Optional
 
 import django
 
 django.setup()  # noqa
 
-import time
 
-from processing.worker import Worker
-from stats.models import Race
+from processing.worker import Worker  # noqa
+from stats.models import Race  # noqa
 
 logger = logging.getLogger(__name__)
 

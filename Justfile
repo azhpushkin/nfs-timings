@@ -22,12 +22,10 @@ pyshell:
 dbshell:
     {{docker-exec}} db psql -U $POSTGRES_USER
 
-black:
+fix:
     black .
     isort .
-
-lint: black
-    ruff check .
+    ruff check --fix .
 
 compile:
     pip-compile requirements.in --resolver=backtracking > requirements.txt

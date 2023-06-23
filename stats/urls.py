@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views.misc import GetKartsUserSettings, SettingsView, change_show_first_stint_view
-from .views.pit import AddKartToQueue, GetPitKartsStats, PitView
+from .views.pit import AddKartToQueue, PitView
 from .views.race_picker import RacePickerView, ResetRacePickView
 from .views.stats import IndexView, KartDetailsView, StintDetailsView, TeamDetailsView, TeamsView
 
@@ -21,7 +21,6 @@ urlpatterns = [
         change_show_first_stint_view,
         name='show-first-stint',
     ),
-    path('get-pit-karts-stats', GetPitKartsStats.as_view(), name='get-pit-karts-stats'),
     path(
         'get-karts-user-settings',
         GetKartsUserSettings.as_view(),

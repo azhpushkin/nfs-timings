@@ -138,8 +138,12 @@ class StintDetailsView(RacePickRequiredMixin, TemplateView):
             race=self.request.race, team=stint.team, stint=stint.stint
         ).order_by('lap_number')
         laps_to_use_for_avg = int(len(laps) * 0.8)
-        s1 = sorted([l.sector_1 for l in laps if l.sector_1])[:laps_to_use_for_avg]
-        s2 = sorted([l.sector_2 for l in laps if l.sector_2])[:laps_to_use_for_avg]
+        s1 = sorted([lap.sector_1 for lap in laps if lap.sector_1])[
+            :laps_to_use_for_avg
+        ]
+        s2 = sorted([lap.sector_2 for lap in laps if lap.sector_2])[
+            :laps_to_use_for_avg
+        ]
 
         # TODO: configurable close_to_best?
         return {

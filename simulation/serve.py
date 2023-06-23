@@ -12,7 +12,7 @@ from tqdm import tqdm
 def try_parse_json(data) -> dict:
     try:
         return json.loads(data)
-    except:
+    except Exception:
         return {}
 
 
