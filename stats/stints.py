@@ -1,13 +1,19 @@
 from django.db import connection, DatabaseError
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 def recreate_stints_view():
+    logger.info('Recreation of stints view started')
     with connection.cursor() as cursor:
         cursor.execute(
             """
             drop materialized view if exists stints
         """
         )
+        logger.info('Old view removed')
         cursor.execute(
             f"""
             create materialized view stints as (
@@ -46,11 +52,13 @@ def recreate_stints_view():
             )
         """
         )
+        logger.info('New view created')
 
 
 def refresh_stints_view():
     try:
         with connection.cursor() as cursor:
-            cursor.execute("""refresh materialized view stints_info""")
+            cursor.execute("""refresh materialized view stints""")
+            logger.info('Materialized view update successfully')
     except DatabaseError as e:
-        print('Error updating view: ' + str(e))
+        logger.exception('Error refreshing stints')

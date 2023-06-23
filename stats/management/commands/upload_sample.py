@@ -31,14 +31,18 @@ class Command(BaseCommand):
             is_active=True,
             kart_overrides=overrides,
         )
-        RacePass.objects.bulk_create([
-            RacePass(user=user, race=race)
-            for user in User.objects.filter(is_superuser=True)
-        ])
+        RacePass.objects.bulk_create(
+            [
+                RacePass(user=user, race=race)
+                for user in User.objects.filter(is_superuser=True)
+            ]
+        )
 
         current_worker = Worker(race)
-        try:
-            while True:
-                current_worker.perform_request()
-        except KeyboardInterrupt:
-            recreate_stints_view()
+
+        while True:
+            board_request = current_worker.perform_request()
+            if board_request.response_status == 508:
+                break
+
+        recreate_stints_view()

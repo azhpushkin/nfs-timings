@@ -74,6 +74,10 @@ class TeamEntry(BaseModel):
 
     # segments: bool  # TODO: define
 
+    @validator('midLap', pre=True)
+    def skip_empty_mid_lap(cls, v: str):
+        return None if v == '0' or v == '' else v
+
     @validator('lastLap', 'lastLapS1', 'lastLapS2', 'bestLapOnSegment', pre=True)
     def skip_empty_time_on_first_lap(cls, v: str):
         return None if v == '' else v

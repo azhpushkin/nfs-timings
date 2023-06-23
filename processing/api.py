@@ -30,6 +30,7 @@ def request_api(race: Race) -> BoardRequest:
         board_request.response_status = 0
         board_request.response_body = traceback.format_exc()
         board_request.resolution = Resolutions.REQUEST_FAILED
+        board_request.save()
 
         logger.exception(
             'Request failed',
@@ -38,8 +39,17 @@ def request_api(race: Race) -> BoardRequest:
             },
         )
         return board_request
+    else:
+        board_request.response_status = response.status_code
+        board_request.save()
+        logger.info(
+            'Request succeeded',
+            extra={
+                'board_request_id': board_request.id,
+                'status_code': response.status_code,
+            },
+        )
 
-    board_request.response_status = response.status_code
     try:
         board_request.response_body = response.content.decode('unicode_escape')
     except Exception:
@@ -47,10 +57,11 @@ def request_api(race: Race) -> BoardRequest:
             'Decoding contents failed',
             extra={
                 'board_request_id': board_request.id,
-                'status_code': response.status_code,
             },
         )
         board_request.response_body = str(response.content)
+    finally:
+        board_request.save(update_fields=['response_body'])
 
     if response.status_code != 200:
         logger.error(
@@ -61,6 +72,7 @@ def request_api(race: Race) -> BoardRequest:
             },
         )
         board_request.resolution = Resolutions.SERVER_ERROR
+        board_request.save(update_fields=['resolution'])
         return board_request
 
     try:
@@ -74,7 +86,9 @@ def request_api(race: Race) -> BoardRequest:
             },
         )
         board_request.resolution = Resolutions.JSON_ERROR
-        return board_request
+        board_request.save(update_fields=['resolution'])
+    else:
+        board_request.resolution = Resolutions.JSON_DECODED
+        board_request.save(update_fields=['resolution', 'response_json'])
 
-    board_request.resolution = Resolutions.JSON_DECODED
     return board_request

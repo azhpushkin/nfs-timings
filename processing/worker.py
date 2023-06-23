@@ -2,7 +2,12 @@ import logging
 from typing import List, Dict
 
 from processing.api import request_api, Resolutions
-from processing.detection import LapDetector, LapIndex, team_entry_to_lap, time_to_total_seconds
+from processing.detection import (
+    LapDetector,
+    LapIndex,
+    team_entry_to_lap,
+    time_to_total_seconds,
+)
 from processing.response_type import NFSResponseDict, TeamEntry
 from stats.models import Race, Lap, BoardRequest, Team
 from stats.models.stints import RaceState, TeamState
@@ -58,11 +63,11 @@ class Worker:
             )
             self.teams[entry.number] = new_team
 
-    def perform_request(self):
+    def perform_request(self) -> BoardRequest:
         board_request = request_api(self.race)
-        board_request.save()
+
         if board_request.resolution != Resolutions.JSON_DECODED:
-            return
+            return board_request
 
         try:
             response_parsed: NFSResponseDict = NFSResponseDict.parse_obj(
@@ -73,7 +78,7 @@ class Worker:
                 'Error on NFSResponseDict.parse_obj',
                 extra={'board_request_id': board_request.id},
             )
-            return
+            return board_request
         else:
             board_request.resolution = Resolutions.JSON_PARSED
             board_request.save(update_fields=['resolution'])
@@ -81,7 +86,7 @@ class Worker:
         if not response_parsed.onTablo.isRace:
             board_request.resolution = Resolutions.JSON_NOT_RACE
             board_request.save(update_fields=['resolution'])
-            return
+            return board_request
 
         race_state = RaceState.objects.create(
             board_request=board_request,
@@ -91,7 +96,11 @@ class Worker:
             team_states={
                 str(entry.number): team_entry_to_team_state(i, entry).to_dict()
                 for i, entry in enumerate(response_parsed.onTablo.teams)
-            }
+            },
+        )
+        logger.info(
+            'RaceState created',
+            {'race_state_id': race_state.id, 'race_time': race_state.race_time},
         )
 
         for new_entry in self.lap_detector.process_race_info(response_parsed.onTablo):
@@ -106,7 +115,12 @@ class Worker:
                 lap.race_time = race_state.race_time
                 lap.save()
                 logger.info(
-                    'Lap created', extra={'request': board_request.id, 'lap': lap.id}
+                    'Lap created',
+                    extra={
+                        'request': board_request.id,
+                        'lap': lap.id,
+                        'team': lap.team,
+                    },
                 )
                 self._process_team(new_entry)
 
@@ -120,11 +134,13 @@ class Worker:
                 )
                 continue
 
+        return board_request
+
 
 def team_entry_to_team_state(position: int, entry: TeamEntry) -> TeamState:
     return TeamState(
         team=entry.number,
         stint_time=time_to_total_seconds(entry.totalOnTrack),
         mid_lap=entry.midLap.to_float() if entry.midLap else None,
-        position=position
+        position=position,
     )

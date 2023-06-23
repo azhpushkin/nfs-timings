@@ -14,6 +14,7 @@ from pathlib import Path
 
 import dj_database_url
 from dotenv import load_dotenv
+from pythonjsonlogger.jsonlogger import JsonFormatter
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -148,10 +149,14 @@ LOGOUT_REDIRECT_URL = '/login'
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'json': {
+            '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',
+            'fmt': '%(message)%(levelname)%(name)%(asctime)',
+        }
+    },
     'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
+        'console': {'class': 'logging.StreamHandler', 'formatter': 'json'},
     },
     'root': {
         'handlers': ['console'],
