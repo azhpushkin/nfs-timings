@@ -75,12 +75,16 @@ class RacePickerView(LoginRequiredMixin, TemplateView):
             kwargs.setdefault('error', race_id_raw)
             return self.get(request, args, kwargs)
 
+        request.session.pop('hide_first_stint', None)
+        request.session.pop('pit_queue', None)
         request.session[SESSION_CURRENT_RACE_KEY] = race_id
         return redirect('karts')
 
 
 class ResetRacePickView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
+        request.session.pop('hide_first_stint', None)
+        request.session.pop('pit_queue', None)
         request.session.pop(SESSION_CURRENT_RACE_KEY)
         return redirect('race-picker')
 
@@ -96,7 +100,7 @@ class IndexView(RacePickRequiredMixin, TemplateView):
         race_pass = get_race_pass(race, self.request.user)
 
         stints = get_stints(race, sort_by=_get_sorting(self.request))
-        if not race_pass.show_first_stint:
+        if self.request.session.get('hide_first_stint'):
             stints = stints.exclude(stint=1)
         stints = pick_best_kart_by(stints, SortOrder.BEST)
 
@@ -270,11 +274,7 @@ def get_karts_user_settings(request):
 
 
 def change_show_first_stint_view(request):
-    skip_first_stint = int(request.POST.get('show_first_stint', 1))
-    race = _get_race(request)
-
-    race_pass = get_race_pass(race, request.user)
-    race_pass.show_first_stint = bool(skip_first_stint)
-    race_pass.save(update_fields=['show_first_stint'])
+    show_first_stint = bool(int(request.POST.get('show_first_stint', 1)))
+    request.session['hide_first_stint'] = not show_first_stint
 
     return redirect('karts')

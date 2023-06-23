@@ -60,5 +60,5 @@ def add_data_from_race_pass(request):
                 int(kart): accent for kart, accent in race_pass.accents.items()
             },
             'user_notes': {int(kart): note for kart, note in race_pass.notes.items()},
-            'show_first_stint': race_pass.show_first_stint,
+            'show_first_stint': not request.session.get('hide_first_stint', False)
         }
