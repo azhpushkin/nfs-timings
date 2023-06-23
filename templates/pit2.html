@@ -6,8 +6,8 @@
 {% endblock %}
 
 {% block extra_head %}
-    <!-- Alpine Plugins -->
     <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+{#    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>#}
 {% endblock %}
 
 
@@ -17,7 +17,7 @@
 
     </h3>
 
-    <table class="karts-on-pit">
+    <table class="karts-on-pit" id="pit-queue">
         <thead>
             <th class="kart-number-cell">#</th>
             <th class="pilot-name-nowrap">Pilot</th>
@@ -75,25 +75,29 @@
 
     <dialog id="add-to-queue-dialog" >
         <header>Додати карт в чергу</header>
-        <menu x-data>
-            {% for kart in range(1, 11) %}
-                <button class="available-kart" @click="requestAddToQueue({{ kart }})">{{ kart }}</button>
+        <menu>
+            {% for kart in range(1, 23)|list + [33, 44, 69, 88] %}
+                <button class="available-kart"
+                        hx-get="{{ url('add-kart-to-queue') }}?kart_number={{ kart }}"
+                        hx-target="#pit-queue"
+                        hx-swap="beforeend">
+                    {{ kart }}
+                </button>
+                {% if loop.index % 10 == 0 %}<hr>{% endif %}
             {% endfor %}
             <hr>
-            {% for kart in range(11, 21) %}
-                <button class="available-kart" @click="requestAddToQueue({{ kart }})">{{ kart }}</button>
-            {% endfor %}
-            <hr>
-            {% for kart in [21, 22, 33, 44, 69, 88] %}
-                <button class="available-kart" @click="requestAddToQueue({{ kart }})">{{ kart }}</button>
-            {% endfor %}
-            <hr>
-            <div x-data="{customKartNumber: 1}">
+            <div>
                 <input
                         type="number" min="1" max="100"
-                        x-model="customKartNumber" style="display: inline; margin-left: 0.5em; width: 5em;">
+                        name="custom-kart"
+                        id="custom-kart"
+                        style="display: inline; margin-left: 0.5em; width: 5em;">
                 <br>
-                <button @click="requestAddToQueue(customKartNumber)" style="margin-left: 0.5em;">Кастомний карт</button>
+                <button style="margin-left: 0.5em;"
+                        hx-vals='js:{kart_number: document.getElementById("custom-kart").value}'
+                        hx-get="{{ url('add-kart-to-queue') }}"
+                        hx-target="#pit-queue"
+                        hx-swap="beforeend">Кастомний карт</button>
             </div>
             <hr>
 
@@ -104,5 +108,8 @@
 
 
 {% block extra_js %}
+    <script>
+
+    </script>
 
 {% endblock %}

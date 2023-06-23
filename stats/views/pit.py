@@ -95,3 +95,24 @@ class PitView(RacePickRequiredMixin, TemplateView):
                 }
             ]
         }
+
+
+class AddKartToQueue(RacePickRequiredMixin, TemplateView):
+    template_name = 'queue_row.html'
+
+    def get_context_data(self, **kwargs):
+        return {
+            'kart_data': {
+                    'number': int(self.request.GET.get('kart_number', '0')),
+                    'best_stint': {
+                        'pilot': 'asd',
+                        'best': 43.23,
+                        'average': 43.23,
+                    },
+                    'last_stint': {
+                        'pilot': 'asd',
+                        'best': 43.23,
+                        'average': 43.23,
+                    },
+                }
+        }

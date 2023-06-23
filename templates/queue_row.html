@@ -1,0 +1,30 @@
+{% from 'components/kart.html' import kart with context %}
+
+<tbody>
+    <tr class="best-stint">
+        <td rowspan="2" class="kart-number-cell">
+            {{ kart(number=kart_data.number, inline=true) }}
+        </td>
+        <td class="pilot-name-nowrap">
+            {{ kart_data.best_stint.pilot }}
+        </td>
+         <td>
+             {{ kart_data.best_stint.best|round(3) }}
+        </td>
+        <td>
+            {{ kart_data.best_stint.average|round(3) }}
+        </td>
+        <td rowspan="2" class="kart-control">🔘</td>
+    </tr>
+    <tr class="last-stint">
+        <td class="pilot-name-nowrap">
+             {{ kart_data.last_stint.pilot }}
+        </td>
+        <td>
+             {{ kart_data.last_stint.best|round(3) }}
+        </td>
+        <td>
+            {{ kart_data.last_stint.average|round(3) }}
+        </td>
+    </tr>
+</tbody>
