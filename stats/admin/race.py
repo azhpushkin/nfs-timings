@@ -65,9 +65,9 @@ class RaceAdmin(admin.ModelAdmin):
                     id original_id,
                     created_at,
                     url,
-                    status,
-                    response,
-                    is_processed
+                    response_status,
+                    response_body,
+                    resolution
                 FROM requests WHERE race_id = %s
                 ''',
                 [
