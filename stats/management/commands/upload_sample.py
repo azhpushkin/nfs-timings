@@ -28,7 +28,7 @@ class Command(BaseCommand):
             created_at=datetime.now(),
             api_url=url,
             name=name,
-            is_active=True,
+            is_active=False,
             kart_overrides=overrides,
         )
         RacePass.objects.bulk_create(

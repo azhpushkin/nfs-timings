@@ -2,18 +2,18 @@ import json
 import pathlib
 import re
 import sys
-from datetime import datetime
 from http import server
 
 import pandas as pd
 from tqdm import tqdm
 
 
-def try_parse_json(data) -> dict:
+def try_parse_json(data, row) -> dict:
     try:
-        return json.loads(data)
+        return json.loads(data.replace('\\', '\\\\'))
     except Exception:
-        return {}
+        print('Error parsing data for row', row)
+        raise
 
 
 # 1985 is start of the race (last request before the race)
@@ -26,76 +26,16 @@ print("Loading", REQUESTS_FILE)
 df = pd.read_parquet(REQUESTS_FILE)
 
 tqdm.pandas(desc='Parse json')
-if 'response_json' not in df.columns:
-    df['response_json'] = df['response'].apply(lambda x: eval(x).decode('utf-8'))
+response_json = pd.Series(index=df.index)
 
-df['parsed_json'] = df['response_json'].progress_apply(try_parse_json)
+for i, row in tqdm(df.iterrows(), total=len(df)):
+    body = row['response_body']
+    if body == 'CONNECTION ERROR' or body.startswith('Access violation at address '):
+        continue
+    else:
+        response_json[i] = try_parse_json(body, row)
 
-df['parsed_created_at'] = df['created_at'].apply(datetime.fromisoformat)
-# Print dataframe to see bounds of requests
-if 'index' not in df.columns and 'id' in df.columns:
-    df['index'] = df['id']
-    print('Populate index from id column')
-
-
-print(df)
-
-
-table_trs = []
-for _, row in tqdm(
-    df.sort_values('index').iterrows(), total=len(df), desc='Generate HTML'
-):
-    on_tablo_data = row['parsed_json'].get('onTablo', {})
-
-    status_color = '' if row['status'] == 200 else ' bgcolor=gray '
-    race_time_color = '' if on_tablo_data.get('totalRaceTime') else ' bgcolor=red '
-    is_race_color = '' if on_tablo_data.get('isRace', False) else ' bgcolor=yellow '
-
-    table_trs.append(
-        f'''
-        <tr>
-            <td>{row['index']}</td>
-            <td>{row['parsed_created_at'].time().replace(microsecond=0).isoformat()}</td>
-            <td {status_color}>
-                {row['status']}
-            </td>
-            <td {is_race_color}>
-                {on_tablo_data.get('isRace', False)}
-            </td>
-            <td {race_time_color}>
-                {on_tablo_data.get('totalRaceTime', 'NO TIME')}
-            </td>
-        </tr>
-    '''
-    )
-table_trs = '\n'.join(table_trs)
-TABLE_STYLE = '''
-    table, th, td {
-        border: 1px solid black;
-        padding-left: 5px;
-        padding-right: 5px;
-    }
-'''
-HEALTH_HTML = f'''
-    <!doctype html>
-    <head>
-    <style>
-        {TABLE_STYLE}
-    </style>
-    </head>
-    <body>
-    <table>
-        <tr>
-            <td>Index</td>
-            <td>Created at</td>
-            <td>Status code</td>
-            <td>Is Race</td>
-            <td>Race time</td>
-        </tr>
-        {table_trs}
-    </table>
-    </body>
-'''
+df['response_json'] = response_json
 
 
 class CustomHTTPHandler(server.SimpleHTTPRequestHandler):
@@ -123,21 +63,17 @@ class CustomHTTPHandler(server.SimpleHTTPRequestHandler):
 
             recorded_request = df.loc[req_id]
 
-            if recorded_request["status"] == 200:
+            if recorded_request["response_status"] == 200:
                 self.send_response(code=200)
                 self.send_header(keyword="Content-type", value="application/json")
                 self.end_headers()
-                self.wfile.write(eval(recorded_request["response"]))
+                self.wfile.write(recorded_request["response_body"].encode('utf-8'))
             else:
                 self.send_response(code=500)
                 self.end_headers()
                 self.wfile.write(b"CONNECTION ERROR")
                 self.wfile.close()
-        elif self.path.startswith('/health'):
-            self.send_response(code=200)
-            self.end_headers()
-            self.wfile.write(HEALTH_HTML.encode('utf-8'))
-            self.wfile.close()
+
         elif self.path.startswith('/reset'):
             self.__class__.COUNTER = 0
 
