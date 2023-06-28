@@ -16,6 +16,7 @@ class Resolutions:
     JSON_DECODED = 'json_decoded'
     JSON_PARSED = 'json_parsed'
     JSON_NOT_RACE = 'json_not_race'
+    JSON_RACE_ENDED = 'json_race_ended'
     JSON_PROCESSED = 'json_processed'
 
 

@@ -10,6 +10,13 @@ class Race(models.Model):
     created_at = models.DateTimeField()
     name = models.CharField(max_length=64)
     is_active = models.BooleanField(default=True)
+    length = models.IntegerField(
+        default=14_400,
+        help_text=(
+            'Race length in seconds. '
+            '7200 for MINI, 14400 for 4h, 25200 for 7h, 36000 for 10h'
+        ),
+    )
 
     allowed_users = models.ManyToManyField(
         get_user_model(), through='RacePass', related_name='allowed_races'

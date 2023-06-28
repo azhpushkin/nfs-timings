@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from processing.api import Resolutions, request_api
 from processing.detection import LapDetector, LapIndex, team_entry_to_lap, time_to_total_seconds
@@ -14,6 +14,7 @@ class Worker:
     race: Race
     lap_detector: LapDetector
     teams: Dict[int, Team]
+    last_race_state: Optional[RaceState]
 
     def __init__(self, race: Race):
         self.race = race
@@ -21,6 +22,8 @@ class Worker:
         latest_laps = self._get_latest_laps()
         latest_laps_indexes = [LapIndex.from_db_lap(lap) for lap in latest_laps]
         self.lap_detector = LapDetector(latest_laps_indexes)
+
+        self.last_race_state = None
 
         self.teams = {team.number: team for team in self._get_teams()}
 
@@ -83,11 +86,23 @@ class Worker:
             board_request.save(update_fields=['resolution'])
             return board_request
 
+        total_race_time = time_to_total_seconds(response_parsed.onTablo.totalRaceTime)
+        if total_race_time > self.race.length or (
+            self.last_race_state and self.last_race_state.race_time > total_race_time
+        ):
+            logger.warning(
+                'Race already ended, skip processing',
+                extra={'board_request_id': board_request.id},
+            )
+            board_request.resolution = Resolutions.JSON_RACE_ENDED
+            board_request.save(update_fields=['resolution'])
+            return board_request
+
         race_state = RaceState.objects.create(
             board_request=board_request,
             created_at=board_request.created_at,
             race=self.race,
-            race_time=time_to_total_seconds(response_parsed.onTablo.totalRaceTime),
+            race_time=total_race_time,
             team_states={
                 str(entry.number): team_entry_to_team_state(i, entry).to_dict()
                 for i, entry in enumerate(response_parsed.onTablo.teams)
@@ -97,6 +112,7 @@ class Worker:
             'RaceState created',
             {'race_state_id': race_state.id, 'race_time': race_state.race_time},
         )
+        self.last_race_state = race_state
 
         for new_entry in self.lap_detector.process_race_info(response_parsed.onTablo):
             try:

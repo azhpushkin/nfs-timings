@@ -16,9 +16,12 @@ class Command(BaseCommand):
         parser.add_argument('--url', dest='url', required=True)
 
         parser.add_argument('--name', dest='name', required=True)
+        parser.add_argument('--length', dest='length', required=True, type=int)
         parser.add_argument('--overrides', dest='overrides', default='', required=False)
 
-    def handle(self, *args, url: str, name: str, overrides: str, **options):
+    def handle(
+        self, *args, url: str, name: str, length: int, overrides: str, **options
+    ):
         overrides = overrides.split(',')
         overrides = [o.split('->') for o in overrides if o]
         overrides = {o[0]: o[1] for o in overrides if o}
@@ -30,6 +33,7 @@ class Command(BaseCommand):
             name=name,
             is_active=False,
             kart_overrides=overrides,
+            length=length,
         )
         RacePass.objects.bulk_create(
             [

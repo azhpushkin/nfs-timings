@@ -10,9 +10,11 @@ class Command(BaseCommand):
 
     def handle(self, race: int, *args, **options):
         with connection.cursor() as cursor:
-            cursor.execute('''
+            cursor.execute(
+                '''
                 DROP TABLE IF EXISTS requests_temp
-            ''')
+            '''
+            )
             cursor.execute(
                 '''
                 CREATE TABLE requests_temp
@@ -31,4 +33,3 @@ class Command(BaseCommand):
                     race,
                 ],
             )
-
