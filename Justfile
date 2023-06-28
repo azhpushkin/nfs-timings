@@ -39,3 +39,10 @@ m:
 
 sample_upload name +extra_args:
     {{docker-exec}} web python manage.py upload_sample --name {{name}} --url http://host.docker.internal:7000/getmaininfo.json?use_counter=1 {{extra_args}}
+
+
+race_to_temp race_id race_name:
+    {{docker-exec}} web python manage.py race_to_temp --race {{race_id}}
+    {{docker-exec}} db psql -U $POSTGRES_USER -c "COPY requests_temp TO STDOUT WITH CSV HEADER" > {{race_name}}.csv
+    cat {{race_name}}.csv | gzip > {{race_name}}.parquet
+    # scp host:fullpath.parquet ./race_name.parquet
