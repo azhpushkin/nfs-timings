@@ -34,6 +34,8 @@ gunicorn==20.1.0
     # via -r requirements.in
 idna==3.4
     # via requests
+iniconfig==2.0.0
+    # via pytest
 ipython==8.4.0
     # via -r requirements.in
 jedi==0.18.2
@@ -51,7 +53,9 @@ numpy==1.25.0
 openpyxl==3.0.10
     # via -r requirements.in
 packaging==23.1
-    # via fastparquet
+    # via
+    #   fastparquet
+    #   pytest
 pandas==2.0.1
     # via
     #   -r requirements.in
@@ -62,6 +66,8 @@ pexpect==4.8.0
     # via ipython
 pickleshare==0.7.5
     # via ipython
+pluggy==1.2.0
+    # via pytest
 prompt-toolkit==3.0.38
     # via ipython
 psycopg2==2.9.3
@@ -74,6 +80,12 @@ pydantic==1.10.9
     # via -r requirements.in
 pygments==2.15.1
     # via ipython
+pytest==7.4.0
+    # via
+    #   -r requirements.in
+    #   pytest-django
+pytest-django==4.5.2
+    # via -r requirements.in
 python-dateutil==2.8.2
     # via pandas
 python-dotenv==0.20.0

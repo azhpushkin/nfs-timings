@@ -12,3 +12,5 @@ gunicorn==20.1.0
 tqdm==4.65.0
 pydantic
 python-json-logger==2.0.7
+pytest-django==4.5.2
+pytest==7.4.0

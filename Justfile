@@ -22,6 +22,9 @@ pyshell:
 dbshell:
     {{docker-exec}} db psql -U $POSTGRES_USER
 
+test:
+    {{docker-exec}} web pytest
+
 fix:
     black .
     isort .

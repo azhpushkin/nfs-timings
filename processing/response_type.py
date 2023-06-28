@@ -2,7 +2,7 @@ import re
 from datetime import time
 from typing import List, Optional
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, root_validator, validator
 
 # All the calculations for the race are within 24 hours, so using datetime.time is fine here
 # Lap times have the format of AA:BB.CC, where AA - minutes, BB - seconds, CC - milliseconds
@@ -62,17 +62,14 @@ class TeamEntry(BaseModel):
     lastLapS2: Optional[LapTime]
     lapCount: int
 
-    # TODO: hardcode that number 44 during marathon is Vovan
-    number: int  # TODO: what does it mean
-    kart: int  # TODO: check if empty
-    pitstops: int  # TODO: use pitspots to determine stint number (is this really good solution??)
+    number: int
+    kart: int
+    pitstops: int
     # TODO: create StintDetector and compare results in it and in pitstops
-    isOnPit: bool  # TODO: skip laps when isOnPit is true
+    isOnPit: bool
     totalOnTrack: time
     bestLapOnSegment: Optional[LapTime]
     midLap: Optional[LapTime]
-
-    # segments: bool  # TODO: define
 
     @validator('midLap', pre=True)
     def skip_empty_mid_lap(cls, v: str):
@@ -97,6 +94,18 @@ class TeamEntry(BaseModel):
         else:
             return v
 
+    @root_validator
+    def check_if_first_lap(cls, values):
+        # last_lap = values.get('lastLap')
+        # if last_lap and last_lap.to_float() > time_to_total_seconds(values['totalOnTrack']):
+        #     real_last_lap = last_lap.to_float() - time_to_total_seconds(values['totalOnTrack'])
+        #     m = math.floor(real_last_lap) // 60
+        #     s = round(real_last_lap % 60, 3)
+        #     lap_str = f'{m}:{s}'
+        #     values['lastLap'] = LapTime(lap_str)
+
+        return values
+
 
 class RaceInfo(BaseModel):
     isRace: bool
@@ -106,3 +115,7 @@ class RaceInfo(BaseModel):
 
 class NFSResponseDict(BaseModel):
     onTablo: RaceInfo
+
+
+def time_to_total_seconds(t: time) -> int:
+    return int(t.hour * 3600 + t.minute * 60 + t.second)

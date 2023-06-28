@@ -1,9 +1,8 @@
 import dataclasses
 import logging
-from datetime import time
 from typing import Dict, Generator, List, Optional
 
-from processing.response_type import RaceInfo, TeamEntry
+from processing.response_type import RaceInfo, TeamEntry, time_to_total_seconds
 from stats.models import BoardRequest, Lap, Race
 
 logger = logging.getLogger(__name__)
@@ -18,10 +17,6 @@ class LapIndex:
     @staticmethod
     def from_db_lap(lap: Lap):
         return LapIndex(team=lap.team, lap_number=lap.lap_number, stint=lap.stint)
-
-
-def time_to_total_seconds(t: time) -> int:
-    return int(t.hour * 3600 + t.minute * 60 + t.second)
 
 
 # TODO: think about swapping TeamEntry to other entity (maybe Lap, but disallow save)

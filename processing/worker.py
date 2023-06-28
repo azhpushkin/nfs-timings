@@ -2,8 +2,8 @@ import logging
 from typing import Dict, List, Optional
 
 from processing.api import Resolutions, request_api
-from processing.detection import LapDetector, LapIndex, team_entry_to_lap, time_to_total_seconds
-from processing.response_type import NFSResponseDict, TeamEntry
+from processing.detection import LapDetector, LapIndex, team_entry_to_lap
+from processing.response_type import NFSResponseDict, TeamEntry, time_to_total_seconds
 from stats.models import BoardRequest, Lap, Race, Team
 from stats.models.stints import RaceState, TeamState
 

@@ -21,3 +21,9 @@ line-length = 88
 [tool.isort]
 profile = "hug"
 extend_skip = "migrations, models/__init__.py"
+
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "timings.settings"
+# -- recommended but optional:
+python_files = ["test_*.py", "*_test.py", "tests/*.py"]
