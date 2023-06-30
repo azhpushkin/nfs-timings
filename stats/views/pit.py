@@ -54,7 +54,7 @@ def _stint_to_dict(s: Stint) -> dict:
     }
 
 
-def _get_kart_data(request, kart_number: int, pit_mode: str = None) -> dict:
+def _get_kart_data(request, kart_number: int, pit_mode: str = '') -> dict:
     pit_mode = pit_mode or _get_pit_mode(request)
 
     if pit_mode == PitModes.BEST_2:

@@ -1,5 +1,10 @@
 from typing import List, Tuple
 
+from django.http import HttpResponse
+from django.urls import reverse
+from django.utils.decorators import method_decorator
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
 from stats.consts import SESSION_PIT_V2_QUEUE_KEY
@@ -59,3 +64,22 @@ class PitV2View(RacePickRequiredMixin, TemplateView):
             'queue': _get_queue(self.request),
             'teams_ontrack': ontrack_data,
         }
+
+
+class AddKartToQueueV2(RacePickRequiredMixin, TemplateView):
+    template_name = 'includes/kart-pit.html'
+
+    def get_context_data(self, **kwargs):
+        kart_number = int(self.request.GET.get('kart_number', '0'))
+        is_ok, error_msg = _add_to_queue(self.request, kart_number)
+        if is_ok:
+            return {'kart_number': kart_number}
+        else:
+            return {'error_msg': error_msg}
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ResetPitQueueV2(RacePickRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        _reset_queue(self.request)
+        return HttpResponse(headers={'HX-Redirect': reverse('pit-v2')})

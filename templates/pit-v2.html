@@ -17,8 +17,8 @@
     </h3>
 
     <div class="karts-on-pit-v2" id="pit-queue-v2">
-        {% for kart in queue %}
-            {{ kart }}
+        {% for kart_number in queue %}
+            {% include 'includes/kart-pit.html' %}
         {% endfor %}
     </div>
 
@@ -34,7 +34,7 @@
         <br>
         <button
             style="width: 100%"
-            hx-post="{{ url('reset-pit-queue') }}"
+            hx-post="{{ url('reset-pit-queue-v2') }}"
             hx-confirm="Точно скинути все з піта?">
             Скинути все
         </button>
@@ -70,8 +70,8 @@
         <menu>
             {% for kart in range(1, 23)|list + [33, 44, 69, 88] %}
                 <button class="available-kart"
-                        hx-get="{{ url('add-kart-to-queue') }}?kart_number={{ kart }}"
-                        hx-target="#pit-queue"
+                        hx-get="{{ url('add-kart-to-queue-v2') }}?kart_number={{ kart }}"
+                        hx-target="#pit-queue-v2"
                         hx-swap="beforeend">
                     {{ kart }}
                 </button>
@@ -87,8 +87,8 @@
                 <br>
                 <button style="margin-left: 0.5em;"
                         hx-vals='js:{kart_number: document.getElementById("custom-kart").value}'
-                        hx-get="{{ url('add-kart-to-queue') }}"
-                        hx-target="#pit-queue"
+                        hx-get="{{ url('add-kart-to-queue-v2') }}"
+                        hx-target="#pit-queue-v2"
                         hx-swap="beforeend">Кастомний карт</button>
             </div>
             <hr>
@@ -118,19 +118,6 @@
         if (modal.open)
             modal.close();
     })
-
-    function showKartControl(element) {
-        var tbody = element.parentElement.parentElement;
-        const kart_number = tbody.children[0].children[0].children[0].innerHTML.trim();
-        if (confirm('Видалити з черги карт ' + kart_number + '?')) {
-            fetch("{{ url('remove-kart-from-queue') }}?kart_number=" + kart_number, {method: "POST"})
-                .then((response) => {
-                    if (response.ok) {
-                        tbody.remove()
-                      }
-                })
-        }
-    }
 
 
     </script>

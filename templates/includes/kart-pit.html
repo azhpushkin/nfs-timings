@@ -1,0 +1,11 @@
+{% from 'components/kart.html' import kart with context %}
+
+{% if not error_msg %}
+    {{ kart(number=kart_number, nolink=true, inline=true) }}
+{% endif %}
+
+{% if error_msg %}
+    <div id="kart-add-error" hx-swap-oob="true">
+        {{ error_msg }}
+    </div>
+{% endif %}
