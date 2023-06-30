@@ -20,23 +20,23 @@ def recreate_stints_view():
                 with stints as (
                     select
                         race_id,
-                        
-                        -- pick most common kart number to avoid issues caused by wrong kart 
+
+                        -- pick most common kart number to avoid issues caused by wrong kart
                         --  (0 means kart number is not set)
                         mode() within group (order by case when kart = 0 then null else kart end) as kart,
-                        
+
                         (array_agg(pilot_name order by lap_number desc))[1] as pilot,
                         team,
                         stint,
                         min(race_time) as stint_started_at,
-                        
+
                         count(*) as laps_amount,
                         array_agg(lap_time order by lap_time) as lap_times,
-                        
+
                         min(lap_time) as best_lap,
                         min(sector_1) as best_sector_1,
                         min(sector_2) as best_sector_2
-                        
+
                     from laps
                     group by race_id, team, stint
                 )

@@ -206,7 +206,7 @@
 				tr.classList[isOnPit ? 'add' : 'remove']('pit');
 
 				// new passing
-				
+
 				if ( prev.laps[id] !== (started ? lapCount : null)) {
 					log(`POS ${position}`, 'good', 'debug');
 					const laps = lapCount * 1;
@@ -311,7 +311,7 @@
 					log(`+trans: [${addTransponders.join(', ')}]`, '', 'debug');
 
 					for (let id of addTransponders) {
-						const 
+						const
 							team = document.createElement('tr'),
 							progress = document.createElement('tr');
 						team.classList.add('team_tr_box');

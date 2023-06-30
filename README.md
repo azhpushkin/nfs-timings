@@ -1,7 +1,7 @@
 ### NFS-timings
 
 
-Used for gathering statistics during endurance karting races 
+Used for gathering statistics during endurance karting races
 in "Need For Speed" Kyiv karting center.
 
 ![How the app looks](fe-example.png)

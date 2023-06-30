@@ -14,12 +14,13 @@ max-doc-length = 120
 
 [tool.black]
 extend-exclude = "migrations"
+force-exclude = "migrations"
 skip-string-normalization = 1
 line-length = 88
 
 
 [tool.isort]
-profile = "hug"
+profile = "black"
 extend_skip = "migrations, models/__init__.py"
 
 

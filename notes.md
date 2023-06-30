@@ -1,4 +1,4 @@
-When is_race is true - there is 
+When is_race is true - there is
 * `onTablo -> teams -> pilotName` displays pilot name, `teamName` for team name
 * `onTablo -> teams -> number` displays team number
 * `onTablo -> teams -> kart` to get kart number that teams is currently running
@@ -13,7 +13,7 @@ When is_race is true - there is
 
 
 I also have **NO IDEA** how tracking of laps goes on - there is something with
-transponders over there, seems to hard to figure out. Probably simply worth checking 
+transponders over there, seems to hard to figure out. Probably simply worth checking
 if last lap != current lap, dont thing we will have too many issues
 
 From the first look - sometimes there are laps that are similar to hundrends, but probably this is
@@ -22,7 +22,7 @@ not gonna happen very often. So might be fine to ignore for the start.
 
 Probaly worth to split everything into 3 parts:
 * worker that simply queues every 1 (maybe 5?) seconds
-* 
+*
 
 
 

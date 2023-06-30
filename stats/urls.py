@@ -9,7 +9,13 @@ from .views.pit import (
     ResetPitQueue,
 )
 from .views.race_picker import RacePickerView, ResetRacePickView
-from .views.stats import IndexView, KartDetailsView, StintDetailsView, TeamDetailsView, TeamsView
+from .views.stats import (
+    IndexView,
+    KartDetailsView,
+    StintDetailsView,
+    TeamDetailsView,
+    TeamsView,
+)
 
 urlpatterns = [
     path('pick-race', RacePickerView.as_view(), name='race-picker'),

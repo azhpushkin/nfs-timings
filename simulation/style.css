@@ -418,7 +418,7 @@ a, button {
 .oib_item_title {
   color: #b6b6b6;
   font-size: 1rem;
- 
+
 }
 .oib_item_time {
   color: #A2A9BD;
@@ -533,7 +533,7 @@ a, button {
   left: -20px;
   opacity: 0.5;
   bottom: 20px;
-  transform: rotate(-90deg); 
+  transform: rotate(-90deg);
 }
 .oip_karts_in_race {
   width: 70%;
@@ -590,7 +590,7 @@ a, button {
 }
 /*=================== board ===================*/
 #board {
-  
+
 }
 .board_head {
   display: flex;
@@ -648,7 +648,7 @@ a, button {
 }
 .bh_c_team.bh_c_team_right {
   text-align: right;
-} 
+}
 .bh_c_teams_box {
   display: flex;
   width: 100%;
@@ -889,7 +889,7 @@ color:#B6B6B6;
   text-align: center;
 }
 .board_table td {
-  padding: 15px 10px;  
+  padding: 15px 10px;
 }
 .board_table td .number {
   width: 8%;
@@ -950,7 +950,7 @@ color:#B6B6B6;
 }
 */
 .team_td_box {
-  display:flex; 
+  display:flex;
   align-items: center;
 }
 .pos_td {
@@ -995,13 +995,13 @@ color:#B6B6B6;
 
 .board_table td.team_td {
   position: relative;
-  overflow:hidden; 
+  overflow:hidden;
 }
 .board_table tr.pit td,
 .pits_table tr.pit td  {
   background:#48391b;
   color: #A57E1C;
-} 
+}
 .pits_table .number {
   background: #bbbbbb;
   padding: 3px 5px;
@@ -1012,7 +1012,7 @@ color:#B6B6B6;
 #light .pits_table tr.pit td  {
   background:#ffeac0;
   color: #A57E1C;
-} 
+}
 
 .totalOnTrack.pit {
 color: #A57E1C;
@@ -1349,7 +1349,7 @@ height: 45px;
 
 .th_laps_and_pits {
   background: #1B1A36;
-  
+
   padding-bottom: 0;
   color: #B6B6B6;
   display: flex;
@@ -1873,7 +1873,7 @@ body#light {
         line-height: 23px;
         font-size: 115%;
   }
-  
+
   .oib_times {
     padding: 0px;
   }
