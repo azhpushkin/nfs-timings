@@ -21,6 +21,11 @@
                 &#128721; <br> ПІТ
             </button>
         </a>
+        <a href="{{ url('pit-v2') }}">
+            <button {% if request.path == '/pit-v2' %}class="active-tab"{% endif %}>
+                &#9203; <br> ПІТ V2
+            </button>
+        </a>
         <a href="{{ url('settings') }}">
             <button {% if request.path == '/settings' %}class="active-tab"{% endif %}>
                 &#128295; <br> Різне

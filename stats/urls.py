@@ -8,6 +8,7 @@ from .views.pit import (
     RemoveKartFromQueue,
     ResetPitQueue,
 )
+from .views.pit_v2 import PitV2View
 from .views.race_picker import RacePickerView, ResetRacePickView
 from .views.stats import (
     IndexView,
@@ -48,4 +49,6 @@ urlpatterns = [
     path(
         'change-pit-settings', ChangePitSettings.as_view(), name='change-pit-settings'
     ),
+    # Pit-related views
+    path('pit-v2', PitV2View.as_view(), name='pit-v2'),
 ]

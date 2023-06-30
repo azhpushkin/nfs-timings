@@ -54,8 +54,8 @@ def _stint_to_dict(s: Stint) -> dict:
     }
 
 
-def _get_kart_data(request, kart_number: int) -> dict:
-    pit_mode = _get_pit_mode(request)
+def _get_kart_data(request, kart_number: int, pit_mode: str = None) -> dict:
+    pit_mode = pit_mode or _get_pit_mode(request)
 
     if pit_mode == PitModes.BEST_2:
         stints = get_stints(request.race, kart=kart_number, sort_by=SortOrder.AVERAGE)

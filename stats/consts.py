@@ -4,6 +4,9 @@ SESSION_PIT_QUEUE_KEY = 'pit-queue'
 SESSION_PIT_MODE_KEY = 'pit-mode'
 
 
+SESSION_PIT_V2_QUEUE_KEY = 'pit-v2-queue'
+
+
 class PitModes:
     BEST_2 = 'best_2'
     BEST_LAST = 'best_last'
