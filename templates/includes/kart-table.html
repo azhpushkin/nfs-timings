@@ -1,6 +1,13 @@
 {% from 'components/stints-table.html' import stints_table with context %}
 
-<h3>Відрізки карту {{ kart_number }}</h3>
+<h4>Карт {{ kart_number }}: деталі</h4>
+<div>
+    <button style="background-color: #f97272"
+            hx-post="{{ url('remove-kart-from-queue-v2') }}?kart_number={{ kart_number }}"
+            hx-confirm="Видалити карт {{ kart_number }} з піта?">Видалити</button>
+    <button style="background-color: gold" onclick="markKart({{ kart_number }})">Відмітити</button>
+</div>
+
 {% if stints %}
     {{ stints_table(stints, columns='PBSAL', sortable=false) }}
 {% else %}

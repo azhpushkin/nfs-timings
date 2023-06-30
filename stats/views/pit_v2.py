@@ -32,6 +32,14 @@ def _add_to_queue(request, new_kart: int) -> Tuple[bool, str]:
     return True, ''
 
 
+def _remove_from_queue(request, kart: int):
+    current_queue = _get_queue(request)
+    if kart in current_queue:
+        current_queue.remove(kart)
+
+    request.session[SESSION_PIT_V2_QUEUE_KEY] = current_queue
+
+
 class PitV2View(RacePickRequiredMixin, TemplateView):
     template_name = 'pit-v2.html'
 
@@ -98,3 +106,11 @@ class GetKartTableV2(RacePickRequiredMixin, TemplateView):
         )
 
         return {'kart_number': kart_number, 'stints': stints}
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class RemoveKartFromQueueV2(RacePickRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        kart_number = int(self.request.GET.get('kart_number', '0'))
+        _remove_from_queue(self.request, kart_number)
+        return HttpResponse(status=200, headers={'HX-Redirect': reverse('pit-v2')})

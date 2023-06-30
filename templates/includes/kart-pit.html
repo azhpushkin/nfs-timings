@@ -1,7 +1,7 @@
 {% from 'components/kart.html' import kart with context %}
 
 {% if not error_msg %}
-    <span hx-get="{{ url('get-kart-table-v2') }}?kart_number={{ kart_number }}"
+    <span class='kart-on-pit-v2' hx-get="{{ url('get-kart-table-v2') }}?kart_number={{ kart_number }}"
                   hx-target="#kart-details"
                   hx-swap="innerHTML">
         {{ kart(number=kart_number, nolink=true, inline=true) }}

@@ -115,3 +115,25 @@ table.karts-on-pit .kart-control {
     font-size: 1.3em;
     margin-top: 10px;
 }
+
+#pit-queue-v2 .kart-on-pit-v2 .kart-number {
+    background-color: gray;
+}
+
+#pit-queue-v2 .kart-on-pit-v2:nth-last-child(-n+4) .kart-number {
+    background-color: white;
+}
+
+#kart-details {
+    border: 4px double gray;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+#kart-details h4 {
+    text-align: center;
+}
+
+#kart-details div {
+    text-align: center;
+}
