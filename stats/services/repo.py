@@ -14,6 +14,8 @@ class SortOrder(Enum):
     SECTOR_1 = 'sector_1'
     SECTOR_2 = 'sector_2'
     KART = 'kart'
+    LATEST_FIRST = 'latest_first'
+    LATEST_LAST = 'latest_last'
 
 
 SORT_MAPPING = {
@@ -22,6 +24,8 @@ SORT_MAPPING = {
     SortOrder.SECTOR_1: 'best_sector_1',
     SortOrder.SECTOR_2: 'best_sector_2',
     SortOrder.KART: 'kart',
+    SortOrder.LATEST_FIRST: '-stint_started_at',
+    SortOrder.LATEST_LAST: 'stint_started_at',
 }
 
 

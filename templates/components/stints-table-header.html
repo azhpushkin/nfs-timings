@@ -7,13 +7,13 @@
         </th>
 
         {% if columns.pilot %}
-            <th class="pilot-name">
-                Pilot
+            <th class='pilot-name {% if sorting == 'latest_first' or not sorting %}selected-sorting{% endif %}'>
+                <a href="?sort=latest_first">Stint</a>
             </th>
         {% endif %}
 
         {% if columns.best %}
-            <th {% if sorting == 'best' or not sorting %}class='selected-sorting'{% endif %}>
+            <th {% if sorting == 'best' %}class='selected-sorting'{% endif %}>
                 <a href="?sort=best">Best</a>
             </th>
         {% endif %}

@@ -38,7 +38,7 @@ nav a button.active-tab {
 }
 
 /* TODO: refactor usages of this class */
-.pilot-name {
+td.pilot-name {
     line-height: 1em;
     color: black;
 }
