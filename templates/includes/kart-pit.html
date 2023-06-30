@@ -1,9 +1,10 @@
 {% from 'components/kart.html' import kart with context %}
 
 {% if not error_msg %}
-    <span class='kart-on-pit-v2' hx-get="{{ url('get-kart-table-v2') }}?kart_number={{ kart_number }}"
-                  hx-target="#kart-details"
-                  hx-swap="innerHTML">
+    <span class="kart-on-pit-v2 {% if kart_number in pit_highlights %}highlighted-on-pit{% endif %}"
+          hx-get="{{ url('get-kart-table-v2') }}?kart_number={{ kart_number }}"
+          hx-target="#kart-details"
+          hx-swap="innerHTML">
         {{ kart(number=kart_number, nolink=true, inline=true) }}
     </span>
     &#8592;

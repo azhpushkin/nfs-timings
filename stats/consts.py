@@ -5,6 +5,7 @@ SESSION_PIT_MODE_KEY = 'pit-mode'
 
 
 SESSION_PIT_V2_QUEUE_KEY = 'pit-v2-queue'
+SESSION_PIT_V2_HIGHLIGHT_KEY = 'pit-v2-highlight'
 
 
 class PitModes:

@@ -5,7 +5,14 @@
     <button style="background-color: #f97272"
             hx-post="{{ url('remove-kart-from-queue-v2') }}?kart_number={{ kart_number }}"
             hx-confirm="Видалити карт {{ kart_number }} з піта?">Видалити</button>
-    <button style="background-color: gold" onclick="markKart({{ kart_number }})">Відмітити</button>
+    <button style="background-color: gold"
+            hx-post="{{ url('highlight-kart-v2') }}?kart_number={{ kart_number }}">
+        {% if kart_number in pit_highlights %}
+            Прибрати помітку
+        {% else %}
+            Помітити
+        {% endif %}
+    </button>
 </div>
 
 {% if stints %}

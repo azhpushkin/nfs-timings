@@ -14,6 +14,7 @@ from .views.pit_v2 import (
     PitV2View,
     RemoveKartFromQueueV2,
     ResetPitQueueV2,
+    ToggleKartHighlight,
 )
 from .views.race_picker import RacePickerView, ResetRacePickView
 from .views.stats import (
@@ -66,5 +67,10 @@ urlpatterns = [
         'remove-kart-from-queue-v2',
         RemoveKartFromQueueV2.as_view(),
         name='remove-kart-from-queue-v2',
+    ),
+    path(
+        'highlight-kart-v2',
+        ToggleKartHighlight.as_view(),
+        name='highlight-kart-v2',
     ),
 ]
