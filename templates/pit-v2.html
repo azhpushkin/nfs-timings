@@ -7,14 +7,19 @@
 
 {% block extra_head %}
     <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    <style>
+    #pit-queue-v2 .kart-on-pit-v2:nth-last-child(n+{{ queue_v2_size+1 }}) .kart-number {
+        background-color: gray !important;
+    }
+    </style>
 {% endblock %}
 
 
 {% block body %}
     <h3>
-        Карти що зараз на піті
-
+        Карти що зараз на піті (розмір черги: {{ queue_v2_size }})
     </h3>
+
 
     <div class="karts-on-pit-v2" id="pit-queue-v2">
         &#8592;
@@ -95,6 +100,20 @@
                         hx-get="{{ url('add-kart-to-queue-v2') }}"
                         hx-target="#pit-queue-v2"
                         hx-swap="beforeend">Кастомний карт</button>
+            </div>
+            <hr>
+            <div>
+                <input
+                        type="number" min="1" max="100"
+                        value="{{ queue_v2_size }}"
+                        name="queue-v2-size"
+                        id="queue-v2-size"
+                        style="display: inline; margin-left: 0.5em; width: 5em;">
+                <br>
+                <button style="margin-left: 0.5em;"
+                        hx-vals='js:{size: document.getElementById("queue-v2-size").value}'
+                        hx-get="{{ url('change-queue-v2-size') }}"
+                        hx-swap="beforeend">Змінити розмір черги</button>
             </div>
             <hr>
 

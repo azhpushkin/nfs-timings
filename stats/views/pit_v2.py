@@ -7,7 +7,12 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from stats.consts import SESSION_PIT_V2_HIGHLIGHT_KEY, SESSION_PIT_V2_QUEUE_KEY
+from stats.consts import (
+    PIT_V2_DEFAULT_QUEUE_SIZE,
+    SESSION_PIT_V2_HIGHLIGHT_KEY,
+    SESSION_PIT_V2_QUEUE_KEY,
+    SESSION_PIT_V2_QUEUE_SIZE_KEY,
+)
 from stats.models import RaceState, TeamState
 from stats.services.repo import SortOrder, get_stints
 from stats.views.pit import _get_kart_data
@@ -21,6 +26,7 @@ def _get_queue(request) -> List[int]:
 def _reset_queue(request):
     request.session.pop(SESSION_PIT_V2_QUEUE_KEY, None)
     request.session.pop(SESSION_PIT_V2_HIGHLIGHT_KEY, None)
+    request.session.pop(SESSION_PIT_V2_QUEUE_SIZE_KEY, None)
 
 
 def _add_to_queue(request, new_kart: int) -> Tuple[bool, str]:
@@ -38,6 +44,10 @@ def _remove_from_queue(request, kart: int):
     if kart in current_queue:
         current_queue.remove(kart)
 
+    request.session[SESSION_PIT_V2_QUEUE_SIZE_KEY] = (
+        request.session.get(SESSION_PIT_V2_QUEUE_SIZE_KEY, PIT_V2_DEFAULT_QUEUE_SIZE)
+        - 1
+    )
     request.session[SESSION_PIT_V2_QUEUE_KEY] = current_queue
 
 
@@ -48,6 +58,10 @@ def _toggle_kart_highlight(request, kart: int):
     hd[kart] = not hd.get(kart, False)
 
     request.session[SESSION_PIT_V2_HIGHLIGHT_KEY] = hd
+
+
+def _change_queue_size(request, size: int):
+    request.session[SESSION_PIT_V2_QUEUE_SIZE_KEY] = size
 
 
 class PitV2View(RacePickRequiredMixin, TemplateView):
@@ -131,4 +145,12 @@ class ToggleKartHighlight(RacePickRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         kart_number = int(self.request.GET.get('kart_number', '0'))
         _toggle_kart_highlight(self.request, kart_number)
+        return HttpResponse(status=200, headers={'HX-Redirect': reverse('pit-v2')})
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ChangeQueueV2Size(RacePickRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        size = int(self.request.GET.get('size', '4'))
+        _change_queue_size(self.request, size)
         return HttpResponse(status=200, headers={'HX-Redirect': reverse('pit-v2')})

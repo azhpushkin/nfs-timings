@@ -6,6 +6,8 @@ SESSION_PIT_MODE_KEY = 'pit-mode'
 
 SESSION_PIT_V2_QUEUE_KEY = 'pit-v2-queue'
 SESSION_PIT_V2_HIGHLIGHT_KEY = 'pit-v2-highlight'
+SESSION_PIT_V2_QUEUE_SIZE_KEY = 'pit-v2-queue-size'
+PIT_V2_DEFAULT_QUEUE_SIZE = 4
 
 
 class PitModes:

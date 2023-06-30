@@ -2,9 +2,11 @@ from django import template
 from django.utils.safestring import mark_safe
 
 from stats.consts import (
+    PIT_V2_DEFAULT_QUEUE_SIZE,
     SESSION_HIDE_FIRST_STINT_KEY,
     SESSION_PIT_MODE_KEY,
     SESSION_PIT_V2_HIGHLIGHT_KEY,
+    SESSION_PIT_V2_QUEUE_SIZE_KEY,
     PitModes,
 )
 from stats.models import Race
@@ -77,4 +79,7 @@ def add_data_from_race_pass(request):
                 ).items()
                 if isok
             ],
+            'queue_v2_size': request.session.get(
+                SESSION_PIT_V2_QUEUE_SIZE_KEY, PIT_V2_DEFAULT_QUEUE_SIZE
+            ),
         }

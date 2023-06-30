@@ -116,10 +116,6 @@ table.karts-on-pit .kart-control {
     margin-top: 10px;
 }
 
-#pit-queue-v2 .kart-on-pit-v2:nth-last-child(n+5) .kart-number {
-    background-color: gray !important;
-}
-
 #pit-queue-v2 .kart-on-pit-v2.highlighted-on-pit .kart-number {
     /*border-color: gold;*/
     box-shadow: 0 0 5px 5px gold;

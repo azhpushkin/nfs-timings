@@ -10,6 +10,7 @@ from .views.pit import (
 )
 from .views.pit_v2 import (
     AddKartToQueueV2,
+    ChangeQueueV2Size,
     GetKartTableV2,
     PitV2View,
     RemoveKartFromQueueV2,
@@ -72,5 +73,10 @@ urlpatterns = [
         'highlight-kart-v2',
         ToggleKartHighlight.as_view(),
         name='highlight-kart-v2',
+    ),
+    path(
+        'change-queue-v2-size',
+        ChangeQueueV2Size.as_view(),
+        name='change-queue-v2-size',
     ),
 ]
