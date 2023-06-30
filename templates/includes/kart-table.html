@@ -1,0 +1,8 @@
+{% from 'components/stints-table.html' import stints_table with context %}
+
+<h3>Відрізки карту {{ kart_number }}</h3>
+{% if stints %}
+    {{ stints_table(stints, columns='PBSAL', sortable=false) }}
+{% else %}
+    <div style="border: 1px solid red">Немає відрізків на цьому карті</div>
+{% endif %}

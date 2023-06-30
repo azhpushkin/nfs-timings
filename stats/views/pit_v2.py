@@ -9,6 +9,7 @@ from django.views.generic import TemplateView
 
 from stats.consts import SESSION_PIT_V2_QUEUE_KEY
 from stats.models import RaceState, TeamState
+from stats.services.repo import SortOrder, get_stints
 from stats.views.pit import _get_kart_data
 from stats.views.race_picker import RacePickRequiredMixin
 
@@ -83,3 +84,17 @@ class ResetPitQueueV2(RacePickRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         _reset_queue(self.request)
         return HttpResponse(headers={'HX-Redirect': reverse('pit-v2')})
+
+
+class GetKartTableV2(RacePickRequiredMixin, TemplateView):
+    template_name = 'includes/kart-table.html'
+
+    def get_context_data(self, **kwargs):
+        kart_number = int(self.request.GET.get('kart_number', '0'))
+        stints = get_stints(
+            self.request.race,
+            kart=kart_number,
+            sort_by=SortOrder.LATEST_FIRST,
+        )
+
+        return {'kart_number': kart_number, 'stints': stints}

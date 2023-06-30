@@ -17,6 +17,7 @@
     </h3>
 
     <div class="karts-on-pit-v2" id="pit-queue-v2">
+        &#8592;
         {% for kart_number in queue %}
             {% include 'includes/kart-pit.html' %}
         {% endfor %}
@@ -38,6 +39,10 @@
             hx-confirm="Точно скинути все з піта?">
             Скинути все
         </button>
+    </div>
+
+    <div id="kart-details">
+
     </div>
 
 

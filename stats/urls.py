@@ -8,7 +8,7 @@ from .views.pit import (
     RemoveKartFromQueue,
     ResetPitQueue,
 )
-from .views.pit_v2 import AddKartToQueueV2, PitV2View, ResetPitQueueV2
+from .views.pit_v2 import AddKartToQueueV2, GetKartTableV2, PitV2View, ResetPitQueueV2
 from .views.race_picker import RacePickerView, ResetRacePickView
 from .views.stats import (
     IndexView,
@@ -55,4 +55,5 @@ urlpatterns = [
         'add-kart-to-queue-v2', AddKartToQueueV2.as_view(), name='add-kart-to-queue-v2'
     ),
     path('reset-pit-queue-v2', ResetPitQueueV2.as_view(), name='reset-pit-queue-v2'),
+    path('get-kart-table-v2', GetKartTableV2.as_view(), name='get-kart-table-v2'),
 ]

@@ -103,3 +103,15 @@ table.karts-on-pit .kart-control {
     padding: 5px;
     margin: 10px;
 }
+
+
+#pit-queue-v2 {
+    font-size: 1.3em;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+#pit-queue-v2 .kart-number {
+    font-size: 1.3em;
+    margin-top: 10px;
+}
