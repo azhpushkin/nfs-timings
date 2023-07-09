@@ -47,5 +47,6 @@ sample_upload name +extra_args:
 race_to_temp race_id race_name:
     {{docker-exec}} web python manage.py race_to_temp --race {{race_id}}
     {{docker-exec}} db psql -U $POSTGRES_USER -c "COPY requests_temp TO STDOUT WITH CSV HEADER" > {{race_name}}.csv
-    cat {{race_name}}.csv | gzip > {{race_name}}.parquet
-    # scp host:fullpath.parquet ./race_name.parquet
+    cat {{race_name}}.csv | gzip > {{race_name}}.csv.gz
+    # readlink -f {{race_name}} to get absolute path
+    # scp host:fullpath.csv.gz ./race_name.csv.gz
