@@ -54,6 +54,7 @@ def pick_best_kart_by(qs: QuerySet[Stint], sort_by: SortOrder) -> List[Stint]:
     qs = qs.annotate(
         index=RawSQL(f'ROW_NUMBER() OVER(partition by kart ORDER BY {field})', ())
     )
+    print(qs.query)
     return [stint for stint in qs if stint.index == 1]
 
 

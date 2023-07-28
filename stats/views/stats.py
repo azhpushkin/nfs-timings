@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.generic import TemplateView
 
 from stats.consts import SESSION_HIDE_FIRST_STINT_KEY
-from stats.models import Lap, Stint, Team
+from stats.models import Lap, RaceState, Stint, Team
 from stats.services.repo import (
     SortOrder,
     get_stints,
@@ -34,7 +34,7 @@ class IndexView(RacePickRequiredMixin, TemplateView):
         stints = get_stints(self.request.race, sort_by=_get_sorting(self.request))
         if self.request.session.get(SESSION_HIDE_FIRST_STINT_KEY):
             stints = stints.exclude(stint=1)
-        stints = pick_best_kart_by(stints, SortOrder.BEST)
+        stints = pick_best_kart_by(stints, _get_sorting(self.request))
 
         return {'stints': stints}
 
@@ -46,19 +46,16 @@ class TeamsView(RacePickRequiredMixin, TemplateView):
         # TODO: Better way to sort teams would be nice
         # Maybe, save some metadata to BoardRequest or some proxy object (e.g. teams order)
         # and then either use it, of if that metadata is absent - use default ordering and log warning
-        last_request = (
-            Lap.objects.filter(race=self.request.race)
-            .order_by('created_at')
+
+        last_state = (
+            RaceState.objects.filter(race=self.request.race)
+            .order_by('race_time')
             .last()
-            .board_request
         )
+        teams_stats = last_state.team_states if last_state else {}
+
         teams = {
             team.number: team for team in Team.objects.filter(race=self.request.race)
-        }
-
-        teams_average_laps = {
-            int(team_data['number']): float(team_data['midLap'])
-            for team_data in last_request.response_json['onTablo']['teams']
         }
 
         stints = get_stints(race=self.request.race).order_by('team', 'stint')
@@ -70,7 +67,7 @@ class TeamsView(RacePickRequiredMixin, TemplateView):
             {
                 'number': team,
                 'name': teams[team].name,
-                'average_lap': teams_average_laps.get(team, 99),
+                'average_lap': teams_stats.get(str(team), {}).get('mid_lap', {}),
                 'pilots': set(s.pilot for s in team_stints),
                 'stints': list(team_stints),
             }
