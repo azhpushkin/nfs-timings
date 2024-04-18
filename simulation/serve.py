@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 def try_parse_json(data, row) -> dict:
     try:
-        return json.loads(data.replace('\\', '\\\\'))
+        return json.loads(data.decode('utf-8').replace('\\', '\\\\'))
     except Exception:
         print('Error parsing data for row', row)
         raise
@@ -29,8 +29,8 @@ tqdm.pandas(desc='Parse json')
 response_json = pd.Series(index=df.index)
 
 for i, row in tqdm(df.iterrows(), total=len(df)):
-    body = row['response_body']
-    if body == 'CONNECTION ERROR' or body.startswith('Access violation at address '):
+    body = eval(row['response'])
+    if body == b'CONNECTION ERROR' or body.startswith(b'Access violation at address '):
         continue
     else:
         response_json[i] = try_parse_json(body, row)
@@ -63,11 +63,11 @@ class CustomHTTPHandler(server.SimpleHTTPRequestHandler):
 
             recorded_request = df.loc[req_id]
 
-            if recorded_request["response_status"] == 200:
+            if recorded_request["status"] == 200:
                 self.send_response(code=200)
                 self.send_header(keyword="Content-type", value="application/json")
                 self.end_headers()
-                self.wfile.write(recorded_request["response_body"].encode('utf-8'))
+                self.wfile.write(eval(recorded_request["response"]))
             else:
                 self.send_response(code=500)
                 self.end_headers()

@@ -28,6 +28,7 @@ table.karts-on-pit .kart-control {
 
 #add-to-queue-dialog menu {
     padding: 10px 10px;
+    margin: 0 30px;
 }
 
 #add-to-queue-dialog .available-kart {
@@ -52,7 +53,7 @@ table.karts-on-pit .kart-control {
 #add-to-queue-dialog #close-add-to-queue-dialog {
     float: right;
     margin-right: 10px;
-    font-size: 1.2em;
+    font-size: 1.5em;
     line-height: 1em;
 }
 
@@ -133,4 +134,42 @@ table.karts-on-pit .kart-control {
 
 #kart-details div {
     text-align: center;
+}
+
+
+#kart-picker-preview {
+    margin-bottom: 30px;
+    text-align: center;
+}
+#kart-picker-preview span {
+    font-family: 'Racing Sans One', cursive;
+
+    height: 1.5em;
+    font-size: 2em;
+    text-align: center;
+    padding: 5px 20px;
+    border: 3px solid black;
+    border-radius: 5px;
+}
+
+#kart-picker {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(3, 1fr);
+}
+  
+#kart-picker > button {
+    padding: 5px 20px;
+    background-color: #ccc;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 2em;
+    height: 1.5em;
+}
+
+#kart-picker > button:last-child {
+    margin-top: 10px;
+    background-color: rgb(196, 247, 152);
+    border: 1px solid black;
+    grid-column: 1/4;
 }
