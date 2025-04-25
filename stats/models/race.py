@@ -21,7 +21,7 @@ class Race(models.Model):
     allowed_users = models.ManyToManyField(
         get_user_model(), through='RacePass', related_name='allowed_races'
     )
-    kart_overrides = models.JSONField(default=dict)
+    kart_overrides = models.JSONField(default=dict, null=True, blank=True)
 
     class Meta:
         constraints = [
