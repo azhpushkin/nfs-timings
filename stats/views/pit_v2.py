@@ -74,8 +74,13 @@ class PitV2View(RacePickRequiredMixin, TemplateView):
             .first()
         )
 
+        team_states_parsed = (
+            latest_state.team_states_parsed
+            if isinstance(latest_state.team_states_parsed, dict)
+            else dict()
+        )
         teams_ontrack = [
-            t for t in latest_state.team_states_parsed.values() if t.team < 21
+            t for t in team_states_parsed.values() if t.team < 21
         ]
         teams_ontrack: List[TeamState] = sorted(
             teams_ontrack, key=lambda x: -(x.stint_time or 0)
