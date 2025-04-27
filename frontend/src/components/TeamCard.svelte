@@ -20,6 +20,12 @@
     // This is a placeholder - implement actual formatting logic
     return pilot;
   }
+  
+  function navigateToTeamDetail() {
+    if (typeof window !== 'undefined' && (window as any).appNavigate) {
+      (window as any).appNavigate(`/team-detail/${team.number}`);
+    }
+  }
 </script>
 
 <div class="team-card">
@@ -46,7 +52,7 @@
     </div>
     
     <div class="team-card-line-link" class:collapsed={!isExpanded} id="team-card-line-link-{team.number}">
-      <a href="/team-detail/{team.number}">
+      <a href="/team-detail/{team.number}" on:click|preventDefault={navigateToTeamDetail}>
         <button>Перейти на сторінку команди</button>
       </a>
     </div>
@@ -60,3 +66,43 @@
     {isExpanded ? 'Hide details' : 'Show details'}
   </button>
 </div>
+
+<style>
+  .team-card {
+    border: 1px solid gray;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 10px 5px;
+  }
+  
+  .team-card-line {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
+  .team-card-line-team {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+  }
+  
+  .team-card-line-team .title {
+    font-weight: bold;
+    font-size: 1.1em;
+  }
+  
+  .team-card-line-team .pilot-names {
+    font-size: 0.8em;
+    text-align: right;
+  }
+  
+  .team-card-line-karts {
+    margin-top: 10px;
+    display: flex;
+    gap: 0.4em;
+  }
+  
+  .collapsed {
+    display: none;
+  }
+</style>

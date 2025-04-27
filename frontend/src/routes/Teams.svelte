@@ -1,69 +1,69 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import TeamCard from '../components/TeamCard.svelte';
+  import { getTeams, type Team } from '../lib/api';
   
-  // Mock data - in a real app, this would be fetched from an API
-  let teams = [
-    {
-      number: 1,
-      name: 'Team Alpha',
-      average_lap: '1:23.456',
-      pilots: ['John Doe', 'Jane Smith'],
-      stints: [
-        {
-          kart: 5,
-          pilot: 'John Doe',
-          stint_started_at: '14:30',
-          best_lap: 82.345,
-          best_sector_1: 41.123,
-          best_sector_2: 41.222,
-          avg_80: 83.456,
-          stint_id: 'stint1'
-        },
-        {
-          kart: 7,
-          pilot: 'Jane Smith',
-          stint_started_at: '15:30',
-          best_lap: 81.987,
-          best_sector_1: 40.876,
-          best_sector_2: 41.111,
-          avg_80: 82.789,
-          stint_id: 'stint2'
-        }
-      ]
-    },
-    {
-      number: 2,
-      name: 'Team Beta',
-      average_lap: '1:24.567',
-      pilots: ['Bob Johnson', 'Alice Brown'],
-      stints: [
-        {
-          kart: 3,
-          pilot: 'Bob Johnson',
-          stint_started_at: '14:45',
-          best_lap: 83.123,
-          best_sector_1: 41.567,
-          best_sector_2: 41.556,
-          avg_80: 84.234,
-          stint_id: 'stint3'
-        },
-        {
-          kart: 9,
-          pilot: 'Alice Brown',
-          stint_started_at: '15:45',
-          best_lap: 82.456,
-          best_sector_1: 41.234,
-          best_sector_2: 41.222,
-          avg_80: 83.567,
-          stint_id: 'stint4'
-        }
-      ]
+  let teams: Team[] = [];
+  let loading = true;
+  let error = false;
+  
+  // Fetch teams from the API
+  async function fetchTeams() {
+    try {
+      loading = true;
+      error = false;
+      
+      teams = await getTeams();
+      
+      loading = false;
+    } catch (err) {
+      console.error('Error fetching teams:', err);
+      error = true;
+      loading = false;
     }
-  ];
+  }
+  
+  // Call the fetch function when the component is mounted
+  onMount(() => {
+    fetchTeams();
+  });
 </script>
 
 <h2>Teams</h2>
 
-{#each teams as team}
-  <TeamCard {team} />
-{/each}
+{#if loading}
+  <div class="loading">Loading teams...</div>
+{:else if error}
+  <div class="error">
+    <p>Error loading teams. Please try again later.</p>
+    <button on:click={fetchTeams}>Retry</button>
+  </div>
+{:else if teams.length === 0}
+  <div class="empty">No teams found</div>
+{:else}
+  {#each teams as team}
+    <TeamCard {team} />
+  {/each}
+{/if}
+
+<style>
+  .loading, .error, .empty {
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: 4px;
+  }
+  
+  .loading {
+    background-color: #f0f0f0;
+  }
+  
+  .error {
+    background-color: #ffebee;
+    color: #c62828;
+  }
+  
+  .empty {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+</style>
