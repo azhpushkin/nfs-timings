@@ -1,0 +1,146 @@
+/* Global styles */
+body {
+  font-family: sans-serif;
+}
+
+/* Kart component styles */
+.kart-number {
+  font-family: 'Racing Sans One', cursive;
+  border: 3px solid black;
+  border-radius: 5px;
+  text-decoration: none;
+  color: black;
+  font-size: 1.2em;
+  width: 1.5em;
+  height: 1.5em;
+  text-align: center;
+  display: block;
+  position: relative;
+}
+
+img.badge {
+  padding: 0.1em;
+  border: 1px solid black;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.kart-number > img.badge {
+  width: 0.7em;
+  height: 0.7em;
+  position: absolute;
+  top: -0.6em;
+  right: -0.34em;
+}
+
+img.badge.good {
+  background-color: #2ed246;
+}
+
+img.badge.slowed {
+  background-color: #ff6565;
+}
+
+img.badge.unknown {
+  background-color: #85b4ff;
+}
+
+img.badge.damaged {
+  background-color: #ffe641;
+}
+
+/* Team card styles */
+.team-card {
+  border: 1px solid gray;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  padding: 10px 5px;
+}
+
+.team-card-line {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.team-card-line-team {
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+
+.team-card-line-team .title {
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.team-card-line-team .pilot-names {
+  font-size: 0.8em;
+  text-align: right;
+}
+
+.team-card-line-karts {
+  margin-top: 10px;
+  display: flex;
+  gap: 0.4em;
+}
+
+.team-card-line-link {
+  display: flex;
+  align-items: center;
+}
+
+.team-card .collapsed {
+  display: none;
+}
+
+/* Stints table styles */
+table.stints {
+  table-layout: fixed;
+}
+
+table.stints td:not(.pilot-name), table.stints th:not(.pilot-name) {
+  vertical-align: middle;
+  text-align: center;
+}
+
+table.stints th {
+  color: black;
+}
+
+table.stints th a {
+  color: black;
+}
+
+table.stints th.selected-sorting {
+  background-color: #ffff7b;
+}
+
+table.stints .stint-timeframe {
+  font-size: 0.8em;
+}
+
+.kart-number-cell {
+  width: 2em;
+  vertical-align: middle;
+}
+
+.kart-number-cell {
+  padding-left: 0;
+}
+
+.stints th:last-child, .stints td:last-child {
+  padding-right: 0;
+}
+
+.stint-link {
+  width: 1.5em;
+}
+
+.stints th.pilot-name, .stints td.pilot-name {
+  padding-right: 0;
+}
+
+.pilot-name-nowrap {
+  overflow: hidden;
+  white-space: nowrap;
+}

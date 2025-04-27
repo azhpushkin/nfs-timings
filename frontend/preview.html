@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NFS Timings Frontend Preview</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
+  <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap" rel="stylesheet">
+  <style>
+    /* Global styles */
+    body {
+      font-family: sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+
+    /* Header styles */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      border-bottom: 1px solid #ccc;
+    }
+
+    #header-title {
+      margin: 0;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    nav button {
+      padding: 0.5rem 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background-color: #f5f5f5;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    nav button:hover {
+      background-color: #e5e5e5;
+    }
+
+    .active-tab {
+      background-color: #ddd;
+      font-weight: bold;
+    }
+
+    /* Kart component styles */
+    .kart-number {
+      font-family: 'Racing Sans One', cursive;
+      border: 3px solid black;
+      border-radius: 5px;
+      text-decoration: none;
+      color: black;
+      font-size: 1.2em;
+      width: 1.5em;
+      height: 1.5em;
+      text-align: center;
+      display: block;
+      position: relative;
+    }
+
+    .kart-number.inline {
+      display: inline-block;
+    }
+
+    .badge {
+      padding: 0.1em;
+      border: 1px solid black;
+      border-radius: 50%;
+      width: 0.7em;
+      height: 0.7em;
+      position: absolute;
+      top: -0.6em;
+      right: -0.34em;
+    }
+
+    .badge.good {
+      background-color: #2ed246;
+    }
+
+    .badge.slowed {
+      background-color: #ff6565;
+    }
+
+    .badge.unknown {
+      background-color: #85b4ff;
+    }
+
+    .badge.damaged {
+      background-color: #ffe641;
+    }
+
+    /* Team card styles */
+    .team-card {
+      border: 1px solid gray;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      padding: 10px 5px;
+    }
+
+    .team-card-line {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    .team-card-line-team {
+      display: flex;
+      justify-content: space-between;
+      align-content: center;
+    }
+
+    .team-card-line-team .title {
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+
+    .team-card-line-team .pilot-names {
+      font-size: 0.8em;
+      text-align: right;
+    }
+
+    .team-card-line-karts {
+      margin-top: 10px;
+      display: flex;
+      gap: 0.4em;
+    }
+
+    /* Stints table styles */
+    table.stints {
+      table-layout: fixed;
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    table.stints td, table.stints th {
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+    }
+
+    table.stints td:not(.pilot-name), table.stints th:not(.pilot-name) {
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    .kart-number-cell {
+      width: 2em;
+      vertical-align: middle;
+    }
+
+    /* Preview specific styles */
+    .preview-section {
+      margin: 2rem 0;
+      padding: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .preview-section h2 {
+      margin-top: 0;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 0.5rem;
+    }
+
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>NFS Timings Frontend Preview</h1>
+  <p>This is a static preview of the Svelte components created for the NFS Timings application.</p>
+
+  <div class="preview-section">
+    <h2>Header Component</h2>
+    <header>
+      <h3 id="header-title">
+        🚀
+        🏁
+        🏆
+        NFS Telega
+      </h3>
+      <nav>
+        <a href="#"><button class="active-tab">🚀 <br> Карти</button></a>
+        <a href="#"><button>👥 <br> Команди</button></a>
+        <a href="#"><button>🏁 <br> Деталі</button></a>
+        <a href="#"><button>🔧 <br> Різне</button></a>
+      </nav>
+    </header>
+  </div>
+
+  <div class="preview-section">
+    <h2>Kart Component</h2>
+    <div class="component-grid">
+      <div>
+        <h4>Basic Kart</h4>
+        <span class="kart-number">5</span>
+      </div>
+      <div>
+        <h4>With Badge</h4>
+        <span class="kart-number">7
+          <div class="badge good"></div>
+        </span>
+      </div>
+      <div>
+        <h4>With Accent</h4>
+        <span class="kart-number" style="background-color: #69ff6e;">12</span>
+      </div>
+      <div>
+        <h4>Inline</h4>
+        <span class="kart-number inline">9</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="preview-section">
+    <h2>Team Card Component</h2>
+    <div class="team-card">
+      <div class="team-card-line">
+        <div class="team-card-line-team">
+          <div class="title">
+            Team Alpha
+            <span style="color: gray; display: inline !important;"> #1</span>
+            <br>
+            <span style="font-size: 0.7em; color: gray;">Mid: 1:23.456</span>
+          </div>
+          <div class="pilot-names">
+            John Doe<br>
+            Jane Smith
+          </div>
+        </div>
+        
+        <div class="team-card-line-karts">
+          <span class="kart-number">5</span>
+          <span class="kart-number">7</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="preview-section">
+    <h2>Stints Table Component</h2>
+    <table class="stints">
+      <thead>
+        <tr>
+          <th class="kart-number-cell">#</th>
+          <th class="pilot-name">Stint</th>
+          <th>Best</th>
+          <th>Sec</th>
+          <th>Avg</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="kart-number-cell">
+            <span class="kart-number">5</span>
+          </td>
+          <td class="pilot-name">
+            John Doe
+            <br>
+            <span class="stint-timeframe">⏰ 14:30</span>
+          </td>
+          <td class="best">82.35</td>
+          <td>
+            <span class="sector_1">41.12</span>
+            <br>
+            <span class="sector_2">41.22</span>
+          </td>
+          <td class="average">83.46</td>
+        </tr>
+        <tr>
+          <td class="kart-number-cell">
+            <span class="kart-number">7</span>
+          </td>
+          <td class="pilot-name">
+            Jane Smith
+            <br>
+            <span class="stint-timeframe">⏰ 15:30</span>
+          </td>
+          <td class="best">81.99</td>
+          <td>
+            <span class="sector_1">40.88</span>
+            <br>
+            <span class="sector_2">41.11</span>
+          </td>
+          <td class="average">82.79</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="preview-section">
+    <h2>Kart Details Preview</h2>
+    <h3>
+      Всі відрізки на <span class="kart-number inline">5</span>
+    </h3>
+
+    <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0; border-radius: 5px; background-color: #f9f9f9;">
+      <b>Примітка: </b>This is a sample note about the kart.
+    </div>
+
+    <hr>
+
+    <div style="margin-top: 20px;">
+      <h4>Змінити фон</h4>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+        <button style="padding: 5px; border: 1px solid #ccc; border-radius: 5px;">
+          <span class="kart-number inline" style="background-color: white;">5</span>
+        </button>
+        <button style="padding: 5px; border: 1px solid #ccc; border-radius: 5px;">
+          <span class="kart-number inline" style="background-color: #69ff6e;">5</span>
+        </button>
+        <button style="padding: 5px; border: 1px solid #ccc; border-radius: 5px;">
+          <span class="kart-number inline" style="background-color: #e87474;">5</span>
+        </button>
+        <button style="padding: 5px; border: 1px solid #ccc; border-radius: 5px;">
+          <span class="kart-number inline" style="background-color: #faec6e;">5</span>
+        </button>
+      </div>
+
+      <h4>Відмітити карт значком</h4>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+        <button style="padding: 5px; border: 1px solid #ccc; border-radius: 5px;">
+          <div style="display: inline-block; width: 1.5em; height: 1.5em; border-radius: 50%; border: 1px solid black; background-color: #2ed246;"></div>
+          <br>
+          <span>Відкручена</span>
+        </button>
+        <button style="padding: 5px; border: 1px solid #ccc; border-radius: 5px;">
+          <div style="display: inline-block; width: 1.5em; height: 1.5em; border-radius: 50%; border: 1px solid black; background-color: #ff6565;"></div>
+          <br>
+          <span>Закручена</span>
+        </button>
+        <button style="padding: 5px; border: 1px solid #ccc; border-radius: 5px;">
+          <div style="display: inline-block; width: 1.5em; height: 1.5em; border-radius: 50%; border: 1px solid black; background-color: #ffe641;"></div>
+          <br>
+          <span>Поломка</span>
+        </button>
+        <button style="padding: 5px; border: 1px solid #ccc; border-radius: 5px;">
+          <div style="display: inline-block; width: 1.5em; height: 1.5em; border-radius: 50%; border: 1px solid black; background-color: #85b4ff;"></div>
+          <br>
+          <span>Нестабільна</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>This is a static preview of the Svelte components. To run the actual interactive application, follow the instructions in the README.md file.</p>
+  </footer>
+</body>
+</html>
