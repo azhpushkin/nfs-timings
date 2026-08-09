@@ -170,3 +170,9 @@ simulation/*-samples/
 recordings/
 
 staticfiles
+.DS_Store
+
+temp_docs/
+
+
+node_modules/
