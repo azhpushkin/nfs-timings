@@ -1,0 +1,7 @@
+.prefill-json {
+    box-sizing: border-box;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    line-height: 1.45;
+    min-width: min(100%, 48rem);
+    tab-size: 2;
+}

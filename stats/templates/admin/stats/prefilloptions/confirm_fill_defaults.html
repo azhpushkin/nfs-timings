@@ -1,0 +1,17 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+    <div id="content-main">
+        <h1>Fill default prefill options?</h1>
+        <p>
+            This will replace both <strong>API URLs</strong> and
+            <strong>race lengths</strong> with the hardcoded defaults.
+        </p>
+        <p>Your current custom values will be lost.</p>
+        <form action="{{ fill_defaults_url }}" method="post">
+            {% csrf_token %}
+            <input type="submit" class="default" value="Yes, replace with defaults">
+            <a href="{{ change_url }}" class="button cancel-link">Cancel</a>
+        </form>
+    </div>
+{% endblock %}
