@@ -34,7 +34,8 @@ class RaceAdmin(admin.ModelAdmin):
     actions = ['download_requests']
 
     class Media:
-        css = {'all': ('stats/admin.css',)}
+        css = {'all': ('stats/admin.css', 'stats/race_admin.css')}
+        js = ('stats/race_admin.js',)
 
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)

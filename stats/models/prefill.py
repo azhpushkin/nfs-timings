@@ -42,6 +42,8 @@ class PrefillOptions(models.Model):
 
     class Meta:
         db_table = 'prefill_options'
+        verbose_name = 'Prefill options'
+        verbose_name_plural = 'Prefill options'
         constraints = [
             models.CheckConstraint(
                 check=models.Q(id=PREFILL_OPTIONS_SINGLETON_ID),

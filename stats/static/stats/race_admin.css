@@ -1,0 +1,41 @@
+.form-row:has(.prefill-combobox) {
+    overflow: visible;
+    position: relative;
+    z-index: 10;
+}
+
+.prefill-combobox {
+    display: inline-block;
+    position: relative;
+    z-index: 100;
+}
+
+.prefill-panel {
+    background: var(--body-bg, #fff);
+    border: 1px solid var(--hairline-color, #ccc);
+    box-shadow: 0 3px 8px rgb(0 0 0 / 18%);
+    left: 0;
+    max-height: 14rem;
+    min-width: 100%;
+    overflow-y: auto;
+    position: absolute;
+    top: calc(100% + 2px);
+    z-index: 1000;
+}
+
+.prefill-choice {
+    background: transparent;
+    border: 0;
+    color: var(--body-fg, #333);
+    cursor: pointer;
+    display: block;
+    padding: 0.55rem 0.7rem;
+    text-align: left;
+    white-space: nowrap;
+    width: 100%;
+}
+
+.prefill-choice:hover,
+.prefill-choice:focus {
+    background: var(--selected-bg, #e8f1f5);
+}

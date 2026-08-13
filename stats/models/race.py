@@ -4,7 +4,8 @@ from django.db.models import UniqueConstraint
 
 
 class Race(models.Model):
-    api_url = models.URLField(
+    api_url = models.CharField(
+        max_length=2048,
         default='https://nfs-stats.herokuapp.com/getmaininfo.json'
     )
     created_at = models.DateTimeField()
