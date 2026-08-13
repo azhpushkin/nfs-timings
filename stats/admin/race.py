@@ -6,7 +6,7 @@ from django.contrib import admin, messages
 from django.db import connection
 from django.http import HttpResponse
 
-from stats.models import User
+from stats.admin.forms import RaceAccessForm
 from stats.models.race import Race, RacePass
 
 
@@ -26,24 +26,32 @@ class UnClosableTempFile(tempfile.SpooledTemporaryFile):
             super().close()
 
 
-class RacePassInline(admin.TabularInline):
-    model = RacePass
-    show_change_link = True
-    fields = ('id', 'race', 'user')
-    extra = 1
-
-    def has_change_permission(self, request, obj=None):
-        return False
-
-
 @admin.register(Race)
 class RaceAdmin(admin.ModelAdmin):
+    form = RaceAccessForm
     list_display = ('id', 'name', 'created_at', 'is_active')
     list_display_links = ('id', 'name')
     actions = ['download_requests']
-    inlines = [
-        RacePassInline,
-    ]
+
+    def save_related(self, request, form, formsets, change):
+        super().save_related(request, form, formsets, change)
+        selected_users = form.cleaned_data['allowed_users']
+        existing_passes = {
+            race_pass.user_id: race_pass
+            for race_pass in RacePass.objects.filter(race=form.instance)
+        }
+        selected_user_ids = set(selected_users.values_list('id', flat=True))
+
+        RacePass.objects.filter(race=form.instance).exclude(
+            user_id__in=selected_user_ids
+        ).delete()
+        RacePass.objects.bulk_create(
+            [
+                RacePass(race=form.instance, user=user)
+                for user in selected_users
+                if user.id not in existing_passes
+            ]
+        )
 
     @admin.action(description='Download requests in parquet format')
     def download_requests(self, request, queryset):
@@ -93,16 +101,6 @@ class RaceAdmin(admin.ModelAdmin):
                 'Content-Disposition'
             ] = f'attachment; filename="{filename}.parquet"'
             return response
-
-    def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
-
-        if not change:
-            superusers = User.objects.filter(is_superuser=True, is_active=True)
-            RacePass.objects.bulk_create(
-                [RacePass(race=obj, user=superuser) for superuser in superusers]
-            )
-
 
 @admin.register(RacePass)
 class RacePassAdmin(admin.ModelAdmin):

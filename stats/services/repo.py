@@ -59,7 +59,16 @@ def pick_best_kart_by(qs: QuerySet[Stint], sort_by: SortOrder) -> List[Stint]:
 
 
 def get_race_pass(race: Race, user: User) -> RacePass:
+    if user.is_superuser:
+        race_pass, _ = RacePass.objects.get_or_create(race=race, user=user)
+        return race_pass
     return RacePass.objects.get(race=race, user=user)
+
+
+def get_available_races(user: User) -> QuerySet[Race]:
+    if user.is_superuser:
+        return Race.objects.all()
+    return Race.objects.filter(allowed_users=user)
 
 
 def update_kart_accent(race_pass: RacePass, kart: int, accent: Optional[str]):
