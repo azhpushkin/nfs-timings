@@ -33,6 +33,9 @@ class RaceAdmin(admin.ModelAdmin):
     list_display_links = ('id', 'name')
     actions = ['download_requests']
 
+    class Media:
+        css = {'all': ('stats/admin.css',)}
+
     def save_related(self, request, form, formsets, change):
         super().save_related(request, form, formsets, change)
         selected_users = form.cleaned_data['allowed_users']

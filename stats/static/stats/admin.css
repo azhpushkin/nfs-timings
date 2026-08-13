@@ -1,0 +1,20 @@
+/* Keep race-access checkboxes readable in Django Admin on narrow screens. */
+.race-access-checklist:not(input) {
+    align-items: flex-start;
+    display: flex !important;
+    flex-direction: column;
+}
+
+.race-access-checklist:not(input) > div,
+.race-access-checklist:not(input) > li {
+    display: block !important;
+    margin: 0 0 0.4rem;
+    width: 100%;
+}
+
+.race-access-checklist:not(input) label {
+    display: inline-block;
+    max-width: calc(100% - 2rem);
+    vertical-align: top;
+    white-space: normal;
+}

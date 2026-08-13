@@ -15,6 +15,9 @@ class CustomUserAdmin(UserAdmin):
     list_display = ('username', 'is_superuser', 'is_active')
     filter_horizontal = []
     list_filter = []
+
+    class Media:
+        css = {'all': ('stats/admin.css',)}
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         (
