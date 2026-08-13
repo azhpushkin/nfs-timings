@@ -49,6 +49,15 @@ services:
       <<: *django-env
       DJANGO_SETTINGS_MODULE: "timings.settings"
 
+  simulator:
+    <<: *django-service
+    command: python simulation/serve.py ${SIMULATION_RECORDING}
+    profiles: ["simulation"]
+    ports:
+      - "7000:7000"
+    environment:
+      PYTHONUNBUFFERED: 1
+
 volumes:
   postgres_data:
     driver: local
