@@ -71,9 +71,9 @@ def team_entry_to_lap(
     )
 
     lap.kart = lap.kart_raw
-    if isinstance(race.kart_overrides, dict):
-        if kart_override := race.kart_overrides.get(str(lap.kart_raw)):
-            lap.kart = int(kart_override)
+    kart_override = race.kart_overrides_dict.get(str(lap.kart_raw))
+    if kart_override is not None:
+        lap.kart = int(kart_override)
 
     return lap
 

@@ -33,6 +33,11 @@ class Race(models.Model):
         ]
         db_table = 'races'
 
+    @property
+    def kart_overrides_dict(self) -> dict:
+        """Return usable overrides even if legacy data contains an empty/non-dict value."""
+        return self.kart_overrides if isinstance(self.kart_overrides, dict) else {}
+
     def __str__(self):
         return f'<Race #{self.id} - {self.name}>'
 
