@@ -121,3 +121,4 @@ wcwidth==0.2.6
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools
+whitenoise==6.12.0
